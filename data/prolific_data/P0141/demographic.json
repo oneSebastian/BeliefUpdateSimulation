@@ -1,0 +1,32 @@
+{
+  "participant_id": "P0141",
+  "age_raw": 22,
+  "age": 22,
+  "gender_raw": 1,
+  "gender": "male",
+  "ethnicity_raw": 1,
+  "ethnicity": "Asian",
+  "country_of_residency_code": "GB",
+  "country_of_residency": "United Kingdom",
+  "country_of_origin_code": null,
+  "country_of_origin": null,
+  "student_status_raw": 2,
+  "student_status": "Part-time student",
+  "employment_status_raw": 0,
+  "employment_status": "Employed full-time",
+  "occupation_field": "finance",
+  "highest_qualification_raw": 4,
+  "highest_qualification": "Bachelor's degree",
+  "personality": {
+    "survey.1.player.big1": 1,
+    "survey.1.player.big2": -1,
+    "survey.1.player.big3": 1,
+    "survey.1.player.big4": 0,
+    "survey.1.player.big5": 1,
+    "survey.1.player.big6": 1,
+    "survey.1.player.big7": 2,
+    "survey.1.player.big8": 2,
+    "survey.1.player.big9": 1,
+    "survey.1.player.big10": 1
+  }
+}

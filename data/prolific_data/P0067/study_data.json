@@ -1,0 +1,120 @@
+{
+  "participant_id": "P0067",
+  "topic_order": [
+    "weight_loss",
+    "penalty",
+    "UBI"
+  ],
+  "topics": [
+    {
+      "topic": "UBI",
+      "statement_formulation": "Everyone should receive Universal Basic Income.",
+      "init_belief": 2,
+      "familiarity": 2,
+      "package": "package3",
+      "message_order_index": 0,
+      "message_order_perm": [
+        1,
+        2,
+        3
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 1,
+          "package": "package3",
+          "text": "Well it’s kind of tough to provide stats and data for something that isn’t currently happening but I’ll try with what we know about other aspects. For things that are common knowledge I won’t link just for the sake of time <br><br>Universal Basic income implies a nationwide standardized stipend provided to individuals. For example $1000/adult. But, as we know the cost of living across the US is not universal. $1000 in Virginia is not the same as $1000 in California. \"Then increase the UBI based on where people live\" Well now large swathes of people are moving to wherever they get the most money to live leading to overpopulation, deterioration of communities and loss of productivity. <br><br>UBI requires the money to come from somewhere. In 2024 about $4.9Tn was collected in tax revenue . There’s about 260 million adults in the US. Let’s say they all get a flat payment of 12,000 a year and that comes out to 3.12Tn lost. So what part of the tax budget should be cut? The majority already goes to social services and healthcare and I don’t think $1000 a month is gonna be able to pay for rent, food and medicine. <br><br>Active engagement in the workforce or school leads to less crime and higher self esteem. So work isn’t this demon that is draining the life from people. It’s necessary for the advancement and enjoyment of society. <br><br>Without a doubt it would lead to major inflation (to make up for the loss of tax revenue and productivity) so yes you’d get $1000 a month but you also no be paying $500 a week for groceries. <br><br>Similar to number 1 different people have different needs. $1000 for a single person who can do what they want is fine. $1000 for a disabled person or single parent with more responsibilities and less time is probably a stretch. Rather than giving an equal sum of money to everyone whether they need it or not, isn’t it smarter to give an appropriate amount of money to those who need it?"
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 2,
+          "package": "package3",
+          "text": "I think you're missing a fundamental point. The UBI can't be funded based only on taxes on UBI, you're right. But it can be funded based on taxes on people who are earning money above and beyond the UBI, just like we currently fund the government by taxing money above and beyond our current UBI of $0. The point isn't that the UBI will be the only form of wages or wealth, there will also be people working jobs like normal. Maybe it will be a select few people earning insane amounts of money, maybe it will be lots of people earning salaries just like normal. Either way, the point is we need to tax those people. UBI is just a transfer payment from people who do work to the total society, nothing more. And it's clearly possible for the government to tax rich people and give it to society in other ways, since that's what it does right now. So why would UBI be any different just because it's direct?"
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 3,
+          "package": "package3",
+          "text": "One of the central problems with Universal Basic Income (UBI) is that while it provides more money to individuals, it does not increase the supply of goods or services. This imbalance leads to inflation, particularly in sectors where supply is limited and prices are driven by demand. <br><br>To illustrate, consider the pricing model of airline seating. On any given flight, there are only a few first class seats and many more economy seats. First class tickets cost significantly more often $1,200–$2,000 because they are a luxury limited in supply. Economy tickets might cost $200–$400 and are accessible to most travelers. <br><br>Now imagine a policy that grants every person earning below a certain point an extra $1000 per flight . While this sounds beneficial on the surface, it introduces a massive influx of purchasing power without changing the supply of goods or services. With that extra income, many more people would now be able to afford first class seats at least initially. <br><br>The result? A spike in demand without a change in supply. Airlines, seeing increased demand for first-class seats, will raise their prices perhaps to $3,000 or more until only the most willing and able are still purchasing. In other words, prices adjust to absorb the new money in the system. <br><br>Worse, the same effect would ripple through the rest of the economy. Businesses in housing, healthcare, transportation, and groceries would begin raising prices, knowing that consumers have more money. Over time, the purchasing power of the UBI would erode, and the cost of living would rise to match the new baseline. People may be nominally richer, but functionally, they’re back where they started or worse, because inflation can outpace the value of the UBI."
+        }
+      ]
+    },
+    {
+      "topic": "penalty",
+      "statement_formulation": "Penalty shootouts are a bad way to determine the winners of football matches.",
+      "init_belief": -2,
+      "familiarity": 2,
+      "package": "package2",
+      "message_order_index": 3,
+      "message_order_perm": [
+        2,
+        3,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 2,
+          "package": "package2",
+          "text": "Luck has nothing to do with it. It's a combination of which team has better penalty kickers, and which has better goalkeeping. And therein lies the true problem: it really only tests a small subset of soccer skills. However, in lieu of a better proposed method of sudden death, we just have to stick with it."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 3,
+          "package": "package2",
+          "text": "If the score is so often a draw that necessitates either overtime or a judge/point system, it suggests that something is more fundamentally wrong. <br><br>20-40% of soccer matches (depending on which league we’re talking about) result in a tie at end of regulation. <br><br>Thats insane. <br><br>The problem soccer has isn’t what to do in a tie - it’s first and foremost how to reduce the number of regulation ties. <br><br>Fixing that requires more out there thinking. Shorten the field? Something else?"
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package2",
+          "text": "\"Because of that, it seems to make it far more likely that the worse team ekes out a win. You can just play extremely conservative football, understanding that your best bet is in penalty kicks.\" There's no reason to believe this is true and the logic doesn't track. <br>Playing defensively doesn't inherently make a team worse than a team that focuses on offense.<br>Teams using defensive tactics can't rely on penalties to win. Most games don't have penalty tie breakers. <br>Penalties are used in cases of a tie, where teams are evenly matched. In terms of which team is better or worse, at that point there's no objective measurement of that. The score itself is how we measure success, and to reiterate, it's a tie. Soccer games run for 90 minutes of playtime, 120 minutes if it's a tie. <br>Theoretically, without a means to break the tie, a game could last forever. Penalties are the quickest way to break that tie. Penalties however have a large element of luck involved. <br>Penalties aren't used outside of the final brackets of tournaments because of this element. Regulation and group level matches use a points system to advance teams to the final brackets.<br>You would need to develop a method to break ties in the final brackets that isn't time exhaustive. Corners could be an option, but I doubt that we could keep the time they would take within a predictable pattern."
+        }
+      ]
+    },
+    {
+      "topic": "weight_loss",
+      "statement_formulation": "Using weight loss drugs like Ozempic is a good way to lose weight.",
+      "init_belief": -1,
+      "familiarity": 0,
+      "package": "package2",
+      "message_order_index": 4,
+      "message_order_perm": [
+        3,
+        1,
+        2
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package2",
+          "text": "Honestly any medication can be seen as harmful. My doctor says it depends on the severity of how obese someone is and if they plan on taking it long term. Almost any of the medication have extreme side effects but in reality there is only a small number of people that actually experience thes symptoms and usually if you do and you notify your doctor early they will most likely have you stop the medication and try a different routine."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 1,
+          "package": "package2",
+          "text": "A lot of responses seem to be focused on why it might have negative implications at a personal level (micro), but we're not also considering negative implications at a society level (macro). I think given the obesity epidemic in the US, there's a very good argument for part of the population to take Ozempic as part of their fitness/wellness journey. The problem I'm seeing is that as it's become mainstream to take ozempic, the Uber-skinny (heroin chic) look has returned as a beauty standard. People who would otherwise be considered healthy weight buckle under these new standards and want to become even skinnier. I have two acquaintances who were so concerned about being a couple pounds above ideal bmi that they started taking ozempic. Now they're under their target weight and so afraid of gaining those few extra pounds that they're considering taking ozempic indefinitely. Our new societal standard, driven in part by ozempic, is reviving the mental health crisis from a few decades back. So while I agree there's a definite need for this drug in a certain portion of the population, I'm concerned about the spillover effect on the opposite end of the spectrum: folks who are already a healthy weight becoming ultra focused on being skinnier as that unhealthy beauty standard returns."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 2,
+          "package": "package2",
+          "text": "You’re literally correct!<br><br>Having a shitty diet with a high BMI is far worse for you than having a shitty diet with a low BMI. And trust me, there are plenty of people in both situations. So it may not fix every issue, but it does fix one specific issue: obesity. And that’s a pretty fucking big one. <br><br>Nobody says these things about high blood pressure medication, which doesn’t fix the “root cause” which is usually also poor diet and lack of exercise. What’s the difference? <br><br>Being fat is supposed to be a scarlet letter which physically brands people with the sin of gluttony. Anyone who has ever been even a little overweight can tell you society absolutely punishes you for it. Any argument against Ozempic, in my eyes, is more or less the same: \"Well you deserve to look bad and be treated poorly because of your poor self-control.\""
+        }
+      ]
+    }
+  ],
+  "raw_fields_used": {
+    "survey.1.player.first_topic": "weight_loss",
+    "survey.1.player.second_topic": "penalty",
+    "survey.1.player.third_topic": "UBI",
+    "survey.1.player.package_UBI": "package3",
+    "survey.1.player.message_order_UBI": 0,
+    "survey.1.player.package_penalty": "package2",
+    "survey.1.player.message_order_penalty": 3,
+    "survey.1.player.package_weight_loss": "package2",
+    "survey.1.player.message_order_weight_loss": 4
+  }
+}

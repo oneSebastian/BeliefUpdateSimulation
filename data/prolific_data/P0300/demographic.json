@@ -1,0 +1,32 @@
+{
+  "participant_id": "P0300",
+  "age_raw": 23,
+  "age": 23,
+  "gender_raw": 0,
+  "gender": "female",
+  "ethnicity_raw": 0,
+  "ethnicity": "White",
+  "country_of_residency_code": "GB",
+  "country_of_residency": "United Kingdom",
+  "country_of_origin_code": null,
+  "country_of_origin": null,
+  "student_status_raw": 1,
+  "student_status": "Full-time student",
+  "employment_status_raw": 3,
+  "employment_status": "Unemployed",
+  "occupation_field": "Hospitality",
+  "highest_qualification_raw": 5,
+  "highest_qualification": "Master's degree",
+  "personality": {
+    "survey.1.player.big1": 2,
+    "survey.1.player.big2": 1,
+    "survey.1.player.big3": -1,
+    "survey.1.player.big4": 2,
+    "survey.1.player.big5": -1,
+    "survey.1.player.big6": 1,
+    "survey.1.player.big7": 1,
+    "survey.1.player.big8": 2,
+    "survey.1.player.big9": -1,
+    "survey.1.player.big10": 0
+  }
+}

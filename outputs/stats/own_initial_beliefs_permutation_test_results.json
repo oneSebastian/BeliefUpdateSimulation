@@ -1,0 +1,20 @@
+[
+  {
+    "LLM":"Qwen3_32B",
+    "Observed Diff":0.199488491,
+    "p-value":0.000012,
+    "Reject Null":true
+  },
+  {
+    "LLM":"Llama-3.3-70B-Instruct",
+    "Observed Diff":0.3282182438,
+    "p-value":0.0,
+    "Reject Null":true
+  },
+  {
+    "LLM":"academic-ai-gpt-5-mini",
+    "Observed Diff":0.3529411765,
+    "p-value":0.0,
+    "Reject Null":true
+  }
+]

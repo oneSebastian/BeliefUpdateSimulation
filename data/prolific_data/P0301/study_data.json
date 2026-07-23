@@ -1,0 +1,120 @@
+{
+  "participant_id": "P0301",
+  "topic_order": [
+    "weight_loss",
+    "UBI",
+    "penalty"
+  ],
+  "topics": [
+    {
+      "topic": "UBI",
+      "statement_formulation": "There should be no Universal Basic Income.",
+      "init_belief": -2,
+      "familiarity": 1,
+      "package": "package1",
+      "message_order_index": 4,
+      "message_order_perm": [
+        3,
+        1,
+        2
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package1",
+          "text": "\" work is very important for people because it gives them meaning in their life \"<br><br>As a proponent of UBI, I actually mostly agree with this, but with a caveat that we should be careful how we define \"work\".<br><br>If you define \"work\" as a task that you do in exchange for a living wage, then I don't agree with you. Many people are deeply unfulfilled by their jobs, but have to do it to pay rent / maintain health insurance, etc... <br><br>But if you define work more broadly as any task that keeps you busy and provides meaning to your life, then UBI actually helps, as it greatly expands the set of \"jobs\" that you can take on, as its no longer important that they're financially viable. <br><br>As an example, I have a friend who does really stunning craft projects. They've created some really beautiful stuff for my kids that took a lot of \"work\" to do, and brings a lot of joy to the people that receive these items. However, even though people would pay for this stuff, they're hand made and it takes way to long / costs too much in materials to make it financially viable. <br><br>But a UBI means that they could continue doing this wonderful work that is deeply fulfilling even if it doesn't make enough money to live off. This would be a vastly more fulfilling life than if they had to take a job they hated as a grocery store cashier just to make ends meet."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 1,
+          "package": "package1",
+          "text": "Depends whose version of the UBI you are talking about. For many people, the goal is to transition from more paternalistic government programs into a UBI that takes their place with less worries. I don't know how messed up Germany's welfare programs are specifically, but in the US they can be terrible - food stamps that only permit certain foods, massive bureaucracy that is very difficult to navigate, having to keep receipts, benefits that disappear the moment you start making money, thus making it very hard to get a job and get out of poverty, etc...<br><br> So we spend $1 trillion a year on welfare programs of various kinds. Some have to stay as is, but if we could convert half of that into UBI, we'd have over $1500/person. It wouldn't be too hard to make that $4500 per person if we balanced it with a progressive tax designed such that really only the bottom third benefited much from the UBI plus the tax. So that's $4500/year instead of half the Byzantine government programs with all their paperwork and bureaucracy and incompatibility with leaving poverty and paternalism. I don't see why the math would be impossible on that version."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 2,
+          "package": "package1",
+          "text": "\"\"If everybody had money given to them they'd become lazy!\" perfect, let them\" <br><br> Ok so that means a reduction in productivity. So there is less medicine, less teachers, less engineers, less builders, less farmers. <br><br>So there are less goods and services to go around. Now in our current society a disproportionate share of goods and services go to the wealthy, so it may be acceptable for there to be less medicine, education, housing, food etc if that is mostly at the expense of the wealthy. But we do need to accept that this is an actual consequence <br><br>There are other flow on effects. Firstly, the same amount of money chasing less goods means those goods are in higher demand - this causes the price of goods to raise. So if UBI is accompanied by decreased productivity, this can cause things that were previously affordable to be out of reach. A UBI that is designed to be \"liveable\" may quickly become unlivable, because the UBI drives prices up. Then you raise the UBI more to make it \"liveable\" again which makes the problem worse... <br><br>Next, the problem with a tide that rises equally is that systemic problems are good at fleecing people. <br><br> Here in Australia, the government gave first home buyers $50,000 to put towards a home. What a great policy.... the prices of houses immediately rose by $50,000. So really, the government just put more money in the pocket of the wealthy. <br><br>When all the poor have their income raise by exactly the same amount, and there are the same or even less goods to go around - guess what happens. Everyone raises their prices to fuck over the poor and capture all the UBI for themselves. Houses and rents are especially vulnerable to this phenomenon. <br><br>Another great example of this is in universities. University tuition has exploded to absurd levels. Students pay more and more every year for teaching that is not that different from half a century again. Student loans increase the amount of money students can pay.This should be great. More affordable uni!. Except oh no, suddenly the cost of uni keeps going up. The more generous the loans, the more the prices of uni go up."
+        }
+      ]
+    },
+    {
+      "topic": "penalty",
+      "statement_formulation": "Penalty shootouts are a good way to determine the winners of football matches.",
+      "init_belief": 0,
+      "familiarity": 1,
+      "package": "package3",
+      "message_order_index": 3,
+      "message_order_perm": [
+        2,
+        3,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 2,
+          "package": "package3",
+          "text": "It will decide a winner, to be sure. <br><br>But the better team doesn't always win. <br><br>And truthfully shoot outs are exciting as anything any other sport can produce but it's a lazy and unfair way to decide a game, especially at the level of the World Cup. <br><br>The standard argument is that if 90 minutes in regulation time and 30 more in over time doesn't produce a winner another 30 (or more) won't either. <br><br>Why not? <br><br>How about removing players from each side as more and more overtime is played or allow more substitutes during OT?<br><br> There are many other options that can be used besides shoot outs but everyone seems to be ok with this style of game play. <br><br>It is an unfair, and truthfully a sissy way to decide something so important. CMV"
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 3,
+          "package": "package3",
+          "text": "PK’s are a big part of them game (similar to free throws in basketball or extra points in American football). If teams were evenly matched after 120 minutes of outfield play, it is very reasonable to shift to this single component of the game in order to decide a winner. It still needs fundamental football skills plus even more mental skills (the margin for error shrinks almost to zero). <br><br>Ultimately it does not conclude that Team A is better at playing football than Team B. But it does fairly decide that Team A beat Team B while at the same time utilizing a key component of the game that takes into consideration important physical and mental characteristics"
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package3",
+          "text": "After 120 minutes, each team loses a man. Another player off after every 10-15 minutes thereafter, golden goal first to score wins. Even If it gets down to 1 v 1 over an entire field (which it won't), it is no more or less silly than penalties. The game of soccer should decide a soccer game, not some weird focus on a singular aspect of the game, divorced from every other part of the sport."
+        }
+      ]
+    },
+    {
+      "topic": "weight_loss",
+      "statement_formulation": "Using weight loss drugs like Ozempic is a good way to lose weight.",
+      "init_belief": -1,
+      "familiarity": 0,
+      "package": "package3",
+      "message_order_index": 1,
+      "message_order_perm": [
+        1,
+        3,
+        2
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 1,
+          "package": "package3",
+          "text": "I work out and eat right. I’ll eat perfectly for 3-4 weeks in a row and then if I have ONE dessert, I’m right back to where I started on the scale. It’s incredibly frustrating. <br><br>One thing I’ve read about these drugs is they take away the obsession over food. So, for me, I am always thinking about my next meal. When do I get to eat? What will I have? How many minutes? How do I plan my schedule around my meal? <br><br>I have people in my family who will get to working and completely forget to eat. I do not understand this. I do not understand how the thought of a meal can skip your mind. Even in my most crazy busy of days, I figure out when to eat my salad or whatever. <br><br>But, the stories I’ve heard of people on these meds… their \"food noise\" disappears. When I heard \"food noise\" described for the first time, I was like, \"omg, that’s me. That’s every moment of my life. \" <br><br>If I could just get through the day without obsessing over my meals, that’s a game changer."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 3,
+          "package": "package3",
+          "text": "It turns out that Ozempic has a host of secondary effects, and you are also bound to gain the lost weight back if you stop using the drug. <br><br>According to Lawsuit Legal News some of the worst potential Ozempic side effects may include: <br><br>Stomach paralysis - which can lead to severe nausea, constipation, vomiting, and sudden or strong feelings of fullness <br><br>Gallbladder issues <br><br>Gallstones <br><br>Pancreatitis <br><br>Thyroid cancer <br><br>Vision loss <br><br>Kidney disease - or other related kidney problems <br><br>Thoughts of suicide <br><br>Other conditions that can cause severe pain <br><br>Ozempic is essentially a Faustian bargain. A deal that gives you what you want, but that comes with too make downsides. There is something inherently wrong about being desperate enough to sign up for any Faustian bargain. <br>The best solution to permanently loose weight is to work on one’s mental health, to adopt a healthy diet and an active lifestyle. There is literally no downside."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 2,
+          "package": "package3",
+          "text": "It's not just about HOW MUCH people eat, but about WHAT they eat. <br><br>Any drug suppressing the hunger or any treatment forcibly reducing the physical amount of food you eat is just a temporary measure that sooner or later will backfire or will be nullified by deeply-rooted bad habits. <br><br>Changing diet only works if it's a serious effort, accompanied by either a general change in lifestyle (removing the risk of falling for the old routine) and/or by therapy if it becomes evident food is a coping mechanism for something bigger. <br><br>If the only thing preventing you from stuffing your face with a large pizza, a bowl of KFC and a box of donuts is a pill or a stapled stomach, it's only a matter of time before those hindrances will be removed and you'll be back to square one."
+        }
+      ]
+    }
+  ],
+  "raw_fields_used": {
+    "survey.1.player.first_topic": "weight_loss",
+    "survey.1.player.second_topic": "UBI",
+    "survey.1.player.third_topic": "penalty",
+    "survey.1.player.package_UBI": "package1",
+    "survey.1.player.message_order_UBI": 4,
+    "survey.1.player.package_penalty": "package3",
+    "survey.1.player.message_order_penalty": 3,
+    "survey.1.player.package_weight_loss": "package3",
+    "survey.1.player.message_order_weight_loss": 1
+  }
+}

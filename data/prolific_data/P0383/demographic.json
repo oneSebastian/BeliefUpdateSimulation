@@ -1,0 +1,32 @@
+{
+  "participant_id": "P0383",
+  "age_raw": 31,
+  "age": 31,
+  "gender_raw": 1,
+  "gender": "male",
+  "ethnicity_raw": 3,
+  "ethnicity": "Hispanic or Latino",
+  "country_of_residency_code": "GB",
+  "country_of_residency": "United Kingdom",
+  "country_of_origin_code": null,
+  "country_of_origin": null,
+  "student_status_raw": 2,
+  "student_status": "Part-time student",
+  "employment_status_raw": 2,
+  "employment_status": "Self-employed",
+  "occupation_field": "customer service",
+  "highest_qualification_raw": 3,
+  "highest_qualification": "Further education (A Levels, BTEC, apprenticeship)",
+  "personality": {
+    "survey.1.player.big1": 1,
+    "survey.1.player.big2": 0,
+    "survey.1.player.big3": 1,
+    "survey.1.player.big4": 0,
+    "survey.1.player.big5": 1,
+    "survey.1.player.big6": 1,
+    "survey.1.player.big7": 1,
+    "survey.1.player.big8": 0,
+    "survey.1.player.big9": 1,
+    "survey.1.player.big10": -1
+  }
+}

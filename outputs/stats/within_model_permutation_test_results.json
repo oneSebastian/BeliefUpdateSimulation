@@ -1,0 +1,74 @@
+[
+  {
+    "LLM":"Qwen3_32B",
+    "Condition 1":"base",
+    "Condition 2":"no-demographic",
+    "Observed Diff":0.0272804774,
+    "p-value":0.223917,
+    "Reject Null":false
+  },
+  {
+    "LLM":"Qwen3_32B",
+    "Condition 1":"base",
+    "Condition 2":"no-personality",
+    "Observed Diff":0.0042625746,
+    "p-value":0.876651,
+    "Reject Null":false
+  },
+  {
+    "LLM":"Qwen3_32B",
+    "Condition 1":"base",
+    "Condition 2":"no-persona",
+    "Observed Diff":0.0179028133,
+    "p-value":0.455239,
+    "Reject Null":false
+  },
+  {
+    "LLM":"Llama-3.3-70B-Instruct",
+    "Condition 1":"base",
+    "Condition 2":"no-demographic",
+    "Observed Diff":-0.0068201194,
+    "p-value":0.604099,
+    "Reject Null":false
+  },
+  {
+    "LLM":"Llama-3.3-70B-Instruct",
+    "Condition 1":"base",
+    "Condition 2":"no-personality",
+    "Observed Diff":-0.0017050298,
+    "p-value":0.947162,
+    "Reject Null":false
+  },
+  {
+    "LLM":"Llama-3.3-70B-Instruct",
+    "Condition 1":"base",
+    "Condition 2":"no-persona",
+    "Observed Diff":0.010230179,
+    "p-value":0.514677,
+    "Reject Null":false
+  },
+  {
+    "LLM":"academic-ai-gpt-5-mini",
+    "Condition 1":"base",
+    "Condition 2":"no-demographic",
+    "Observed Diff":-0.0136402387,
+    "p-value":0.481259,
+    "Reject Null":false
+  },
+  {
+    "LLM":"academic-ai-gpt-5-mini",
+    "Condition 1":"base",
+    "Condition 2":"no-personality",
+    "Observed Diff":0.0434782609,
+    "p-value":0.021588,
+    "Reject Null":false
+  },
+  {
+    "LLM":"academic-ai-gpt-5-mini",
+    "Condition 1":"base",
+    "Condition 2":"no-persona",
+    "Observed Diff":-0.0161977835,
+    "p-value":0.408245,
+    "Reject Null":false
+  }
+]

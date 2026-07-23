@@ -1,0 +1,120 @@
+{
+  "participant_id": "P0401",
+  "topic_order": [
+    "weight_loss",
+    "UBI",
+    "penalty"
+  ],
+  "topics": [
+    {
+      "topic": "UBI",
+      "statement_formulation": "There should be no Universal Basic Income.",
+      "init_belief": -2,
+      "familiarity": 1,
+      "package": "package3",
+      "message_order_index": 5,
+      "message_order_perm": [
+        3,
+        2,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package3",
+          "text": "One of the central problems with Universal Basic Income (UBI) is that while it provides more money to individuals, it does not increase the supply of goods or services. This imbalance leads to inflation, particularly in sectors where supply is limited and prices are driven by demand. <br><br>To illustrate, consider the pricing model of airline seating. On any given flight, there are only a few first class seats and many more economy seats. First class tickets cost significantly more often $1,200–$2,000 because they are a luxury limited in supply. Economy tickets might cost $200–$400 and are accessible to most travelers. <br><br>Now imagine a policy that grants every person earning below a certain point an extra $1000 per flight . While this sounds beneficial on the surface, it introduces a massive influx of purchasing power without changing the supply of goods or services. With that extra income, many more people would now be able to afford first class seats at least initially. <br><br>The result? A spike in demand without a change in supply. Airlines, seeing increased demand for first-class seats, will raise their prices perhaps to $3,000 or more until only the most willing and able are still purchasing. In other words, prices adjust to absorb the new money in the system. <br><br>Worse, the same effect would ripple through the rest of the economy. Businesses in housing, healthcare, transportation, and groceries would begin raising prices, knowing that consumers have more money. Over time, the purchasing power of the UBI would erode, and the cost of living would rise to match the new baseline. People may be nominally richer, but functionally, they’re back where they started or worse, because inflation can outpace the value of the UBI."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 2,
+          "package": "package3",
+          "text": "I think you're missing a fundamental point. The UBI can't be funded based only on taxes on UBI, you're right. But it can be funded based on taxes on people who are earning money above and beyond the UBI, just like we currently fund the government by taxing money above and beyond our current UBI of $0. The point isn't that the UBI will be the only form of wages or wealth, there will also be people working jobs like normal. Maybe it will be a select few people earning insane amounts of money, maybe it will be lots of people earning salaries just like normal. Either way, the point is we need to tax those people. UBI is just a transfer payment from people who do work to the total society, nothing more. And it's clearly possible for the government to tax rich people and give it to society in other ways, since that's what it does right now. So why would UBI be any different just because it's direct?"
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package3",
+          "text": "Well it’s kind of tough to provide stats and data for something that isn’t currently happening but I’ll try with what we know about other aspects. For things that are common knowledge I won’t link just for the sake of time <br><br>Universal Basic income implies a nationwide standardized stipend provided to individuals. For example $1000/adult. But, as we know the cost of living across the US is not universal. $1000 in Virginia is not the same as $1000 in California. \"Then increase the UBI based on where people live\" Well now large swathes of people are moving to wherever they get the most money to live leading to overpopulation, deterioration of communities and loss of productivity. <br><br>UBI requires the money to come from somewhere. In 2024 about $4.9Tn was collected in tax revenue . There’s about 260 million adults in the US. Let’s say they all get a flat payment of 12,000 a year and that comes out to 3.12Tn lost. So what part of the tax budget should be cut? The majority already goes to social services and healthcare and I don’t think $1000 a month is gonna be able to pay for rent, food and medicine. <br><br>Active engagement in the workforce or school leads to less crime and higher self esteem. So work isn’t this demon that is draining the life from people. It’s necessary for the advancement and enjoyment of society. <br><br>Without a doubt it would lead to major inflation (to make up for the loss of tax revenue and productivity) so yes you’d get $1000 a month but you also no be paying $500 a week for groceries. <br><br>Similar to number 1 different people have different needs. $1000 for a single person who can do what they want is fine. $1000 for a disabled person or single parent with more responsibilities and less time is probably a stretch. Rather than giving an equal sum of money to everyone whether they need it or not, isn’t it smarter to give an appropriate amount of money to those who need it?"
+        }
+      ]
+    },
+    {
+      "topic": "penalty",
+      "statement_formulation": "Penalty shootouts are a good way to determine the winners of football matches.",
+      "init_belief": 0,
+      "familiarity": 1,
+      "package": "package1",
+      "message_order_index": 2,
+      "message_order_perm": [
+        2,
+        1,
+        3
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 2,
+          "package": "package1",
+          "text": "I don't really have a problem with penalty kicks because in that there is no better alternative. They played 90 minutes and the teams were even. They played 30 more minutes and the teams were even. You need to declare a victor. I'm not sure what else you do. Only about 1 in 4 matches end in a tie. I kind of like in club soccer that there is room to say that on that day, the two teams were even. Like, in the NBA if there are two teams that go to overtime and the game goes down to the last shot where the player was fouled but the ref doesn't call it because they rarely call a foul on a buzzer beater, is one team really better than the other? Same with an NFL game ending in a field goal.The vast majority of the time, a penalty shootout comes down to a shooting player missing and beating themselves. I think out of all penalty shots, the success rate is like 85%. It's basically an In the World Cup, the success rate in penalty shoot outs, the success rate is only 70%. The pressure really matters. This means out of 5 shots, each team is likely to miss 1. <br><br>If everybody makes their shot, you will probably win. That takes discipline and mental toughness. It is important and impressive. Same goes with the goalie. Chances are that they will allow 4 goals so the stops are really important. In the world Cup final, Hugo Lloris was the far better goal keeper but Dibu Martinez was clearly the more confident goal keeper despite Lloris having won a world cup. One rose to the occasion and the other didn't <br><br>All this to say, that it still simulates the key part of winning the game like in Hockey. It really speeds up the game to the most important moment in any victory which are the shots on goal. I assume allowing the soccer player to run up with the ball would just make the shot impossible to stop just like it is harder for the goalie in hockey. The difference being that it would take the strategy out of the shoot out in Soccer since the success rate for shooters would be like 99%. You could say that they have to shoot from further away, but then who wants to see a shootout where everybody misses. <br><br>Nah. You are falling into the North American trap of trying to fix the most popular sport on the planet. The penalty shoot out works great. It is insanely suspenseful in Soccer."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 1,
+          "package": "package1",
+          "text": "Penalty kicks exist to force an ending to a game that will statistically only become less likely to quickly end. After all, goalkeepers move the least, so they'll still be the freshest players on the pitch at the end. Eventually someone might get a lucky kick in, but as players get more and more exhausted, skill matters less and less because they won't have the strenght for proper skilled play anymore. So it's still more luck than anything. <br><br> Penalty kicks at least cut the game off while people still have the power to place proper shots and it's still the shooters skill vs the keepers skill."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 3,
+          "package": "package1",
+          "text": "The better team doesn't always win within the first 90 minutes of the game anyway. In that sense, a penalty shootout mirrors what makes the game of football so interesting - its unpredictability. Much of the time a team will dominate the entire match but not come out victors, falling to a defeat to a plucky underdog who managed to scrape through by creating one chance which they manage to take. That's just one example of how this system works. What penalty shoot outs do is play that unpredictability out on a grander scale. It's almost impossible to predict how they'll turn out, who will miss, who will score, which shots will be saved, and ultimately, who will win. Plus, they are an exceptionally tense examination of players' mental strengths and kicking technique, as well as goalkeeping qualities. Much of penalty taking is psychological, and it's generally the team that manages to keep their cool that comes out victor in the end. It's a brilliant, brilliant way to decide tied games and it makes for some extremely entertaining finales."
+        }
+      ]
+    },
+    {
+      "topic": "weight_loss",
+      "statement_formulation": "Using weight loss drugs like Ozempic is a bad way to lose weight.",
+      "init_belief": 1,
+      "familiarity": 0,
+      "package": "package1",
+      "message_order_index": 5,
+      "message_order_perm": [
+        3,
+        2,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package1",
+          "text": "Ozempic is bad for you. If you don’t have diabetes and your doctor prescribes it you, he is a just a drug dealer. This shouldn’t be taken by anyone. It will cause bone density loss and sarcopenia. This will 100 percent shorten your life span by YEARS. Shame on ANYONE that takes this instead of doing whatever they can to be healthy the right way. No one even talks about how bad this is for your body, most of the negative side effects have been scrubbed from the internet because there is SO MUCH MONEY behind this. Everyone’s body is different, all kinds of shapes and sizes. Stop worrying about your weight and just focus on making healthy decisions DAILY. Sick of these crying obese ass Americans talking about how hard it is to not be fat and lazy. Go take a trip around the world, lots of hungry people out there dumbfounded at our obesity epidemic here in America. <br><br>Also love how the body positivity movement shut the fuck up when ozempic started getting bit. Lizzo and all of them. This society is disgusting. Just another side effect of the USA being in the shitter. We have the MOST ignorant citizens on the planet lol."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 2,
+          "package": "package1",
+          "text": "I've lost about 80 pounds from the side effects of a medication I started taking last year. I have never been able to diet and exercise enough to make the slightest impact, and I feel like this medicine has (inadvertently, as low appetite is merely a side effect) given me my life back. A life that I've never had, as I was obese for my whole childhood. <br><br> Even if I am taken off of this medication one day, I'm glad that my life contains at least this short time period of being \"normal sized.\" I wish I could give that gift to all of the other perma-fat folks out there. They don't realize how much they are missing."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package1",
+          "text": "Most of society hates or dislikes fat people. They think taking what is functionally a wonder drug at improving health outcomes is \"cheating.\" They think people should be forced to work for it, dramatically change the way they live ect to not suffer potentially extreme health consequences. <br><br>I strongly disagree with such people, but this seems to be their mentality. As of now, this class of drugs seems to be an unambiguously positive development for society."
+        }
+      ]
+    }
+  ],
+  "raw_fields_used": {
+    "survey.1.player.first_topic": "weight_loss",
+    "survey.1.player.second_topic": "UBI",
+    "survey.1.player.third_topic": "penalty",
+    "survey.1.player.package_UBI": "package3",
+    "survey.1.player.message_order_UBI": 5,
+    "survey.1.player.package_penalty": "package1",
+    "survey.1.player.message_order_penalty": 2,
+    "survey.1.player.package_weight_loss": "package1",
+    "survey.1.player.message_order_weight_loss": 5
+  }
+}

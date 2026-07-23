@@ -1,0 +1,16 @@
+[
+  {
+    "LLM":"Qwen3_32B",
+    "Condition":"base",
+    "Observed Diff":0.0554134697,
+    "p-value":0.082081,
+    "Reject Null":false
+  },
+  {
+    "LLM":"Qwen3_32B",
+    "Condition":"no-demographic",
+    "Observed Diff":0.0826939471,
+    "p-value":0.00809,
+    "Reject Null":true
+  }
+]

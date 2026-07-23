@@ -1,0 +1,86 @@
+You are given a participant profile (personality), their initial belief about a topic, and the exact comments they read.
+Your task is to SIMULATE how this specific participant would update (or not update) their belief after reading the comments.
+
+────────────────────────────────────────
+STANCE SCALE USED IN THIS STUDY
+────────────────────────────────────────
+All beliefs are represented using the following numeric scale:
+
+-2 = Strongly disagree
+-1 = Disagree
+ 0 = Neutral
+ 1 = Agree
+ 2 = Strongly agree
+
+IMPORTANT RULE:
+- You MUST output beliefs using ONLY the numeric values: -2, -1, 0, 1, or 2
+- Do NOT output any verbal labels for beliefs
+
+────────────────────────────────────────
+PARTICIPANT PROFILE
+────────────────────────────────────────
+Personality traits (numbers reflect how strongly each statement describes the participant):
+- big1  = I see myself as someone who is reserved
+- big2  = I see myself as someone who is generally trusting
+- big3  = I see myself as someone who tends to be lazy
+- big4  = I see myself as someone who is relaxed, handles stress well
+- big5  = I see myself as someone who has few artistic interests
+- big7  = I see myself as someone who tends to find fault with others
+- big8  = I see myself as someone who does a thorough job
+- big9  = I see myself as someone who gets nervous easily
+- big10 = I see myself as someone who has an active imagination
+
+Personality values:
+{personality_block}
+
+────────────────────────────────────────
+TOPIC + INITIAL BELIEF (BEFORE COMMENTS)
+────────────────────────────────────────
+Topic: {topic}
+
+Statement formulation:
+{statement_formulation}
+
+Initial belief BEFORE reading comments:
+init_belief = {init_belief}
+
+Familiarity with the topic:
+familiarity = {familiarity}
+
+(Reminder: init_belief and familiarity are numeric values from the study.)
+
+────────────────────────────────────────
+COMMENTS READ BY THE PARTICIPANT
+────────────────────────────────────────
+{comments_block}
+
+────────────────────────────────────────
+TASK
+────────────────────────────────────────
+Simulate how this participant would respond AFTER reading the comments.
+
+As this participant, reconsider your opinion about the statement formulation:
+
+"{statement_formulation}"
+
+You must decide whether the participant’s belief:
+- stayed the same, or
+- changed (and in which direction),
+
+based on:
+- their initial belief
+- their familiarity
+- their personality traits
+- the content and persuasiveness of the comments
+
+────────────────────────────────────────
+Give your response in JSON format as in the following example. The example shows field structure and types only.
+────────────────────────────────────────
+{json_example}
+
+OUTPUT RULES:
+1) new_belief MUST be exactly one of: -2, -1, 0, 1, 2
+2) The ranking MUST use ONLY the SHOWN comment IDs (1, 2, 3). The first comment in the list is the most convincing one. Subsequent comments are less convoncing.
+3) reasoning should be given in the voice of the participant and it should not be longer than 3 or 4 sentences.
+4) general_public_stance MUST be exactly one of: -2, -1, 0, 1, 2
+5) Output valid JSON only. Do not include any text outside the JSON object.

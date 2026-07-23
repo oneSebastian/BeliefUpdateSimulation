@@ -1,0 +1,46 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2025 BehavioralResearch @ IT-U
+
+This licence covers the DATA in this repository:
+
+    data/
+    results/
+    data/hf_dataset/   (generated; same terms)
+    outputs/
+
+The source code is licensed separately under the MIT License; see LICENSE.
+
+You are free to:
+
+    Share  — copy and redistribute the material in any medium or format
+    Adapt  — remix, transform, and build upon the material for any purpose,
+             even commercially
+
+under the following terms:
+
+    Attribution — You must give appropriate credit, provide a link to the
+    licence, and indicate if changes were made. You may do so in any reasonable
+    manner, but not in any way that suggests the licensor endorses you or your
+    use.
+
+    No additional restrictions — You may not apply legal terms or technological
+    measures that legally restrict others from doing anything the licence
+    permits.
+
+Full licence text: https://creativecommons.org/licenses/by/4.0/legalcode
+Summary: https://creativecommons.org/licenses/by/4.0/
+
+--------------------------------------------------------------------------------
+A note on the human-subject data
+
+These records come from human participants who consented to their responses
+being released publicly in de-identified form. The licence grants broad reuse
+rights, but it does not waive the ethical obligations that come with the data:
+
+  - Do not attempt to re-identify participants, whether alone or by linking
+    these records against any other dataset.
+  - The demographic fields are quasi-identifiers and the free-text answers are
+    participants' own writing. Treat both accordingly.
+
+See the Ethics and consent section of README.md for what participants were told.

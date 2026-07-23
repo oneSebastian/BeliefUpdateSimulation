@@ -1,0 +1,32 @@
+{
+  "participant_id": "P0267",
+  "age_raw": 19,
+  "age": 19,
+  "gender_raw": 0,
+  "gender": "female",
+  "ethnicity_raw": 0,
+  "ethnicity": "White",
+  "country_of_residency_code": "GB",
+  "country_of_residency": "United Kingdom",
+  "country_of_origin_code": null,
+  "country_of_origin": null,
+  "student_status_raw": 1,
+  "student_status": "Full-time student",
+  "employment_status_raw": 1,
+  "employment_status": "Employed part-time",
+  "occupation_field": "hospitality",
+  "highest_qualification_raw": 3,
+  "highest_qualification": "Further education (A Levels, BTEC, apprenticeship)",
+  "personality": {
+    "survey.1.player.big1": 1,
+    "survey.1.player.big2": 0,
+    "survey.1.player.big3": 2,
+    "survey.1.player.big4": 1,
+    "survey.1.player.big5": -1,
+    "survey.1.player.big6": 1,
+    "survey.1.player.big7": 0,
+    "survey.1.player.big8": 1,
+    "survey.1.player.big9": 2,
+    "survey.1.player.big10": 1
+  }
+}

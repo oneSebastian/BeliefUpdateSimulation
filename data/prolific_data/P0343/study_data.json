@@ -1,0 +1,120 @@
+{
+  "participant_id": "P0343",
+  "topic_order": [
+    "penalty",
+    "weight_loss",
+    "UBI"
+  ],
+  "topics": [
+    {
+      "topic": "UBI",
+      "statement_formulation": "There should be no Universal Basic Income.",
+      "init_belief": 1,
+      "familiarity": 1,
+      "package": "package2",
+      "message_order_index": 4,
+      "message_order_perm": [
+        3,
+        1,
+        2
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package2",
+          "text": "I want to be clear up front about this: I oppose UBI and don't think it's in the countries best interest. That being said, the most viable plan for implementation DOES offer less than a living wage, the object being to raise people not earning enough to a more comfortable financial level. It also eliminates a lot of other programs (and their support structure) to fund it. Programs like unemployment, social security, welfare, etc. that give out money to those who meet criteria for it being replaced by a single check that doesn't stop when the situation changes. It also comes with a tax adjustment so that most people don't actually come out very far ahead in the end, upper-middle to upper class would basically pay everything back, plus some, middle to lower middle MIGHT get a little ahead, IF they don't start spending the \"free money\" too extravagantly,. Lower class would do some better, but the real benefit here would be in streamlined payments and fewer hurdles to jump through to get money they need to get by, and in that it provides incentive to work because working would only add to their income, allowing upper mobility. <br><br>It would also allow for alternative choices to working if you really don't want to. A group of artists (just as an example) could pool resourses on a single multi bedroom unit and be able to scrape by while focusing on art rather than a more traditional career. <br><br>Likewise it could be said to remove a lot of resentment that people tend to hold against each other, since EVERYONE is getting a check and nobody is \"being a freeloader at my expense\" <br><br>Other government programs could benefit as well. The census, springs to mind. People would be extremely likely to respond if census data were used to determine needs for UBI. <br><br>I can see a lot of the appeal, beyond just \"free money\" which is how most people interpret it. But even IF such a program could be made to work, I think it puts to much control of the individual in government hands. Not that it CAN'T work, but that we SHOULDN'T have to rely on it."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 1,
+          "package": "package2",
+          "text": "\"Let's say a country like Germany would like to implement UBI. Currently the minimum wage is 18.000 Euro per year. So let's say that for the ease of calculation UBI would be just 10.000 Euro per year. With a population of 80 million, that would be an expenditure of 800 billion Euros.\" <br><br>UBI is just a redistribution of wealth. <br><br>In the naive from, you tax everyone an additional $10K, and then you give everyone their $10K back, and everyone has the same amount of money so there's no problem. <br><br>In the slightly more real version, you raise taxes enough to get an average of $10K per person, but you do it using standard progressive taxation methods, getting most of it from the rich and successful. Just like all taxes. <br><br>The purpose of UBI is to redistribute income in an economy that makes enough for everyone but which has massive inequality and therefore leaves a lot of people with less than they need. It's not about what the government can afford, it's just about how much money to take away from who in order to give it to everyone else."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 2,
+          "package": "package2",
+          "text": "I used to like the idea of UBI, but I've shifted my opinion on that. <br><br>I would rather see people receive free healthcare. This may be a stepping stone to full UBI, which is fine. But for the immediate needs of the people, this would be nice. For many people, it would be better than UBI. For others just a minor convenience. But equally important for everyone. <br><br>I think with UBI, even 1000 a month, it would immediately change the economy in weird ways. Of course this is speculation: <br><br>Imagine a 1000 per month UBI is implemented. You are a college student. You are moving across the state for school. You've just turned 18. Last year, the local school apartments were 780 but this year, they are 1000. Why? Because the landlord knows that's exactly the UBI amount. <br><br>My grandmother, who is 91 would be in a similar situation. She pays 1200 per month for her place. Plus an additional amount for in home care and such. Well, better just raise that rate to 1500 because she's got extra money now. Technically, she's paying less out of pocket. Pocketing more money. Same with the college student. Rather than paying 780, they pay nothing out of pocket. <br><br>It initially sounds great. They ARE saving money, right?! <br><br>Landlords and service providers may adjust prices upward, knowing people have guaranteed income. <br><br>This is called \"UBI capture\", where the benefit intended for the recipient is absorbed by the market — often by landlords, healthcare providers, or even grocery stores. <br><br>The end result? UBI becomes a subsidy to providers, not a net gain for the recipient. <br><br>In some proposals, UBI would replace programs like food stamps, housing assistance, disability, or Social Security. <br><br>For people like my grandmother, a flat $1,000 UBI may not be enough to cover needs that specialized programs currently help with. <br><br>The result could be worse outcomes for the most vulnerable if UBI replaces rather than supplements existing programs. <br><br>I think that to properly implement something like this, it would require very detailed regulations and idk that the government has the capability to do that. Certainly not the existing administration."
+        }
+      ]
+    },
+    {
+      "topic": "penalty",
+      "statement_formulation": "Penalty shootouts are a good way to determine the winners of football matches.",
+      "init_belief": 1,
+      "familiarity": 0,
+      "package": "package1",
+      "message_order_index": 0,
+      "message_order_perm": [
+        1,
+        2,
+        3
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 1,
+          "package": "package1",
+          "text": "Penalty kicks exist to force an ending to a game that will statistically only become less likely to quickly end. After all, goalkeepers move the least, so they'll still be the freshest players on the pitch at the end. Eventually someone might get a lucky kick in, but as players get more and more exhausted, skill matters less and less because they won't have the strenght for proper skilled play anymore. So it's still more luck than anything. <br><br> Penalty kicks at least cut the game off while people still have the power to place proper shots and it's still the shooters skill vs the keepers skill."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 2,
+          "package": "package1",
+          "text": "I don't really have a problem with penalty kicks because in that there is no better alternative. They played 90 minutes and the teams were even. They played 30 more minutes and the teams were even. You need to declare a victor. I'm not sure what else you do. Only about 1 in 4 matches end in a tie. I kind of like in club soccer that there is room to say that on that day, the two teams were even. Like, in the NBA if there are two teams that go to overtime and the game goes down to the last shot where the player was fouled but the ref doesn't call it because they rarely call a foul on a buzzer beater, is one team really better than the other? Same with an NFL game ending in a field goal.The vast majority of the time, a penalty shootout comes down to a shooting player missing and beating themselves. I think out of all penalty shots, the success rate is like 85%. It's basically an In the World Cup, the success rate in penalty shoot outs, the success rate is only 70%. The pressure really matters. This means out of 5 shots, each team is likely to miss 1. <br><br>If everybody makes their shot, you will probably win. That takes discipline and mental toughness. It is important and impressive. Same goes with the goalie. Chances are that they will allow 4 goals so the stops are really important. In the world Cup final, Hugo Lloris was the far better goal keeper but Dibu Martinez was clearly the more confident goal keeper despite Lloris having won a world cup. One rose to the occasion and the other didn't <br><br>All this to say, that it still simulates the key part of winning the game like in Hockey. It really speeds up the game to the most important moment in any victory which are the shots on goal. I assume allowing the soccer player to run up with the ball would just make the shot impossible to stop just like it is harder for the goalie in hockey. The difference being that it would take the strategy out of the shoot out in Soccer since the success rate for shooters would be like 99%. You could say that they have to shoot from further away, but then who wants to see a shootout where everybody misses. <br><br>Nah. You are falling into the North American trap of trying to fix the most popular sport on the planet. The penalty shoot out works great. It is insanely suspenseful in Soccer."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 3,
+          "package": "package1",
+          "text": "The better team doesn't always win within the first 90 minutes of the game anyway. In that sense, a penalty shootout mirrors what makes the game of football so interesting - its unpredictability. Much of the time a team will dominate the entire match but not come out victors, falling to a defeat to a plucky underdog who managed to scrape through by creating one chance which they manage to take. That's just one example of how this system works. What penalty shoot outs do is play that unpredictability out on a grander scale. It's almost impossible to predict how they'll turn out, who will miss, who will score, which shots will be saved, and ultimately, who will win. Plus, they are an exceptionally tense examination of players' mental strengths and kicking technique, as well as goalkeeping qualities. Much of penalty taking is psychological, and it's generally the team that manages to keep their cool that comes out victor in the end. It's a brilliant, brilliant way to decide tied games and it makes for some extremely entertaining finales."
+        }
+      ]
+    },
+    {
+      "topic": "weight_loss",
+      "statement_formulation": "Using weight loss drugs like Ozempic is a good way to lose weight.",
+      "init_belief": 1,
+      "familiarity": 0,
+      "package": "package3",
+      "message_order_index": 3,
+      "message_order_perm": [
+        2,
+        3,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 2,
+          "package": "package3",
+          "text": "It's not just about HOW MUCH people eat, but about WHAT they eat. <br><br>Any drug suppressing the hunger or any treatment forcibly reducing the physical amount of food you eat is just a temporary measure that sooner or later will backfire or will be nullified by deeply-rooted bad habits. <br><br>Changing diet only works if it's a serious effort, accompanied by either a general change in lifestyle (removing the risk of falling for the old routine) and/or by therapy if it becomes evident food is a coping mechanism for something bigger. <br><br>If the only thing preventing you from stuffing your face with a large pizza, a bowl of KFC and a box of donuts is a pill or a stapled stomach, it's only a matter of time before those hindrances will be removed and you'll be back to square one."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 3,
+          "package": "package3",
+          "text": "It turns out that Ozempic has a host of secondary effects, and you are also bound to gain the lost weight back if you stop using the drug. <br><br>According to Lawsuit Legal News some of the worst potential Ozempic side effects may include: <br><br>Stomach paralysis - which can lead to severe nausea, constipation, vomiting, and sudden or strong feelings of fullness <br><br>Gallbladder issues <br><br>Gallstones <br><br>Pancreatitis <br><br>Thyroid cancer <br><br>Vision loss <br><br>Kidney disease - or other related kidney problems <br><br>Thoughts of suicide <br><br>Other conditions that can cause severe pain <br><br>Ozempic is essentially a Faustian bargain. A deal that gives you what you want, but that comes with too make downsides. There is something inherently wrong about being desperate enough to sign up for any Faustian bargain. <br>The best solution to permanently loose weight is to work on one’s mental health, to adopt a healthy diet and an active lifestyle. There is literally no downside."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package3",
+          "text": "I work out and eat right. I’ll eat perfectly for 3-4 weeks in a row and then if I have ONE dessert, I’m right back to where I started on the scale. It’s incredibly frustrating. <br><br>One thing I’ve read about these drugs is they take away the obsession over food. So, for me, I am always thinking about my next meal. When do I get to eat? What will I have? How many minutes? How do I plan my schedule around my meal? <br><br>I have people in my family who will get to working and completely forget to eat. I do not understand this. I do not understand how the thought of a meal can skip your mind. Even in my most crazy busy of days, I figure out when to eat my salad or whatever. <br><br>But, the stories I’ve heard of people on these meds… their \"food noise\" disappears. When I heard \"food noise\" described for the first time, I was like, \"omg, that’s me. That’s every moment of my life. \" <br><br>If I could just get through the day without obsessing over my meals, that’s a game changer."
+        }
+      ]
+    }
+  ],
+  "raw_fields_used": {
+    "survey.1.player.first_topic": "penalty",
+    "survey.1.player.second_topic": "weight_loss",
+    "survey.1.player.third_topic": "UBI",
+    "survey.1.player.package_UBI": "package2",
+    "survey.1.player.message_order_UBI": 4,
+    "survey.1.player.package_penalty": "package1",
+    "survey.1.player.message_order_penalty": 0,
+    "survey.1.player.package_weight_loss": "package3",
+    "survey.1.player.message_order_weight_loss": 3
+  }
+}

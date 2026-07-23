@@ -1,0 +1,32 @@
+{
+    "human": "results/merged_llm_participants_data_with_normalized_beliefs.csv",
+    "llm": {
+        "gemini-3-flash-preview": "results/gemini-3-flash-preview_all_personas_results.xlsx",
+        "claude-opus-4-6": "results/claude-opus-4-6_all_personas_results.xlsx",
+        "academic-ai-gpt-5-mini": "results/academic-ai-gpt-5-mini_all_personas_results.xlsx",
+        "Llama-3.3-70B-Instruct": "results/Llama-3.3-70B-Instruct_all_personas_results.xlsx",
+        "Qwen3_32B": "results/Qwen3_32B_all_personas_results.xlsx"
+    },
+    "ablation": {
+        "Qwen3_32B": {
+            "no-demographic": "results/ablations/Qwen3-32B_no-demographic.xlsx",
+            "no-personality": "results/ablations/Qwen3-32B_no-personality.xlsx",
+            "no-persona": "results/ablations/Qwen3-32B_no-persona.xlsx"
+        },
+        "Llama-3.3-70B-Instruct": {
+            "no-demographic": "results/ablations/Llama-3.3-70B-Instruct_no-demographic.xlsx",
+            "no-personality": "results/ablations/Llama-3.3-70B-Instruct_no-personality.xlsx",
+            "no-persona": "results/ablations/Llama-3.3-70B-Instruct_no-persona.xlsx"
+        },
+        "academic-ai-gpt-5-mini": {
+            "no-demographic": "results/ablations/academic-ai-gpt-5-mini_no-demographic.xlsx",
+            "no-personality": "results/ablations/academic-ai-gpt-5-mini_no-personality.xlsx",
+            "no-persona": "results/ablations/academic-ai-gpt-5-mini_no-persona.xlsx"
+        }
+    },
+    "initial_beliefs": {
+        "Qwen3_32B": "results/ablations/Qwen3-32B_own-initial-belief.xlsx",
+        "Llama-3.3-70B-Instruct": "results/ablations/Llama-3.3-70B-Instruct_own-initial-belief.xlsx",
+        "academic-ai-gpt-5-mini": "results/ablations/academic-ai-gpt-5-mini_own-initial-belief.xlsx"
+    }
+}

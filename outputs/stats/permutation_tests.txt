@@ -1,0 +1,7 @@
+Permutation Test Results:
+gemini-3-flash-preview: Observed Diff = -0.0205, p-value = 5.1960e-01, Reject Null = False
+claude-opus-4-6: Observed Diff = -0.0580, p-value = 5.8473e-02, Reject Null = False
+academic-ai-gpt-5-mini: Observed Diff = 0.0111, p-value = 7.5321e-01, Reject Null = False
+Llama-3.3-70B-Instruct: Observed Diff = 0.1185, p-value = 6.3400e-04, Reject Null = True
+Qwen3_32B: Observed Diff = 0.0554, p-value = 8.1402e-02, Reject Null = False
+gpt-5.2: Observed Diff = 0.0725, p-value = 1.6880e-02, Reject Null = False

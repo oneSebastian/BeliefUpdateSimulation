@@ -1,0 +1,28 @@
+# Secrets — never commit real keys
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Job output
+logs/
+nohup/
+slurm-*.out
+
+# Per-persona run log, rewritten by every run_agent invocation
+results/progress_log.jsonl
+
+# Generated HF dataset — rebuild with `python -m scripts.data.export_hf_dataset`
+data/hf_dataset/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
+.pytest_cache/

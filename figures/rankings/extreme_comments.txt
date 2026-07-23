@@ -1,0 +1,111 @@
+
+================================================================================
+SOURCE: GPT-5.2
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: UBI  |  Package: package2  |  Message ID: 2  |  Avg rank: 1.0000
+
+I used to like the idea of UBI, but I've shifted my opinion on that. <br><br>I would rather see people receive free healthcare. This may be a stepping stone to full UBI, which is fine. But for the immediate needs of the people, this would be nice. For many people, it would be better than UBI. For others just a minor convenience. But equally important for everyone. <br><br>I think with UBI, even 1000 a month, it would immediately change the economy in weird ways. Of course this is speculation: <br><br>Imagine a 1000 per month UBI is implemented. You are a college student. You are moving across the state for school. You've just turned 18. Last year, the local school apartments were 780 but this year, they are 1000. Why? Because the landlord knows that's exactly the UBI amount. <br><br>My grandmother, who is 91 would be in a similar situation. She pays 1200 per month for her place. Plus an additional amount for in home care and such. Well, better just raise that rate to 1500 because she's got extra money now. Technically, she's paying less out of pocket. Pocketing more money. Same with the college student. Rather than paying 780, they pay nothing out of pocket. <br><br>It initially sounds great. They ARE saving money, right?! <br><br>Landlords and service providers may adjust prices upward, knowing people have guaranteed income. <br><br>This is called "UBI capture", where the benefit intended for the recipient is absorbed by the market — often by landlords, healthcare providers, or even grocery stores. <br><br>The end result? UBI becomes a subsidy to providers, not a net gain for the recipient. <br><br>In some proposals, UBI would replace programs like food stamps, housing assistance, disability, or Social Security. <br><br>For people like my grandmother, a flat $1,000 UBI may not be enough to cover needs that specialized programs currently help with. <br><br>The result could be worse outcomes for the most vulnerable if UBI replaces rather than supplements existing programs. <br><br>I think that to properly implement something like this, it would require very detailed regulations and idk that the government has the capability to do that. Certainly not the existing administration.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: penalty  |  Package: package2  |  Message ID: 3  |  Avg rank: 3.0000
+
+If the score is so often a draw that necessitates either overtime or a judge/point system, it suggests that something is more fundamentally wrong. <br><br>20-40% of soccer matches (depending on which league we’re talking about) result in a tie at end of regulation. <br><br>Thats insane. <br><br>The problem soccer has isn’t what to do in a tie - it’s first and foremost how to reduce the number of regulation ties. <br><br>Fixing that requires more out there thinking. Shorten the field? Something else?
+
+
+================================================================================
+SOURCE: GPT-5-mini
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: penalty  |  Package: package1  |  Message ID: 2  |  Avg rank: 1.0000
+
+I don't really have a problem with penalty kicks because in that there is no better alternative. They played 90 minutes and the teams were even. They played 30 more minutes and the teams were even. You need to declare a victor. I'm not sure what else you do. Only about 1 in 4 matches end in a tie. I kind of like in club soccer that there is room to say that on that day, the two teams were even. Like, in the NBA if there are two teams that go to overtime and the game goes down to the last shot where the player was fouled but the ref doesn't call it because they rarely call a foul on a buzzer beater, is one team really better than the other? Same with an NFL game ending in a field goal.The vast majority of the time, a penalty shootout comes down to a shooting player missing and beating themselves. I think out of all penalty shots, the success rate is like 85%. It's basically an In the World Cup, the success rate in penalty shoot outs, the success rate is only 70%. The pressure really matters. This means out of 5 shots, each team is likely to miss 1. <br><br>If everybody makes their shot, you will probably win. That takes discipline and mental toughness. It is important and impressive. Same goes with the goalie. Chances are that they will allow 4 goals so the stops are really important. In the world Cup final, Hugo Lloris was the far better goal keeper but Dibu Martinez was clearly the more confident goal keeper despite Lloris having won a world cup. One rose to the occasion and the other didn't <br><br>All this to say, that it still simulates the key part of winning the game like in Hockey. It really speeds up the game to the most important moment in any victory which are the shots on goal. I assume allowing the soccer player to run up with the ball would just make the shot impossible to stop just like it is harder for the goalie in hockey. The difference being that it would take the strategy out of the shoot out in Soccer since the success rate for shooters would be like 99%. You could say that they have to shoot from further away, but then who wants to see a shootout where everybody misses. <br><br>Nah. You are falling into the North American trap of trying to fix the most popular sport on the planet. The penalty shoot out works great. It is insanely suspenseful in Soccer.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: UBI  |  Package: package3  |  Message ID: 2  |  Avg rank: 2.9237
+
+I think you're missing a fundamental point. The UBI can't be funded based only on taxes on UBI, you're right. But it can be funded based on taxes on people who are earning money above and beyond the UBI, just like we currently fund the government by taxing money above and beyond our current UBI of $0. The point isn't that the UBI will be the only form of wages or wealth, there will also be people working jobs like normal. Maybe it will be a select few people earning insane amounts of money, maybe it will be lots of people earning salaries just like normal. Either way, the point is we need to tax those people. UBI is just a transfer payment from people who do work to the total society, nothing more. And it's clearly possible for the government to tax rich people and give it to society in other ways, since that's what it does right now. So why would UBI be any different just because it's direct?
+
+
+================================================================================
+SOURCE: Gemini-3-flash
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: weight_loss  |  Package: package3  |  Message ID: 3  |  Avg rank: 1.1016
+
+It turns out that Ozempic has a host of secondary effects, and you are also bound to gain the lost weight back if you stop using the drug. <br><br>According to Lawsuit Legal News some of the worst potential Ozempic side effects may include: <br><br>Stomach paralysis - which can lead to severe nausea, constipation, vomiting, and sudden or strong feelings of fullness <br><br>Gallbladder issues <br><br>Gallstones <br><br>Pancreatitis <br><br>Thyroid cancer <br><br>Vision loss <br><br>Kidney disease - or other related kidney problems <br><br>Thoughts of suicide <br><br>Other conditions that can cause severe pain <br><br>Ozempic is essentially a Faustian bargain. A deal that gives you what you want, but that comes with too make downsides. There is something inherently wrong about being desperate enough to sign up for any Faustian bargain. <br>The best solution to permanently loose weight is to work on one’s mental health, to adopt a healthy diet and an active lifestyle. There is literally no downside.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: penalty  |  Package: package2  |  Message ID: 3  |  Avg rank: 2.9847
+
+If the score is so often a draw that necessitates either overtime or a judge/point system, it suggests that something is more fundamentally wrong. <br><br>20-40% of soccer matches (depending on which league we’re talking about) result in a tie at end of regulation. <br><br>Thats insane. <br><br>The problem soccer has isn’t what to do in a tie - it’s first and foremost how to reduce the number of regulation ties. <br><br>Fixing that requires more out there thinking. Shorten the field? Something else?
+
+
+================================================================================
+SOURCE: Claude Opus 4.6
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: weight_loss  |  Package: package3  |  Message ID: 3  |  Avg rank: 1.3047
+
+It turns out that Ozempic has a host of secondary effects, and you are also bound to gain the lost weight back if you stop using the drug. <br><br>According to Lawsuit Legal News some of the worst potential Ozempic side effects may include: <br><br>Stomach paralysis - which can lead to severe nausea, constipation, vomiting, and sudden or strong feelings of fullness <br><br>Gallbladder issues <br><br>Gallstones <br><br>Pancreatitis <br><br>Thyroid cancer <br><br>Vision loss <br><br>Kidney disease - or other related kidney problems <br><br>Thoughts of suicide <br><br>Other conditions that can cause severe pain <br><br>Ozempic is essentially a Faustian bargain. A deal that gives you what you want, but that comes with too make downsides. There is something inherently wrong about being desperate enough to sign up for any Faustian bargain. <br>The best solution to permanently loose weight is to work on one’s mental health, to adopt a healthy diet and an active lifestyle. There is literally no downside.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: penalty  |  Package: package2  |  Message ID: 3  |  Avg rank: 3.0000
+
+If the score is so often a draw that necessitates either overtime or a judge/point system, it suggests that something is more fundamentally wrong. <br><br>20-40% of soccer matches (depending on which league we’re talking about) result in a tie at end of regulation. <br><br>Thats insane. <br><br>The problem soccer has isn’t what to do in a tie - it’s first and foremost how to reduce the number of regulation ties. <br><br>Fixing that requires more out there thinking. Shorten the field? Something else?
+
+
+================================================================================
+SOURCE: Qwen3-32B
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: UBI  |  Package: package2  |  Message ID: 2  |  Avg rank: 1.0992
+
+I used to like the idea of UBI, but I've shifted my opinion on that. <br><br>I would rather see people receive free healthcare. This may be a stepping stone to full UBI, which is fine. But for the immediate needs of the people, this would be nice. For many people, it would be better than UBI. For others just a minor convenience. But equally important for everyone. <br><br>I think with UBI, even 1000 a month, it would immediately change the economy in weird ways. Of course this is speculation: <br><br>Imagine a 1000 per month UBI is implemented. You are a college student. You are moving across the state for school. You've just turned 18. Last year, the local school apartments were 780 but this year, they are 1000. Why? Because the landlord knows that's exactly the UBI amount. <br><br>My grandmother, who is 91 would be in a similar situation. She pays 1200 per month for her place. Plus an additional amount for in home care and such. Well, better just raise that rate to 1500 because she's got extra money now. Technically, she's paying less out of pocket. Pocketing more money. Same with the college student. Rather than paying 780, they pay nothing out of pocket. <br><br>It initially sounds great. They ARE saving money, right?! <br><br>Landlords and service providers may adjust prices upward, knowing people have guaranteed income. <br><br>This is called "UBI capture", where the benefit intended for the recipient is absorbed by the market — often by landlords, healthcare providers, or even grocery stores. <br><br>The end result? UBI becomes a subsidy to providers, not a net gain for the recipient. <br><br>In some proposals, UBI would replace programs like food stamps, housing assistance, disability, or Social Security. <br><br>For people like my grandmother, a flat $1,000 UBI may not be enough to cover needs that specialized programs currently help with. <br><br>The result could be worse outcomes for the most vulnerable if UBI replaces rather than supplements existing programs. <br><br>I think that to properly implement something like this, it would require very detailed regulations and idk that the government has the capability to do that. Certainly not the existing administration.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: penalty  |  Package: package1  |  Message ID: 1  |  Avg rank: 2.9699
+
+Penalty kicks exist to force an ending to a game that will statistically only become less likely to quickly end. After all, goalkeepers move the least, so they'll still be the freshest players on the pitch at the end. Eventually someone might get a lucky kick in, but as players get more and more exhausted, skill matters less and less because they won't have the strenght for proper skilled play anymore. So it's still more luck than anything. <br><br> Penalty kicks at least cut the game off while people still have the power to place proper shots and it's still the shooters skill vs the keepers skill.
+
+
+================================================================================
+SOURCE: Llama-3.3-70B-Instruct
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: UBI  |  Package: package2  |  Message ID: 2  |  Avg rank: 1.0000
+
+I used to like the idea of UBI, but I've shifted my opinion on that. <br><br>I would rather see people receive free healthcare. This may be a stepping stone to full UBI, which is fine. But for the immediate needs of the people, this would be nice. For many people, it would be better than UBI. For others just a minor convenience. But equally important for everyone. <br><br>I think with UBI, even 1000 a month, it would immediately change the economy in weird ways. Of course this is speculation: <br><br>Imagine a 1000 per month UBI is implemented. You are a college student. You are moving across the state for school. You've just turned 18. Last year, the local school apartments were 780 but this year, they are 1000. Why? Because the landlord knows that's exactly the UBI amount. <br><br>My grandmother, who is 91 would be in a similar situation. She pays 1200 per month for her place. Plus an additional amount for in home care and such. Well, better just raise that rate to 1500 because she's got extra money now. Technically, she's paying less out of pocket. Pocketing more money. Same with the college student. Rather than paying 780, they pay nothing out of pocket. <br><br>It initially sounds great. They ARE saving money, right?! <br><br>Landlords and service providers may adjust prices upward, knowing people have guaranteed income. <br><br>This is called "UBI capture", where the benefit intended for the recipient is absorbed by the market — often by landlords, healthcare providers, or even grocery stores. <br><br>The end result? UBI becomes a subsidy to providers, not a net gain for the recipient. <br><br>In some proposals, UBI would replace programs like food stamps, housing assistance, disability, or Social Security. <br><br>For people like my grandmother, a flat $1,000 UBI may not be enough to cover needs that specialized programs currently help with. <br><br>The result could be worse outcomes for the most vulnerable if UBI replaces rather than supplements existing programs. <br><br>I think that to properly implement something like this, it would require very detailed regulations and idk that the government has the capability to do that. Certainly not the existing administration.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: UBI  |  Package: package2  |  Message ID: 1  |  Avg rank: 3.0000
+
+"Let's say a country like Germany would like to implement UBI. Currently the minimum wage is 18.000 Euro per year. So let's say that for the ease of calculation UBI would be just 10.000 Euro per year. With a population of 80 million, that would be an expenditure of 800 billion Euros." <br><br>UBI is just a redistribution of wealth. <br><br>In the naive from, you tax everyone an additional $10K, and then you give everyone their $10K back, and everyone has the same amount of money so there's no problem. <br><br>In the slightly more real version, you raise taxes enough to get an average of $10K per person, but you do it using standard progressive taxation methods, getting most of it from the rich and successful. Just like all taxes. <br><br>The purpose of UBI is to redistribute income in an economy that makes enough for everyone but which has massive inequality and therefore leaves a lot of people with less than they need. It's not about what the government can afford, it's just about how much money to take away from who in order to give it to everyone else.
+
+
+================================================================================
+SOURCE: Human
+================================================================================
+
+MOST CONVINCING (lowest avg rank)
+Topic: penalty  |  Package: package1  |  Message ID: 1  |  Avg rank: 1.8195
+
+Penalty kicks exist to force an ending to a game that will statistically only become less likely to quickly end. After all, goalkeepers move the least, so they'll still be the freshest players on the pitch at the end. Eventually someone might get a lucky kick in, but as players get more and more exhausted, skill matters less and less because they won't have the strenght for proper skilled play anymore. So it's still more luck than anything. <br><br> Penalty kicks at least cut the game off while people still have the power to place proper shots and it's still the shooters skill vs the keepers skill.
+
+
+LEAST CONVINCING (highest avg rank)
+Topic: UBI  |  Package: package3  |  Message ID: 3  |  Avg rank: 2.2061
+
+One of the central problems with Universal Basic Income (UBI) is that while it provides more money to individuals, it does not increase the supply of goods or services. This imbalance leads to inflation, particularly in sectors where supply is limited and prices are driven by demand. <br><br>To illustrate, consider the pricing model of airline seating. On any given flight, there are only a few first class seats and many more economy seats. First class tickets cost significantly more often $1,200–$2,000 because they are a luxury limited in supply. Economy tickets might cost $200–$400 and are accessible to most travelers. <br><br>Now imagine a policy that grants every person earning below a certain point an extra $1000 per flight . While this sounds beneficial on the surface, it introduces a massive influx of purchasing power without changing the supply of goods or services. With that extra income, many more people would now be able to afford first class seats at least initially. <br><br>The result? A spike in demand without a change in supply. Airlines, seeing increased demand for first-class seats, will raise their prices perhaps to $3,000 or more until only the most willing and able are still purchasing. In other words, prices adjust to absorb the new money in the system. <br><br>Worse, the same effect would ripple through the rest of the economy. Businesses in housing, healthcare, transportation, and groceries would begin raising prices, knowing that consumers have more money. Over time, the purchasing power of the UBI would erode, and the cost of living would rise to match the new baseline. People may be nominally richer, but functionally, they’re back where they started or worse, because inflation can outpace the value of the UBI.

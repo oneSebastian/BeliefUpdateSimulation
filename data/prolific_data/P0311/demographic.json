@@ -1,0 +1,32 @@
+{
+  "participant_id": "P0311",
+  "age_raw": 57,
+  "age": 57,
+  "gender_raw": 1,
+  "gender": "male",
+  "ethnicity_raw": 0,
+  "ethnicity": "White",
+  "country_of_residency_code": "GB",
+  "country_of_residency": "United Kingdom",
+  "country_of_origin_code": null,
+  "country_of_origin": null,
+  "student_status_raw": 3,
+  "student_status": "Not currently a student",
+  "employment_status_raw": 2,
+  "employment_status": "Self-employed",
+  "occupation_field": "IT",
+  "highest_qualification_raw": 6,
+  "highest_qualification": "PhD or higher",
+  "personality": {
+    "survey.1.player.big1": 2,
+    "survey.1.player.big2": 1,
+    "survey.1.player.big3": 1,
+    "survey.1.player.big4": 1,
+    "survey.1.player.big5": -1,
+    "survey.1.player.big6": -1,
+    "survey.1.player.big7": -2,
+    "survey.1.player.big8": 1,
+    "survey.1.player.big9": -1,
+    "survey.1.player.big10": 2
+  }
+}

@@ -1,0 +1,79 @@
+================================================================================
+FREQUENCY COUNTS FOR ALL CATEGORICAL VARIABLES WITH LABELS
+================================================================================
+
+Total Observations: 1173
+Unique Participants: 391
+
+
+TOPIC:
+--------------------------------------------------------------------------------
+   Category  Frequency  Percentage
+        UBI        391       33.33
+    Penalty        391       33.33
+Weight Loss        391       33.33
+
+STANCE DIRECTION:
+--------------------------------------------------------------------------------
+Category  Frequency  Percentage
+     Pro        606       51.66
+     Con        567       48.34
+
+GENDER:
+--------------------------------------------------------------------------------
+Category  Frequency  Percentage
+  female        606       51.66
+    male        564       48.08
+ diverse          3        0.26
+
+ETHNICITY:
+--------------------------------------------------------------------------------
+                      Category  Frequency  Percentage
+                         White        996       84.91
+                         Asian         84        7.16
+       Black / African descent         42        3.58
+        Multiple ethnic groups         24        2.05
+            Other ethnic group         15        1.28
+Middle Eastern / North African          6        0.51
+            Hispanic or Latino          6        0.51
+
+COUNTRY OF BIRTH:
+--------------------------------------------------------------------------------
+Category  Frequency  Percentage
+      GB       1023       87.21
+   Other         75        6.39
+      DE         15        1.28
+      PL         15        1.28
+      NG          9        0.77
+      CN          6        0.51
+      FR          6        0.51
+      LK          6        0.51
+      IE          6        0.51
+      HK          6        0.51
+      RU          6        0.51
+
+STUDENT STATUS:
+--------------------------------------------------------------------------------
+         Category  Frequency  Percentage
+    Not a student       1053       89.77
+Full-time student         78        6.65
+Part-time student         42        3.58
+
+EMPLOYMENT STATUS:
+--------------------------------------------------------------------------------
+                                                        Category  Frequency  Percentage
+                                              Employed full-time        498       42.46
+Not in the labor force (e.g. retired, caregiver, unable to work)        207       17.65
+                                              Employed part-time        195       16.62
+                                                   Self-employed        180       15.35
+                                                      Unemployed         93        7.93
+
+HIGHEST QUALIFICATION:
+--------------------------------------------------------------------------------
+                                          Category  Frequency  Percentage
+                                 Bachelor's degree        528       45.01
+Further education (A Levels, BTEC, apprenticeship)        288       24.55
+                                   Master's degree        201       17.14
+                Secondary school (GCSEs/ O Levels)        117        9.97
+                                     PhD or higher         30        2.56
+                               No formal education          9        0.77

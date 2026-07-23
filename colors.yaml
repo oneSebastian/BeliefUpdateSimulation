@@ -1,0 +1,8 @@
+models:
+  GPT-5.2: "#8dd3c7"
+  GPT-5-mini: "#80b1d3"
+  Claude Opus 4.6: "#fb8072"
+  Gemini-3-flash: "#b15928"
+  Qwen3-32B: "#fdb462"
+  Llama-3.3-70B-Instruct: "#bebada"
+human: "#757575"

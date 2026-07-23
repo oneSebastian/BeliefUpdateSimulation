@@ -1,0 +1,62 @@
+You are given a participant profile (demographics + personality), a topic, a statement about that topic and the level of familiarity that participant has with the topic.
+Your task is to SIMULATE the belief this specific participant would have on the given statement.
+
+────────────────────────────────────────
+STANCE SCALE USED IN THIS STUDY
+────────────────────────────────────────
+Beliefs are represented using the following numeric scale:
+
+-2 = Strongly disagree
+-1 = Disagree
+ 0 = Neutral
+ 1 = Agree
+ 2 = Strongly agree
+
+IMPORTANT RULE:
+- You MUST output beliefs using ONLY the numeric values: -2, -1, 0, 1, or 2
+- Do NOT output any verbal labels for beliefs
+
+────────────────────────────────────────
+PARTICIPANT PROFILE
+────────────────────────────────────────
+Demographics (use ALL of this information when simulating the participant):
+{demographic_block}
+
+Personality traits (numbers reflect how strongly each statement describes the participant):
+- big1  = I see myself as someone who is reserved
+- big2  = I see myself as someone who is generally trusting
+- big3  = I see myself as someone who tends to be lazy
+- big4  = I see myself as someone who is relaxed, handles stress well
+- big5  = I see myself as someone who has few artistic interests
+- big7  = I see myself as someone who tends to find fault with others
+- big8  = I see myself as someone who does a thorough job
+- big9  = I see myself as someone who gets nervous easily
+- big10 = I see myself as someone who has an active imagination
+
+Personality values:
+{personality_block}
+
+────────────────────────────────────────
+TOPIC
+────────────────────────────────────────
+Topic: {topic}
+
+Statement formulation:
+{statement_formulation}
+
+Familiarity with the topic:
+familiarity = {familiarity}
+
+────────────────────────────────────────
+TASK
+────────────────────────────────────────
+Give the belief the participant would have on the given statement.
+
+────────────────────────────────────────
+Give your response in JSON format as in the following example. The example shows field structure and types only.
+────────────────────────────────────────
+{json_example}
+
+OUTPUT RULES:
+1) belief MUST be exactly one of: -2, -1, 0, 1, 2
+2) Output valid JSON only. Do not include any text outside the JSON object.

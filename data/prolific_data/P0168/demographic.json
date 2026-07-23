@@ -1,0 +1,32 @@
+{
+  "participant_id": "P0168",
+  "age_raw": 42,
+  "age": 42,
+  "gender_raw": 0,
+  "gender": "female",
+  "ethnicity_raw": 0,
+  "ethnicity": "White",
+  "country_of_residency_code": "GB",
+  "country_of_residency": "United Kingdom",
+  "country_of_origin_code": null,
+  "country_of_origin": null,
+  "student_status_raw": 3,
+  "student_status": "Not currently a student",
+  "employment_status_raw": 4,
+  "employment_status": "Not in the labor force (e.g. retired, caregiver, unable to work)",
+  "occupation_field": "Art",
+  "highest_qualification_raw": 2,
+  "highest_qualification": "Secondary school (GCSEs/ O Levels)",
+  "personality": {
+    "survey.1.player.big1": -1,
+    "survey.1.player.big2": 1,
+    "survey.1.player.big3": -2,
+    "survey.1.player.big4": -1,
+    "survey.1.player.big5": 2,
+    "survey.1.player.big6": 0,
+    "survey.1.player.big7": -1,
+    "survey.1.player.big8": 2,
+    "survey.1.player.big9": 0,
+    "survey.1.player.big10": 2
+  }
+}

@@ -1,0 +1,15 @@
+sample_1,sample_2,observed_diff,p_value,reject,accuracy
+qwen,human,,,,0.41602728047740833
+qwen_no-persona,human,,,,0.38192668371696503
+qwen_no-persona,qwen,,,,
+qwen_no-personality,human,,,,0.4057971014492754
+qwen_no-personality,qwen,,,,
+qwen_no-demographic,human,,,,0.4219948849104859
+qwen_no-demographic,qwen,,,,
+llama,human,,,,0.2966751918158568
+llama_no-persona,human,,,,0.2830349531116795
+llama_no-persona,llama,,,,
+llama_no-personality,human,,,,0.3145780051150895
+llama_no-personality,llama,,,,
+llama_no-demographic,human,,,,0.2958226768968457
+llama_no-demographic,llama,,,,

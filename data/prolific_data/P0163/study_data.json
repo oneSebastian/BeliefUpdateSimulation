@@ -1,0 +1,120 @@
+{
+  "participant_id": "P0163",
+  "topic_order": [
+    "weight_loss",
+    "UBI",
+    "penalty"
+  ],
+  "topics": [
+    {
+      "topic": "UBI",
+      "statement_formulation": "There should be no Universal Basic Income.",
+      "init_belief": 0,
+      "familiarity": -1,
+      "package": "package2",
+      "message_order_index": 4,
+      "message_order_perm": [
+        3,
+        1,
+        2
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package2",
+          "text": "I want to be clear up front about this: I oppose UBI and don't think it's in the countries best interest. That being said, the most viable plan for implementation DOES offer less than a living wage, the object being to raise people not earning enough to a more comfortable financial level. It also eliminates a lot of other programs (and their support structure) to fund it. Programs like unemployment, social security, welfare, etc. that give out money to those who meet criteria for it being replaced by a single check that doesn't stop when the situation changes. It also comes with a tax adjustment so that most people don't actually come out very far ahead in the end, upper-middle to upper class would basically pay everything back, plus some, middle to lower middle MIGHT get a little ahead, IF they don't start spending the \"free money\" too extravagantly,. Lower class would do some better, but the real benefit here would be in streamlined payments and fewer hurdles to jump through to get money they need to get by, and in that it provides incentive to work because working would only add to their income, allowing upper mobility. <br><br>It would also allow for alternative choices to working if you really don't want to. A group of artists (just as an example) could pool resourses on a single multi bedroom unit and be able to scrape by while focusing on art rather than a more traditional career. <br><br>Likewise it could be said to remove a lot of resentment that people tend to hold against each other, since EVERYONE is getting a check and nobody is \"being a freeloader at my expense\" <br><br>Other government programs could benefit as well. The census, springs to mind. People would be extremely likely to respond if census data were used to determine needs for UBI. <br><br>I can see a lot of the appeal, beyond just \"free money\" which is how most people interpret it. But even IF such a program could be made to work, I think it puts to much control of the individual in government hands. Not that it CAN'T work, but that we SHOULDN'T have to rely on it."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 1,
+          "package": "package2",
+          "text": "\"Let's say a country like Germany would like to implement UBI. Currently the minimum wage is 18.000 Euro per year. So let's say that for the ease of calculation UBI would be just 10.000 Euro per year. With a population of 80 million, that would be an expenditure of 800 billion Euros.\" <br><br>UBI is just a redistribution of wealth. <br><br>In the naive from, you tax everyone an additional $10K, and then you give everyone their $10K back, and everyone has the same amount of money so there's no problem. <br><br>In the slightly more real version, you raise taxes enough to get an average of $10K per person, but you do it using standard progressive taxation methods, getting most of it from the rich and successful. Just like all taxes. <br><br>The purpose of UBI is to redistribute income in an economy that makes enough for everyone but which has massive inequality and therefore leaves a lot of people with less than they need. It's not about what the government can afford, it's just about how much money to take away from who in order to give it to everyone else."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 2,
+          "package": "package2",
+          "text": "I used to like the idea of UBI, but I've shifted my opinion on that. <br><br>I would rather see people receive free healthcare. This may be a stepping stone to full UBI, which is fine. But for the immediate needs of the people, this would be nice. For many people, it would be better than UBI. For others just a minor convenience. But equally important for everyone. <br><br>I think with UBI, even 1000 a month, it would immediately change the economy in weird ways. Of course this is speculation: <br><br>Imagine a 1000 per month UBI is implemented. You are a college student. You are moving across the state for school. You've just turned 18. Last year, the local school apartments were 780 but this year, they are 1000. Why? Because the landlord knows that's exactly the UBI amount. <br><br>My grandmother, who is 91 would be in a similar situation. She pays 1200 per month for her place. Plus an additional amount for in home care and such. Well, better just raise that rate to 1500 because she's got extra money now. Technically, she's paying less out of pocket. Pocketing more money. Same with the college student. Rather than paying 780, they pay nothing out of pocket. <br><br>It initially sounds great. They ARE saving money, right?! <br><br>Landlords and service providers may adjust prices upward, knowing people have guaranteed income. <br><br>This is called \"UBI capture\", where the benefit intended for the recipient is absorbed by the market — often by landlords, healthcare providers, or even grocery stores. <br><br>The end result? UBI becomes a subsidy to providers, not a net gain for the recipient. <br><br>In some proposals, UBI would replace programs like food stamps, housing assistance, disability, or Social Security. <br><br>For people like my grandmother, a flat $1,000 UBI may not be enough to cover needs that specialized programs currently help with. <br><br>The result could be worse outcomes for the most vulnerable if UBI replaces rather than supplements existing programs. <br><br>I think that to properly implement something like this, it would require very detailed regulations and idk that the government has the capability to do that. Certainly not the existing administration."
+        }
+      ]
+    },
+    {
+      "topic": "penalty",
+      "statement_formulation": "Penalty shootouts are a good way to determine the winners of football matches.",
+      "init_belief": 2,
+      "familiarity": 1,
+      "package": "package2",
+      "message_order_index": 5,
+      "message_order_perm": [
+        3,
+        2,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 3,
+          "package": "package2",
+          "text": "If the score is so often a draw that necessitates either overtime or a judge/point system, it suggests that something is more fundamentally wrong. <br><br>20-40% of soccer matches (depending on which league we’re talking about) result in a tie at end of regulation. <br><br>Thats insane. <br><br>The problem soccer has isn’t what to do in a tie - it’s first and foremost how to reduce the number of regulation ties. <br><br>Fixing that requires more out there thinking. Shorten the field? Something else?"
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 2,
+          "package": "package2",
+          "text": "Luck has nothing to do with it. It's a combination of which team has better penalty kickers, and which has better goalkeeping. And therein lies the true problem: it really only tests a small subset of soccer skills. However, in lieu of a better proposed method of sudden death, we just have to stick with it."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package2",
+          "text": "\"Because of that, it seems to make it far more likely that the worse team ekes out a win. You can just play extremely conservative football, understanding that your best bet is in penalty kicks.\" There's no reason to believe this is true and the logic doesn't track. <br>Playing defensively doesn't inherently make a team worse than a team that focuses on offense.<br>Teams using defensive tactics can't rely on penalties to win. Most games don't have penalty tie breakers. <br>Penalties are used in cases of a tie, where teams are evenly matched. In terms of which team is better or worse, at that point there's no objective measurement of that. The score itself is how we measure success, and to reiterate, it's a tie. Soccer games run for 90 minutes of playtime, 120 minutes if it's a tie. <br>Theoretically, without a means to break the tie, a game could last forever. Penalties are the quickest way to break that tie. Penalties however have a large element of luck involved. <br>Penalties aren't used outside of the final brackets of tournaments because of this element. Regulation and group level matches use a points system to advance teams to the final brackets.<br>You would need to develop a method to break ties in the final brackets that isn't time exhaustive. Corners could be an option, but I doubt that we could keep the time they would take within a predictable pattern."
+        }
+      ]
+    },
+    {
+      "topic": "weight_loss",
+      "statement_formulation": "Using weight loss drugs like Ozempic is a bad way to lose weight.",
+      "init_belief": 0,
+      "familiarity": 2,
+      "package": "package1",
+      "message_order_index": 3,
+      "message_order_perm": [
+        2,
+        3,
+        1
+      ],
+      "shown_messages": [
+        {
+          "shown_comment_id": 1,
+          "source_message_id": 2,
+          "package": "package1",
+          "text": "I've lost about 80 pounds from the side effects of a medication I started taking last year. I have never been able to diet and exercise enough to make the slightest impact, and I feel like this medicine has (inadvertently, as low appetite is merely a side effect) given me my life back. A life that I've never had, as I was obese for my whole childhood. <br><br> Even if I am taken off of this medication one day, I'm glad that my life contains at least this short time period of being \"normal sized.\" I wish I could give that gift to all of the other perma-fat folks out there. They don't realize how much they are missing."
+        },
+        {
+          "shown_comment_id": 2,
+          "source_message_id": 3,
+          "package": "package1",
+          "text": "Ozempic is bad for you. If you don’t have diabetes and your doctor prescribes it you, he is a just a drug dealer. This shouldn’t be taken by anyone. It will cause bone density loss and sarcopenia. This will 100 percent shorten your life span by YEARS. Shame on ANYONE that takes this instead of doing whatever they can to be healthy the right way. No one even talks about how bad this is for your body, most of the negative side effects have been scrubbed from the internet because there is SO MUCH MONEY behind this. Everyone’s body is different, all kinds of shapes and sizes. Stop worrying about your weight and just focus on making healthy decisions DAILY. Sick of these crying obese ass Americans talking about how hard it is to not be fat and lazy. Go take a trip around the world, lots of hungry people out there dumbfounded at our obesity epidemic here in America. <br><br>Also love how the body positivity movement shut the fuck up when ozempic started getting bit. Lizzo and all of them. This society is disgusting. Just another side effect of the USA being in the shitter. We have the MOST ignorant citizens on the planet lol."
+        },
+        {
+          "shown_comment_id": 3,
+          "source_message_id": 1,
+          "package": "package1",
+          "text": "Most of society hates or dislikes fat people. They think taking what is functionally a wonder drug at improving health outcomes is \"cheating.\" They think people should be forced to work for it, dramatically change the way they live ect to not suffer potentially extreme health consequences. <br><br>I strongly disagree with such people, but this seems to be their mentality. As of now, this class of drugs seems to be an unambiguously positive development for society."
+        }
+      ]
+    }
+  ],
+  "raw_fields_used": {
+    "survey.1.player.first_topic": "weight_loss",
+    "survey.1.player.second_topic": "UBI",
+    "survey.1.player.third_topic": "penalty",
+    "survey.1.player.package_UBI": "package2",
+    "survey.1.player.message_order_UBI": 4,
+    "survey.1.player.package_penalty": "package2",
+    "survey.1.player.message_order_penalty": 5,
+    "survey.1.player.package_weight_loss": "package1",
+    "survey.1.player.message_order_weight_loss": 3
+  }
+}

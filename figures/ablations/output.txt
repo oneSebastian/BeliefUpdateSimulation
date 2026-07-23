@@ -1,0 +1,35 @@
+DEBUG: LOAD DATA
+DEBUG NOW LOAD FROM: ablations/data/Qwen3_32B_all_personas_results.xlsx
+{'sample_1': 'qwen', 'sample_2': 'human', 'observed_diff': np.float64(-0.05541346973572037), 'p_value': np.float64(0.0815), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Qwen3-32B_no-persona.xlsx
+{'sample_1': 'qwen_no-persona', 'sample_2': 'human', 'observed_diff': np.float64(-0.0733162830349531), 'p_value': np.float64(0.02311), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Qwen3-32B_no-persona.xlsx
+DEBUG NOW LOAD FROM: ablations/data/Qwen3_32B_all_personas_results.xlsx
+{'sample_1': 'qwen_no-persona', 'sample_2': 'qwen', 'observed_diff': np.float64(-0.017902813299232736), 'p_value': np.float64(0.455581), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Qwen3-32B_no-personality.xlsx
+{'sample_1': 'qwen_no-personality', 'sample_2': 'human', 'observed_diff': np.float64(-0.059676044330775786), 'p_value': np.float64(0.061078), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Qwen3-32B_no-personality.xlsx
+DEBUG NOW LOAD FROM: ablations/data/Qwen3_32B_all_personas_results.xlsx
+{'sample_1': 'qwen_no-personality', 'sample_2': 'qwen', 'observed_diff': np.float64(-0.004262574595055414), 'p_value': np.float64(0.87605), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Qwen3-32B_no-demographic.xlsx
+{'sample_1': 'qwen_no-demographic', 'sample_2': 'human', 'observed_diff': np.float64(-0.08269394714407502), 'p_value': np.float64(0.00809), 'reject': np.True_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Qwen3-32B_no-demographic.xlsx
+DEBUG NOW LOAD FROM: ablations/data/Qwen3_32B_all_personas_results.xlsx
+{'sample_1': 'qwen_no-demographic', 'sample_2': 'qwen', 'observed_diff': np.float64(-0.027280477408354646), 'p_value': np.float64(0.224015), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/Llama-3.3-70B-Instruct_all_personas_results.xlsx
+{'sample_1': 'llama', 'sample_2': 'human', 'observed_diff': np.float64(-0.1184995737425405), 'p_value': np.float64(0.000582), 'reject': np.True_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Llama-3.3-70B-Instruct_no-persona.xlsx
+{'sample_1': 'llama_no-persona', 'sample_2': 'human', 'observed_diff': np.float64(-0.1287297527706735), 'p_value': np.float64(0.000286), 'reject': np.True_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Llama-3.3-70B-Instruct_no-persona.xlsx
+DEBUG NOW LOAD FROM: ablations/data/Llama-3.3-70B-Instruct_all_personas_results.xlsx
+{'sample_1': 'llama_no-persona', 'sample_2': 'llama', 'observed_diff': np.float64(-0.010230179028132993), 'p_value': np.float64(0.514677), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Llama-3.3-70B-Instruct_no-personality.xlsx
+{'sample_1': 'llama_no-personality', 'sample_2': 'human', 'observed_diff': np.float64(-0.11679454390451834), 'p_value': np.float64(0.000583), 'reject': np.True_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Llama-3.3-70B-Instruct_no-personality.xlsx
+DEBUG NOW LOAD FROM: ablations/data/Llama-3.3-70B-Instruct_all_personas_results.xlsx
+{'sample_1': 'llama_no-personality', 'sample_2': 'llama', 'observed_diff': np.float64(0.0017050298380221654), 'p_value': np.float64(0.947162), 'reject': np.False_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Llama-3.3-70B-Instruct_no-demographic.xlsx
+{'sample_1': 'llama_no-demographic', 'sample_2': 'human', 'observed_diff': np.float64(-0.11167945439045183), 'p_value': np.float64(0.001314), 'reject': np.True_}
+DEBUG NOW LOAD FROM: ablations/data/ablations/Llama-3.3-70B-Instruct_no-demographic.xlsx
+DEBUG NOW LOAD FROM: ablations/data/Llama-3.3-70B-Instruct_all_personas_results.xlsx
+{'sample_1': 'llama_no-demographic', 'sample_2': 'llama', 'observed_diff': np.float64(0.0068201193520886615), 'p_value': np.float64(0.604099), 'reject': np.False_}

@@ -1,0 +1,12 @@
+﻿[
+  {
+    "model": "gpt-5.2",
+    "max_tokens": 1024,
+    "temperature": 0.7,
+    "paths": {
+      "personas_root": "data/prolific_data",
+      "prompt_template_file": "prompt_templates/templates1.txt",
+      "output_excel": "results/all_personas_results.xlsx"
+    }
+  }
+]

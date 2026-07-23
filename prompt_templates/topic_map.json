@@ -1,0 +1,26 @@
+{
+    "Everyone should receive Universal Basic Income.": [
+        "Everyone should receive Universal Basic Income.",
+        "There should be no Universal Basic Income."
+    ],
+    "There should be no Universal Basic Income.": [
+        "Everyone should receive Universal Basic Income.",
+        "There should be no Universal Basic Income."
+    ],
+    "Penalty shootouts are a good way to determine the winners of football matches.": [
+        "Penalty shootouts are a good way to determine the winners of football matches.",
+        "Penalty shootouts are a bad way to determine the winners of football matches."
+    ],
+    "Penalty shootouts are a bad way to determine the winners of football matches.": [
+        "Penalty shootouts are a good way to determine the winners of football matches.",
+        "Penalty shootouts are a bad way to determine the winners of football matches."
+    ],
+    "Using weight loss drugs like Ozempic is a good way to lose weight.": [
+        "Using weight loss drugs like Ozempic is a good way to lose weight.",
+        "Using weight loss drugs like Ozempic is a bad way to lose weight."
+    ],
+    "Using weight loss drugs like Ozempic is a bad way to lose weight.": [
+        "Using weight loss drugs like Ozempic is a good way to lose weight.",
+        "Using weight loss drugs like Ozempic is a bad way to lose weight."
+    ]
+}
