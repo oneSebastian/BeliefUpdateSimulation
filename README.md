@@ -205,9 +205,6 @@ any time without penalty. Participants who did not consent were routed out of
 the study before any responses were recorded, and returned submissions are
 excluded from the released data (391 of 400 recruited participants remain).
 
-The consent form and the survey instrument are in the companion repository for
-the oTree experiment. Questions about the research: `behaviorexperiments@it-u.at`.
-
 ## License
 
 Code is MIT — see `LICENSE`.
