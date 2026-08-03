@@ -1,14 +1,32 @@
 # Human–LLM Agents Simulation
 
-Code and data for simulating human survey participants with LLM agents and comparing
-the simulated responses against the real human responses they were derived from.
+Code and data for the paper [**LLMs struggle to simulate human belief updates in controlled environments**](https://arxiv.org/abs/2607.28347) (arXiv:2607.28347).
 
-391 Prolific participants each gave an initial stance on three debate topics
-(universal basic income, penalty shootouts, weight-loss drugs), read three
-argumentative comments, ranked them, and gave a post-exposure stance. Each
-participant is turned into a persona — demographics, Big-5 personality, initial
-stance — and replayed through an LLM under the same conditions, so that human and
-simulated belief change can be compared directly.
+This repository contains everything needed to simulate human survey participants with
+LLM agents and to compare the simulated responses against the real human responses they
+were derived from. 391 Prolific participants each gave an initial stance on three debate
+topics (universal basic income, penalty shootouts, weight-loss drugs), read three
+argumentative comments, ranked them, and gave a post-exposure stance. Each participant is
+turned into a persona — demographics, Big-5 personality, initial stance — and replayed
+through an LLM under the same conditions, so that human and simulated belief change can be
+compared directly.
+
+## Citation
+
+If you use this code or data, please cite:
+
+```bibtex
+@misc{pohl2026llmsstruggle,
+  title         = {LLMs struggle to simulate human belief updates in controlled environments},
+  author        = {Sebastian Pohl and Harsh Mehta and Pranav Mambayil and Abdul Ghafoor and Franziska Lesigang and Yufang Hou and Christian Hilbe},
+  year          = {2026},
+  eprint        = {2607.28347},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2607.28347},
+  doi           = {10.48550/arXiv.2607.28347}
+}
+```
 
 ## Contents
 
