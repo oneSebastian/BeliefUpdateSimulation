@@ -1,0 +1,23 @@
+{
+  "alpha": 0.008333333333333333,
+  "power": 0.8,
+  "permutation_dz": {
+    "nominal": 0.10175612031686437,
+    "independent": 0.17677441374942127
+  },
+  "chi2_cramers_v": {
+    "nominal": 0.08579816481671707,
+    "independent": 0.14860972455580734
+  },
+  "brown_forsythe_belief_change_sd_ratio": {
+    "nominal": 1.249066710472107,
+    "independent": 1.4764031171798706
+  },
+  "brown_forsythe_mean_rank_sd_ratio": {
+    "fixed_27": 2.0575653314590454
+  },
+  "kendall_tau": {
+    "nominal": 0.06494937864765428,
+    "independent": 0.1128324104542871
+  }
+}

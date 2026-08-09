@@ -31,6 +31,8 @@ results/           Simulation outputs (.xlsx per model, plus ablations/)
 outputs/           Generated stats, derived tables, and figures
 slurm/             Cluster job scripts for locally served models
 tests/             Test suite
+reference/         Static snapshot of the oTree survey application, included
+                   for reference only — not imported or run by the pipeline
 colors.yaml        Shared per-model colour palette used by all figures
 ```
 
@@ -39,17 +41,68 @@ resolved from the repository root by `belief_update_sim.config` rather than from
 the working directory. Figure scripts still write their images to a path
 relative to the working directory, so **run them from the repository root**.
 
-## Setup
+## Requirements
+
+**Operating systems (tested).** The analysis, statistics, and figure code was
+developed and tested on **Windows 11**. Serving the open-weight models locally is
+done on a **Linux** GPU cluster via SLURM; API-based models run on either.
+
+**Python.** 3.10 or newer (tested on 3.14.2).
+
+**Python packages.** Installed from `requirements.txt`, which is intentionally
+left unpinned for portability. The versions the code has been tested with:
+
+| Package | Tested version | | Package | Tested version |
+| --- | --- | --- | --- | --- |
+| pandas | 2.3.3 | | Pillow | 12.2.0 |
+| numpy | 2.4.1 | | svgutils | 0.3.4 |
+| scipy | 1.17.0 | | PyMuPDF | 1.28.0 |
+| statsmodels | 0.14.6 | | openai | 2.46.0 |
+| matplotlib | 3.10.9 | | anthropic | 0.117.1 |
+| seaborn | 0.13.2 | | google-genai | 2.13.0 |
+| openpyxl | 3.1.5 | | requests | 2.32.5 |
+| pyarrow | 23.0.0 | | python-dotenv | 1.2.2 |
+| PyYAML | 6.0.3 | | | |
+
+**Hardware.** No special hardware is required for the analysis, statistics, and
+figures, or for API-based simulation — any normal desktop CPU is sufficient, and
+there are no particular CPU requirements. Serving the open-weight models locally
+(Llama-3.3-70B, Qwen3-32B) is the only step that needs a GPU: our runs used
+**4× NVIDIA H100 80GB HBM3** GPUs with vLLM tensor parallelism (see
+`slurm/run_Llama70b.slurm`: `--gpus=4`, `--tensor-parallel-size 4`).
+
+## Installation
 
 ```bash
+python -m venv .venv && source .venv/bin/activate   # or conda; needs Python >= 3.10
 pip install -r requirements.txt
 pip install -e .        # makes belief_update_sim and scripts importable
 cp .env.example .env    # then fill in keys for the providers you plan to use
 ```
 
+Installation takes a few minutes on a normal desktop (typically 2–5 minutes,
+dominated by the scientific-stack wheels).
+
 Only the providers you actually run need keys. Locally served models (Qwen, Llama,
 Olmo) need none — `scripts/pipeline/run_agent.py` talks to a vLLM
 OpenAI-compatible endpoint on the `port` given in the config.
+
+## Demo
+
+A self-contained example that needs no API keys and no GPU — it runs on the
+survey data shipped in this repository. From the repository root:
+
+```bash
+python -m scripts.figures.distributions.post_stance_models
+```
+
+**Expected output.** A six-panel figure (one panel per model) of the
+post-exposure stance distribution, each overlaid with the human post-stance
+baseline, written to
+`figures/plots/distributions/post_stance_models.{png,pdf,eps,svg}` (plus the
+individual `panel_*` panels in the same folder).
+
+**Expected run time.** About 10 seconds on a normal desktop.
 
 ## 1. Simulate
 
@@ -84,6 +137,11 @@ server, waits for it to become healthy, runs the agent, then shuts the server do
 ```bash
 sbatch slurm/run_qwen32.slurm
 ```
+
+**On your own data.** To simulate a different participant set, place each persona
+under `data/prolific_data/<id>/` as `demographic.json` + `study_data.json` (the
+layout documented under [Data](#data)); the commands above then apply unchanged,
+and `--single_persona ID` runs just one.
 
 ## 2. Analyze
 
@@ -124,6 +182,20 @@ python -m scripts.figures.zscore_initial_beliefs_combined
 ```
 
 Everything in `outputs/derived/` is a regenerable intermediate, not a source input.
+
+## Reproducing the reported statistics (optional)
+
+The statistics reported in the paper regenerate from the shipped data with no API
+keys or GPU. From the repository root:
+
+```bash
+python -m scripts.stats.post_stance_distribution   # chi-squared: human vs LLM post-stance
+python -m scripts.stats.belief_change_variability  # Brown-Forsythe on |belief change|
+python -m scripts.stats.comment_rank_correlation   # Kendall tau on comment rankings
+python -m scripts.stats.comment_rank_variability   # Brown-Forsythe on comment mean-ranks
+```
+
+Each writes a `.txt` and `.json` summary to `outputs/stats/`.
 
 ## Data
 
@@ -205,8 +277,8 @@ any time without penalty. Participants who did not consent were routed out of
 the study before any responses were recorded, and returned submissions are
 excluded from the released data (391 of 400 recruited participants remain).
 
-The consent form and the survey instrument are in the companion repository for
-the oTree experiment. Questions about the research: `behaviorexperiments@it-u.at`.
+The consent form and the survey instrument are the oTree application included in
+this repository under `reference/otree_survey/` (for reference only).
 
 ## License
 

@@ -26,3 +26,6 @@ Thumbs.db
 .idea/
 .claude/
 .pytest_cache/
+
+# temp files
+tmp_*

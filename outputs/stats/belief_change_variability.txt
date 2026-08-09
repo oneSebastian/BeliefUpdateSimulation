@@ -1,0 +1,20 @@
+================================================================================================
+Brown-Forsythe test on absolute belief change |post - initial|
+H0: var(human) == var(model)     H1: var(human) > var(model)  (one-sided)
+================================================================================================
+
+human: n = 1173, SD = 0.8697
+
+model                           n  SD(model)         W     p 2-sided     p 1-sided   H1
+------------------------------------------------------------------------------------------------
+GPT-5.2                      1173     0.4887    33.709     7.268e-09     3.634e-09   yes
+GPT-5-Mini                   1173     0.4311   109.203     5.145e-25     2.572e-25   yes
+Gemini-3-Flash-Preview       1172     0.4932    14.313     1.587e-04     7.934e-05   yes
+Claude-Opus-4.6              1173     0.4971     7.994     4.733e-03     2.366e-03   yes
+Qwen-3-32B                   1173     0.5163    18.736     1.564e-05     7.821e-06   yes
+Llama-3.3-70B-Instruct       1173     0.5228    74.054     1.369e-17     6.844e-18   yes
+------------------------------------------------------------------------------------------------
+one-sided test; Bonferroni across 6 models: alpha = 0.0083
+
+largest one-sided p across all models: 2.366e-03
+=> human belief change is significantly more variable than every model

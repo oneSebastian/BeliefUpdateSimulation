@@ -1,0 +1,17 @@
+====================================================================================
+Sensitivity power analysis: minimum detectable effect at 80% power
+alpha = 0.00833 (Bonferroni 0.05/6), power = 0.80
+nominal n = observation level; independent n = 391 participants
+====================================================================================
+
+test / effect size                                 nominal n     independent
+------------------------------------------------------------------------------------
+permutation  paired Cohen d_z                         0.1018          0.1768
+chi-squared  Cramer V                                 0.0858          0.1486
+Brown-Forsythe |belief change|  SD ratio               1.249           1.476
+  (equivalently, variance ratio)                       1.560           2.180
+Brown-Forsythe mean-rank spread  SD ratio            n = 27:           2.058
+Kendall  detectable mean |tau|                        0.0649          0.1128
+------------------------------------------------------------------------------------
+d_z, Cramer V and mean |tau| are the smallest effects detectable;
+SD ratio is how many times more (or less) variable one group must be.

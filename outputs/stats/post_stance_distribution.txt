@@ -1,0 +1,30 @@
+================================================================================================
+Chi-squared test of independence: human vs LLM post-stance distribution
+H0: the post-stance distribution is the same for humans and the model
+H1: the distributions differ (non-directional -> two-sided)
+post-stance on the normalised 5-point scale; 2 x 5 contingency table, dof = 4
+================================================================================================
+
+                               SD      D      N      A     SA    total
+Human                         183    298    181    317    194     1173
+------------------------------------------------------------------------------------------------
+GPT-5.2                       115    305    353    309     91     1173
+GPT-5-Mini                    211    220    241    332    169     1173
+Gemini-3-Flash-Preview        176    323    106    394    173     1172
+Claude-Opus-4.6               139    273    278    306    177     1173
+Qwen-3-32B                    141    297    287    341    107     1173
+Llama-3.3-70B-Instruct        163    312    252    352     94     1173
+
+model                             chi2   dof             p     min E
+------------------------------------------------------------------------------------------------
+GPT-5.2                        108.326     4     1.656e-22     142.5
+GPT-5-Mini                      24.334     4     6.845e-05     181.5
+Gemini-3-Flash-Preview          30.282     4     4.287e-06     143.4
+Claude-Opus-4.6                 28.579     4     9.517e-06     161.0
+Qwen-3-32B                      55.476     4     2.582e-11     150.5
+Llama-3.3-70B-Instruct          49.673     4     4.226e-10     144.0
+------------------------------------------------------------------------------------------------
+test is two-sided (non-directional); min E is the smallest expected cell count
+(the chi-squared approximation is reliable when this is >= 5)
+
+largest p across all models: 6.845e-05

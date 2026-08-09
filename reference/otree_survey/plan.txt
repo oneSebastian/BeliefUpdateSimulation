@@ -1,0 +1,28 @@
+To generate the treatments for participants:
+
+    - Let's assume we have three topics with three message packages each.
+    - We want to assign a message package for each topic.
+    - Then permutate the order of the topics and order of the messages.
+
+We have to:
+
+    - Assign participants to a value in {1,...,3*3*3} to assign the message packages.
+    - Assign a permutation that accounts for the order of the topics in {1,...,3!}
+    - Assign a permutation that accounts for the order of the messages for each message package -> 3* {1,...,3!}
+
+
+27*6*3*6 = 2100 
+
+We should:
+
+    - Iteratively assign the message packages
+    - Randomly assign the order of the topic (but save it!!)
+    - Randomly assign the order of the displayed messages (but save it!!)
+
+How to:
+
+    - 3 csv files for each topics. 3 rows each, 3 columns each. 
+    - First permutation permutates the topics displays (in init page)
+    - Second, third and fourth permutation permutates the topic messages (in topic.html file)
+
+

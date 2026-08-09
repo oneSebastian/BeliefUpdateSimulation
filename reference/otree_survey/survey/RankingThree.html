@@ -1,0 +1,59 @@
+
+{% block content %}
+
+<strong style="font-size: 120%;">Rank the messages from 1 (most convincing) to 3 (least convincing):</strong>
+
+<style>
+    td.message-label {
+        padding-right: 40px; /* space between message and first radio */
+    }
+
+    input[type="radio"] {
+        margin-right: 25px; /* space between radios */
+    }
+</style>
+
+<table>
+    <tr>
+        <th>Rating</th>
+        <th>1st</th>
+        <th>2nd</th>
+        <th>3rd</th>
+    </tr>
+    <tr>
+        <td class="message-label">Message 1</td>
+        <td><input type="radio" name="rank_topic_3_1" value="1"></td>
+        <td><input type="radio" name="rank_topic_3_1" value="2"></td>
+        <td><input type="radio" name="rank_topic_3_1" value="3"></td>
+    </tr>
+    <tr>
+        <td class="message-label">Message 2</td>
+        <td><input type="radio" name="rank_topic_3_2" value="1"></td>
+        <td><input type="radio" name="rank_topic_3_2" value="2"></td>
+        <td><input type="radio" name="rank_topic_3_2" value="3"></td>
+    </tr>
+    <tr>
+        <td class="message-label">Message 3</td>
+        <td><input type="radio" name="rank_topic_3_3" value="1"></td>
+        <td><input type="radio" name="rank_topic_3_3" value="2"></td>
+        <td><input type="radio" name="rank_topic_3_3" value="3"></td>
+    </tr>
+</table>
+
+<br>
+
+<b>For reference, here are the messages again</b><br><br>
+
+<b>Message 1:</b><br>
+{{ message1 }}<br><br>
+
+<b>Message 2:</b><br>
+{{ message2 }}<br><br>
+
+<b>Message 3:</b><br>
+{{ message3 }}<br><br>
+
+
+{% next_button %}
+
+{% endblock %}

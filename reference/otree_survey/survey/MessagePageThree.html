@@ -1,0 +1,32 @@
+
+{% block content %}
+
+<div style="font-size: 120%;">
+  <p><b>{{ formulation }}</b></p>
+  Read the following messages<br>
+</div>
+
+<hr>
+
+<b>Message 1:</b><br>
+{{ message1|linebreaks }}
+<b>{% formfield player.stance_topic_3_message_1 %}</b>
+<hr>
+
+<b>Message 2:</b><br>
+{{ message2|linebreaks }}
+<b>{% formfield player.stance_topic_3_message_2 %}</b>
+<hr>
+
+<b>Message 3:</b><br>
+{{ message3|linebreaks }}
+<b>{% formfield player.stance_topic_3_message_3 %}</b>
+<hr>
+
+<br>
+<br>
+
+
+{% next_button %}
+
+{% endblock %}

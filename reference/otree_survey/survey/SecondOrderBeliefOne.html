@@ -1,0 +1,14 @@
+{% block content %}
+
+<p><strong style="font-size: 120%;">{{ formulation }}</strong></p>
+
+
+<hr>
+
+{% for field in form %}
+    {% formfield field %}
+{% endfor %}
+
+{{ next_button }}
+
+{% endblock %}
