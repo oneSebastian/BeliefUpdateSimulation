@@ -7,11 +7,11 @@ ranks spread across the full 1..3 range; a source whose raters disagree produces
 mean ranks bunched near 2.
 
 The spread of those 27 means is compared against the human spread with a
-one-sided Brown-Forsythe test (Levene centred on the median, which is robust to
+two-sided Brown-Forsythe test (Levene centred on the median, which is robust to
 the non-normal distribution of the means):
 
     H0: var(human mean ranks) == var(model mean ranks)
-    H1: var(human) <  var(model)      -- humans discriminate less
+    H1: var(human) != var(model)      -- the spreads differ
 
 Reads the source files directly; model rankings are converted into the human
 convention on load (see belief_update_sim.ranking).
@@ -73,14 +73,14 @@ def render(means, comments):
     out()
 
     out("=" * 104)
-    out("One-sided Brown-Forsythe test (Levene, center='median')")
+    out("Two-sided Brown-Forsythe test (Levene, center='median')")
     out("H0: var(human mean ranks) == var(model mean ranks)")
-    out("H1: var(human) < var(model)  -- humans discriminate less between comments")
+    out("H1: var(human) != var(model)  -- the spreads differ")
     out(f"n = {len(comments)} comments per group")
     out("=" * 104)
     out()
-    out(f"{'model':<26}{'sd(human)':>11}{'sd(model)':>11}{'W':>10}"
-        f"{'p 2-sided':>14}{'p 1-sided':>14}   supports H1")
+    out(f"{'model':<26}{'sd(human)':>11}{'sd(model)':>11}{'var ratio':>10}{'W':>10}"
+        f"{'p':>14}   sig")
     out("-" * 104)
 
     human_values = [means[HUMAN][c] for c in comments]
@@ -90,28 +90,29 @@ def render(means, comments):
     for name in models:
         model_values = [means[name][c] for c in comments]
         w, p_two = levene(human_values, model_values, center="median")
-        # one-sided in the predicted direction; the complement otherwise, so a
-        # result in the wrong direction can never read as significant
-        lower = sds[HUMAN] < sds[name]
-        p_one = p_two / 2 if lower else 1 - p_two / 2
-        stats["models"][name] = {"sd": sds[name], "W": w,
-                                 "p_two_sided": p_two, "p_one_sided": p_one,
-                                 "significant": bool(p_one < alpha)}
-        out(f"{name:<26}{sds[HUMAN]:>11.4f}{sds[name]:>11.4f}{w:>10.3f}"
-            f"{p_two:>14.3e}{p_one:>14.3e}   {'yes' if p_one < alpha else 'no'}")
+        # variance/SD ratio (model / human) reports the direction descriptively;
+        # every model is more variable than the human ranks
+        sd_ratio = sds[name] / sds[HUMAN]
+        stats["models"][name] = {"sd": sds[name], "sd_ratio": sd_ratio,
+                                 "variance_ratio": sd_ratio ** 2, "W": w,
+                                 "p_value": p_two,
+                                 "significant": bool(p_two < alpha)}
+        out(f"{name:<26}{sds[HUMAN]:>11.4f}{sds[name]:>11.4f}{sd_ratio ** 2:>10.3f}"
+            f"{w:>10.3f}{p_two:>14.3e}   {'yes' if p_two < alpha else 'no'}")
     out("-" * 104)
-    out(f"Bonferroni across the {len(models)} models: alpha = {alpha:.4f}")
+    out(f"two-sided test; Bonferroni across the {len(models)} models: alpha = {alpha:.4f}")
+    out("var ratio is model/human; every model is more variable than the human ranks")
 
-    worst = max(s["p_one_sided"] for s in stats["models"].values())
+    worst = max(s["p_value"] for s in stats["models"].values())
     out()
-    out(f"largest one-sided p across all models: {worst:.3e}")
+    out(f"largest p across all models: {worst:.3e}")
     if all(s["significant"] for s in stats["models"].values()):
-        out("=> human rankings are significantly less variable than every model")
+        out("=> human and model rank-spreads differ significantly for every model")
     else:
         failed = [n for n, s in stats["models"].items() if not s["significant"]]
         out(f"=> NOT significant for: {', '.join(failed)}")
 
-    stats["largest_p_one_sided"] = worst
+    stats["largest_p"] = worst
     stats["alpha_bonferroni"] = alpha
     return "\n".join(lines) + "\n", stats
 

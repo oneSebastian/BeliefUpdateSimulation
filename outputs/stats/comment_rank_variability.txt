@@ -36,22 +36,23 @@ weight_loss package3     3            2.000          1.562          1.047       
 sd across comments                   0.0981         0.5998         0.6522         0.5046         0.5272         0.5590         0.6492
 
 ========================================================================================================
-One-sided Brown-Forsythe test (Levene, center='median')
+Two-sided Brown-Forsythe test (Levene, center='median')
 H0: var(human mean ranks) == var(model mean ranks)
-H1: var(human) < var(model)  -- humans discriminate less between comments
+H1: var(human) != var(model)  -- the spreads differ
 n = 27 comments per group
 ========================================================================================================
 
-model                       sd(human)  sd(model)         W     p 2-sided     p 1-sided   supports H1
+model                       sd(human)  sd(model) var ratio         W             p   sig
 --------------------------------------------------------------------------------------------------------
-GPT-5.2                        0.0981     0.5998    37.241     1.326e-07     6.629e-08   yes
-GPT-5-Mini                     0.0981     0.6522    39.440     6.933e-08     3.467e-08   yes
-Gemini-3-Flash-Preview         0.0981     0.5046    15.213     2.771e-04     1.385e-04   yes
-Claude-Opus-4.6                0.0981     0.5272    40.757     4.740e-08     2.370e-08   yes
-Qwen-3-32B                     0.0981     0.5590    33.149     4.638e-07     2.319e-07   yes
-Llama-3.3-70B-Instruct         0.0981     0.6492    34.054     3.497e-07     1.748e-07   yes
+GPT-5.2                        0.0981     0.5998    37.371    37.241     1.326e-07   yes
+GPT-5-Mini                     0.0981     0.6522    44.188    39.440     6.933e-08   yes
+Gemini-3-Flash-Preview         0.0981     0.5046    26.443    15.213     2.771e-04   yes
+Claude-Opus-4.6                0.0981     0.5272    28.869    40.757     4.740e-08   yes
+Qwen-3-32B                     0.0981     0.5590    32.460    33.149     4.638e-07   yes
+Llama-3.3-70B-Instruct         0.0981     0.6492    43.777    34.054     3.497e-07   yes
 --------------------------------------------------------------------------------------------------------
-Bonferroni across the 6 models: alpha = 0.0083
+two-sided test; Bonferroni across the 6 models: alpha = 0.0083
+var ratio is model/human; every model is more variable than the human ranks
 
-largest one-sided p across all models: 1.385e-04
-=> human rankings are significantly less variable than every model
+largest p across all models: 2.771e-04
+=> human and model rank-spreads differ significantly for every model

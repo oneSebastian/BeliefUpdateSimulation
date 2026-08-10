@@ -6,12 +6,12 @@ Brown-Forsythe test (Levene centred on the median, robust to the non-normal,
 bounded distribution of |delta|):
 
     H0: var(human |delta|) == var(model |delta|)
-    H1: var(human) >  var(model)      -- humans change their belief more variably
+    H1: var(human) != var(model)      -- the spreads differ
 
-The alternative is directional, so this is a **one-sided** test. scipy's Levene
-returns a two-sided p; the one-sided p is half of it once the observed direction
-matches (sd(human) > sd(model)), and its complement otherwise so a result in the
-wrong direction can never read as significant.
+The alternative is non-directional, so this is a **two-sided** test: scipy's
+Levene (median-centred) returns the two-sided p directly. The observed direction
+is reported descriptively as the SD/variance ratio (human / model) and the
+`human_more_variable` flag.
 
 |delta| is invariant to the pro/con sign flip (both terms flip together), so the
 absolute change is computed from the raw recorded stances and equals the value
@@ -56,12 +56,12 @@ def compute():
         model = model_abs_delta(path)
         sd_model = float(pd.Series(model).std())
         w, p_two = levene(human, model, center="median")
-        larger = sd_human > sd_model
-        p_one = p_two / 2 if larger else 1 - p_two / 2
+        sd_ratio = sd_human / sd_model
         results[name] = {
             "n_model": int(model.size), "sd_model": sd_model,
-            "W": float(w), "p_two_sided": float(p_two), "p_one_sided": float(p_one),
-            "human_more_variable": bool(larger),
+            "sd_ratio": sd_ratio, "variance_ratio": sd_ratio ** 2,
+            "W": float(w), "p_value": float(p_two),
+            "human_more_variable": bool(sd_human > sd_model),
         }
     return sd_human, int(human.size), results
 
@@ -76,26 +76,27 @@ def render(sd_human, n_human, results):
     alpha = 0.05 / len(results)
     out("=" * 96)
     out("Brown-Forsythe test on absolute belief change |post - initial|")
-    out("H0: var(human) == var(model)     H1: var(human) > var(model)  (one-sided)")
+    out("H0: var(human) == var(model)     H1: var(human) != var(model)  (two-sided)")
     out("=" * 96)
     out()
     out(f"human: n = {n_human}, SD = {sd_human:.4f}")
     out()
-    out(f"{'model':<26}{'n':>7}{'SD(model)':>11}{'W':>10}"
-        f"{'p 2-sided':>14}{'p 1-sided':>14}   H1")
+    out(f"{'model':<26}{'n':>7}{'SD(model)':>11}{'var ratio':>11}{'W':>10}"
+        f"{'p':>14}   sig")
     out("-" * 96)
     for name, r in results.items():
-        out(f"{name:<26}{r['n_model']:>7}{r['sd_model']:>11.4f}{r['W']:>10.3f}"
-            f"{r['p_two_sided']:>14.3e}{r['p_one_sided']:>14.3e}"
-            f"   {'yes' if r['p_one_sided'] < alpha else 'no'}")
+        out(f"{name:<26}{r['n_model']:>7}{r['sd_model']:>11.4f}"
+            f"{r['variance_ratio']:>11.3f}{r['W']:>10.3f}{r['p_value']:>14.3e}"
+            f"   {'yes' if r['p_value'] < alpha else 'no'}")
     out("-" * 96)
-    out(f"one-sided test; Bonferroni across {len(results)} models: alpha = {alpha:.4f}")
+    out(f"two-sided test; Bonferroni across {len(results)} models: alpha = {alpha:.4f}")
+    out("var ratio is human/model; human_more_variable holds for every model")
 
-    worst = max(r["p_one_sided"] for r in results.values())
+    worst = max(r["p_value"] for r in results.values())
     out()
-    out(f"largest one-sided p across all models: {worst:.3e}")
-    if all(r["p_one_sided"] < alpha for r in results.values()):
-        out("=> human belief change is significantly more variable than every model")
+    out(f"largest p across all models: {worst:.3e}")
+    if all(r["p_value"] < alpha for r in results.values()):
+        out("=> human and model belief-change spreads differ significantly for every model")
     return "\n".join(lines) + "\n"
 
 

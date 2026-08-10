@@ -23,7 +23,7 @@ Effect-size metric per test:
 The two closed-form tests (paired t and chi-squared) use statsmodels power
 solvers. The two Brown-Forsythe tests have no closed-form power, so the MDE is
 found by simulation: the empirical human distribution is resampled and one
-group's spread is scaled until a one-sided median-centred Levene test rejects at
+group's spread is scaled until a two-sided median-centred Levene test rejects at
 80% power. Seeded, so the numbers are reproducible.
 
     python -m scripts.stats.power_sensitivity
@@ -88,11 +88,13 @@ def kendall_tau_mde(n, sd_ref=TAU_SD_NULL):
 # ---------------------------------------------------------------------------
 
 def _bf_power(base, n, ratio, human_more_variable, rng, n_sims=N_SIMS):
-    """One-sided median-centred Levene power at a given SD ratio.
+    """Two-sided median-centred Levene power at a given SD ratio.
 
     `base` is the empirical reference distribution (resampled for both groups).
     The second group's deviations from the median are scaled so that the SD
     ratio between the more- and less-variable group is `ratio` (>= 1).
+    `human_more_variable` sets which group carries the larger spread; the test
+    itself is non-directional.
     """
     med = float(np.median(base))
     hits = 0
@@ -104,10 +106,7 @@ def _bf_power(base, n, ratio, human_more_variable, rng, n_sims=N_SIMS):
         else:                                      # inflate the model group
             b = med + (b0 - med) * ratio
         _, p_two = levene(a, b, center="median")
-        sd_a, sd_b = a.std(ddof=1), b.std(ddof=1)
-        matched = (sd_a > sd_b) if human_more_variable else (sd_b > sd_a)
-        p_one = p_two / 2 if matched else 1 - p_two / 2
-        if p_one < ALPHA:
+        if p_two < ALPHA:
             hits += 1
     return hits / n_sims
 

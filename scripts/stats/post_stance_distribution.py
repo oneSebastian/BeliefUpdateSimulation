@@ -49,11 +49,14 @@ def compute():
 
         table = np.array([human_counts, model_counts])
         chi2, p, dof, expected = chi2_contingency(table)
+        n_total = int(table.sum())
+        # 2 rows -> min(r, c) - 1 = 1, so Cramer's V = sqrt(chi2 / N)
+        cramers_v = float((chi2 / n_total) ** 0.5)
         results[name] = {
             "n_human": int(human.size), "n_model": int(model.size),
             "human_counts": human_counts, "model_counts": model_counts,
             "chi2": float(chi2), "dof": int(dof), "p_value": float(p),
-            "min_expected": float(expected.min()),
+            "cramers_v": cramers_v, "min_expected": float(expected.min()),
         }
     return human_counts, int(human.size), results
 
@@ -83,11 +86,11 @@ def render(human_counts, n_human, results):
             + f"{r['n_model']:>9}")
     out()
 
-    out(f"{'model':<26}{'chi2':>12}{'dof':>6}{'p':>14}{'min E':>10}")
+    out(f"{'model':<26}{'chi2':>12}{'dof':>6}{'p':>14}{'CramerV':>10}{'min E':>10}")
     out("-" * 96)
     for name, r in results.items():
         out(f"{name:<26}{r['chi2']:>12.3f}{r['dof']:>6}{r['p_value']:>14.3e}"
-            f"{r['min_expected']:>10.1f}")
+            f"{r['cramers_v']:>10.4f}{r['min_expected']:>10.1f}")
     out("-" * 96)
     out("test is two-sided (non-directional); min E is the smallest expected cell "
         "count\n(the chi-squared approximation is reliable when this is >= 5)")

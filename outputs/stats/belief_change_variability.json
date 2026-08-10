@@ -5,49 +5,55 @@
     "GPT-5.2": {
       "n_model": 1173,
       "sd_model": 0.48867931036605416,
+      "sd_ratio": 1.7796234426320785,
+      "variance_ratio": 3.167059597565651,
       "W": 33.70902608121491,
-      "p_two_sided": 7.267709764921168e-09,
-      "p_one_sided": 3.633854882460584e-09,
+      "p_value": 7.267709764921168e-09,
       "human_more_variable": true
     },
     "GPT-5-Mini": {
       "n_model": 1173,
       "sd_model": 0.43114845105330374,
+      "sd_ratio": 2.0170898318945576,
+      "variance_ratio": 4.068651389932414,
       "W": 109.20340217804147,
-      "p_two_sided": 5.144729141812774e-25,
-      "p_one_sided": 2.572364570906387e-25,
+      "p_value": 5.144729141812774e-25,
       "human_more_variable": true
     },
     "Gemini-3-Flash-Preview": {
       "n_model": 1172,
       "sd_model": 0.4931689306424642,
+      "sd_ratio": 1.7634224352368904,
+      "variance_ratio": 3.1096586850968047,
       "W": 14.312801102381172,
-      "p_two_sided": 0.00015868745981060018,
-      "p_one_sided": 7.934372990530009e-05,
+      "p_value": 0.00015868745981060018,
       "human_more_variable": true
     },
     "Claude-Opus-4.6": {
       "n_model": 1173,
       "sd_model": 0.49708407233917956,
+      "sd_ratio": 1.749533338624661,
+      "variance_ratio": 3.0608669029591526,
       "W": 7.994052676295656,
-      "p_two_sided": 0.0047329601741902955,
-      "p_one_sided": 0.0023664800870951477,
+      "p_value": 0.0047329601741902955,
       "human_more_variable": true
     },
     "Qwen-3-32B": {
       "n_model": 1173,
       "sd_model": 0.5162628172551734,
+      "sd_ratio": 1.6845395941556984,
+      "variance_ratio": 2.837673644278245,
       "W": 18.7360968994907,
-      "p_two_sided": 1.564196277036464e-05,
-      "p_one_sided": 7.82098138518232e-06,
+      "p_value": 1.564196277036464e-05,
       "human_more_variable": true
     },
     "Llama-3.3-70B-Instruct": {
       "n_model": 1173,
       "sd_model": 0.5227776752174643,
+      "sd_ratio": 1.663546853440031,
+      "variance_ratio": 2.767388133590228,
       "W": 74.05416126967334,
-      "p_two_sided": 1.3687826309997487e-17,
-      "p_one_sided": 6.843913154998743e-18,
+      "p_value": 1.3687826309997487e-17,
       "human_more_variable": true
     }
   }

@@ -201,7 +201,7 @@ python -m scripts.figures.zscore_initial_beliefs_combined
 
 Everything in `outputs/derived/` is a regenerable intermediate, not a source input.
 
-## Reproducing the reported statistics (optional)
+## Reproducing the reported statistics
 
 The statistics reported in the paper regenerate from the shipped data with no API
 keys or GPU. From the repository root:

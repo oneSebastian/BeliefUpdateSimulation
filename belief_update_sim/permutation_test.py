@@ -87,6 +87,14 @@ def fast_permutation_test(sample_1, sample_2):
     return obs, p_value, reject
 
 
+def cohens_dz(sample_1, sample_2):
+    """Paired Cohen's d_z = mean(diff) / sd(diff), the effect size that pairs
+    with the paired permutation test. NaN pairs are dropped first."""
+    d = np.asarray(sample_1, dtype=float) - np.asarray(sample_2, dtype=float)
+    d = d[~np.isnan(d)]
+    return float(np.mean(d) / np.std(d, ddof=1))
+
+
 def permutation_test_on_paths(path1, path2):
     paths = [path1, path2]
     data = []
