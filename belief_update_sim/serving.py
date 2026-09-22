@@ -22,7 +22,7 @@ import shlex
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .config import CONFIGS_DIR
+from .config import resolve_config_path
 
 # The cluster is a single node (labgpu01) with four H100 80GB cards.
 MAX_GPUS = 4
@@ -247,11 +247,11 @@ def _validate(serving: ServingConfig) -> ServingConfig:
 def load_config_entry(config: str | Path) -> dict:
     """Load a config by name (resolved under ``configs/``) or by path.
 
+    Resolution is shared with run_agent via :func:`resolve_config_path`, so the
+    SLURM scripts and the agent always agree on what a given --config means.
     The shipped configs carry a UTF-8 BOM, hence ``utf-8-sig``.
     """
-    path = Path(config)
-    if not path.is_absolute() and not path.exists():
-        path = CONFIGS_DIR / config
+    path = resolve_config_path(config)
     if not path.exists():
         raise ServingConfigError(f"config not found: {config}")
 

@@ -33,6 +33,28 @@ STATS_OUTPUT_DIR = OUTPUTS_DIR / "stats"
 DERIVED_DIR = OUTPUTS_DIR / "derived"
 
 
+def resolve_config_path(config):
+    """Resolve a config given either as a path or as a name under ``configs/``.
+
+    Both forms occur, and callers should not have to know which they hold:
+
+        gpt-5.2.json                         -> configs/gpt-5.2.json
+        model_size/Qwen3.5-9B.json           -> configs/model_size/Qwen3.5-9B.json
+        configs/model_size/Qwen3.5-9B.json   -> itself
+
+    The last form is what ``slurm/submit_model.sh`` produces, because it builds
+    its list by globbing ``configs/model_size/*.json``. ``--config`` has always
+    meant the first two. Resolving both here is what stops the two conventions
+    from disagreeing -- they previously did, and the result was a request for
+    ``configs/configs/model_size/...`` that only failed after a model had been
+    loaded on the cluster.
+    """
+    path = Path(config)
+    if path.is_absolute() or path.exists():
+        return path
+    return CONFIGS_DIR / config
+
+
 def ensure_output_dirs():
     """Create the output directories if they do not yet exist."""
     for path in (STATS_OUTPUT_DIR, DERIVED_DIR):

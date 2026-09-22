@@ -28,6 +28,7 @@ try:
 except ImportError:  # pragma: no cover - depends on the installed extras
     anthropic = None
 
+from belief_update_sim.config import resolve_config_path
 from scripts.pipeline.academic_ai import AcademicAIClient
 
 # --------------------------------------------------
@@ -758,7 +759,15 @@ def main():
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be at least 1")
 
-    config_path = os.path.join("configs", args.config)
+    # Accepts both "model_size/X.json" and "configs/model_size/X.json"; the
+    # SLURM scripts pass the latter because they glob for their config list.
+    config_path = resolve_config_path(args.config)
+    if not Path(config_path).exists():
+        raise SystemExit(
+            f"\nConfig not found: {args.config}\n"
+            f"  Looked for: {config_path}\n"
+            f"  Give a name under configs/ (model_size/Qwen3.5-9B.json) or a path."
+        )
     print(f"Load config from {config_path}")
     config_list = load_json(config_path)
     config = config_list[0]
