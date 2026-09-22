@@ -18,7 +18,10 @@
       "time": "12:00:00",
       "pilot_time": "02:00:00",
       "reasoning_parser": "qwen3",
-      "extra_args": []
+      "extra_args": [
+        "--gdn-prefill-backend",
+        "triton"
+      ]
     },
     "paths": {
       "personas_root": "data/prolific_data",

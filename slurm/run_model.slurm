@@ -81,8 +81,23 @@ nvidia-smi --query-gpu=index,name,memory.total --format=csv || true
 # ---------------------------------------------------------------------------
 # 2. Start the vLLM server
 # ---------------------------------------------------------------------------
+# FlashInfer JIT-compiles its sampling kernels on first use, with whichever
+# nvcc is on PATH. The system toolkit at /usr/bin/nvcc predates CUDA 12, so that
+# build dies with "nvcc fatal : Unsupported gpu architecture 'compute_90a'" --
+# and it dies during the profile run, after the weights have already loaded.
+#
+# The native/Triton sampler needs no nvcc and draws from the same distribution,
+# so results are unaffected. Set here rather than per model, so every model in
+# the sweep samples through the same kernel.
+#
+# Set VLLM_USE_FLASHINFER_SAMPLER=1 to undo this once a CUDA >= 12.0 toolkit is
+# on PATH (`conda install -c nvidia cuda-nvcc`).
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
+
 VLLM_LOG="logs/vllm_${MODEL}_${SLURM_JOB_ID:-local}.out"
 echo "[$(date)] Starting vllm server -> $VLLM_LOG"
+echo "[$(date)] VLLM_USE_FLASHINFER_SAMPLER=$VLLM_USE_FLASHINFER_SAMPLER"
+echo "[$(date)] nvcc: $(command -v nvcc || echo '(none on PATH)')"
 echo "[$(date)] vllm serve ${VLLM_ARGS[*]}"
 
 vllm serve "${VLLM_ARGS[@]}" > "$VLLM_LOG" 2>&1 &

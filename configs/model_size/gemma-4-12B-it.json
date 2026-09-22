@@ -17,7 +17,7 @@
       "partition": "verylong",
       "time": "12:00:00",
       "pilot_time": "04:00:00",
-      "reasoning_parser": null,
+      "reasoning_parser": "gemma4",
       "extra_args": []
     },
     "paths": {

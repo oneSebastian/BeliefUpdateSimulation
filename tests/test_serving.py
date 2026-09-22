@@ -282,6 +282,39 @@ def test_pilot_walltime_is_well_under_the_full_run(path):
     assert parse_slurm_time(serving.pilot_time) < parse_slurm_time(serving.time_limit)
 
 
+def test_every_sweep_config_sets_a_reasoning_parser():
+    """Thinking is forced on for all twelve, so every model needs the parser
+    that splits it out of the answer -- qwen3 for Qwen, gemma4 for Gemma."""
+    expected = {"Qwen3.5": "qwen3", "gemma-4": "gemma4"}
+    for path in model_size_configs():
+        serving = load_serving_config(path)
+        family = next(f for f in expected if serving.model.startswith(f))
+        assert serving.reasoning_parser == expected[family], (
+            f"{path.name}: expected {expected[family]!r}, "
+            f"got {serving.reasoning_parser!r}"
+        )
+
+
+def test_qwen_configs_avoid_the_flashinfer_gdn_jit():
+    """Qwen3.5's gated-delta-net prefill kernel is JIT-compiled with nvcc, and
+    the cluster's /usr/bin/nvcc cannot target sm_90a. Triton needs no nvcc."""
+    for path in model_size_configs():
+        serving = load_serving_config(path)
+        if not serving.model.startswith("Qwen3.5"):
+            continue
+        args = serving.vllm_args()
+        assert "--gdn-prefill-backend" in args, f"{path.name}: GDN JIT not disabled"
+        assert args[args.index("--gdn-prefill-backend") + 1] == "triton"
+
+
+def test_gemma_configs_do_not_carry_the_gdn_flag():
+    """Gemma 4 has no gated-delta-net layers; the flag would be meaningless."""
+    for path in model_size_configs():
+        serving = load_serving_config(path)
+        if serving.model.startswith("gemma-4"):
+            assert "--gdn-prefill-backend" not in serving.vllm_args()
+
+
 def test_larger_models_are_not_given_fewer_gpus():
     """A sanity check on the hand-written allocation: GPUs are monotone in size."""
     by_gpus = {}
@@ -316,6 +349,39 @@ def test_cli_check_passes_for_the_whole_sweep():
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == ""
+
+
+def test_sort_key_orders_by_gpus_before_anything_else():
+    from scripts.pipeline.serving_params import sort_key
+    small_but_many_gpus = make(gpus=4, tensor_parallel_size=4, pilot_time="02:00:00")
+    large_but_one_gpu = make(gpus=1, tensor_parallel_size=1, pilot_time="12:00:00",
+                             time_limit="48:00:00")
+    assert sort_key(large_but_one_gpu) < sort_key(small_but_many_gpus)
+
+
+def test_sort_key_breaks_gpu_ties_by_download_size():
+    from scripts.pipeline.serving_params import sort_key
+    small = make(model="a-small", pilot_time="02:00:00")
+    big = make(model="z-big", pilot_time="04:00:00")
+    assert sort_key(small) < sort_key(big)
+    # ...and the name only matters once both of those are equal.
+    first = make(model="aaa", pilot_time="02:00:00")
+    second = make(model="zzz", pilot_time="02:00:00")
+    assert sort_key(first) < sort_key(second)
+
+
+def test_cli_sort_by_gpus_lists_the_sweep_cheapest_first():
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.pipeline.serving_params", "--sort-by-gpus",
+         *[str(p) for p in model_size_configs()]],
+        capture_output=True, text=True, cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 0, result.stderr
+    ordered = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    assert len(ordered) == 12
+    gpus = [load_serving_config(p).gpus for p in ordered]
+    assert gpus == sorted(gpus), gpus
+    assert "Qwen3.5-122B-A10B" in ordered[-1]
 
 
 def test_cli_writes_errors_to_stderr_not_stdout(tmp_path):

@@ -115,6 +115,40 @@ def test_after_chains_the_first_job_behind_an_existing_one(shim):
     assert "--dependency=afterany:999" in calls(log)[0]
 
 
+def test_only_restricts_the_batch_to_matching_configs(shim):
+    """For re-running one family after a fix, without redoing the rest."""
+    env, log = shim
+    result = run(env, "--pilot-all", "--only", "gemma-4-*")
+    assert result.returncode == 0, result.stderr
+    submissions = calls(log)
+    assert len(submissions) == 5
+    assert all("gemma-4-" in line for line in submissions)
+    assert not any("Qwen" in line for line in submissions)
+
+
+def test_only_still_chains_what_it_selects(shim):
+    env, log = shim
+    run(env, "--pilot-all", "--only", "gemma-4-*")
+    submissions = calls(log)
+    assert "--dependency" not in submissions[0]
+    assert all("--dependency=afterany:" in line for line in submissions[1:])
+
+
+def test_only_matching_nothing_fails_loudly(shim):
+    env, log = shim
+    result = run(env, "--pilot-all", "--only", "llama-*")
+    assert result.returncode == 1
+    assert "no configs" in result.stderr
+    assert calls(log) == []
+
+
+def test_only_without_a_glob_is_rejected(shim):
+    env, _ = shim
+    result = run(env, "--pilot-all", "--only")
+    assert result.returncode == 2
+    assert "--only needs a glob" in result.stderr
+
+
 def test_after_without_a_job_id_is_rejected(shim):
     env, _ = shim
     result = run(env, "--pilot-all", "--after")
@@ -208,6 +242,66 @@ def test_single_config_submission(shim):
     assert "--gpus=1" in submissions[0]
     assert "Qwen3.5-9B-pilot" in submissions[0]
     assert "--dependency" not in submissions[0]
+
+
+def gpus_in_submission_order(log: Path):
+    counts = []
+    for line in calls(log):
+        field = next(f for f in line.split() if f.startswith("--gpus="))
+        counts.append(int(field.removeprefix("--gpus=")))
+    return counts
+
+
+def test_batches_are_submitted_cheapest_allocation_first(shim):
+    """The 4-GPU job can sit pending while other users hold cards. Submitting
+    it last means the eleven ahead of it finish rather than stalling the chain."""
+    env, log = shim
+    result = run(env, "--pilot-all")
+    assert result.returncode == 0, result.stderr
+
+    counts = gpus_in_submission_order(log)
+    assert counts == sorted(counts), f"not ordered by GPU count: {counts}"
+    assert counts[0] == 1
+    assert counts[-1] == 4
+
+
+def test_the_four_gpu_model_is_submitted_last(shim):
+    env, log = shim
+    run(env, "--pilot-all")
+    assert "Qwen3.5-122B-A10B" in calls(log)[-1]
+
+
+def test_ordering_also_applies_to_full_runs(shim):
+    env, log = shim
+    run(env, "--all")
+    counts = gpus_in_submission_order(log)
+    assert counts == sorted(counts), counts
+
+
+def test_ordering_survives_the_only_filter(shim):
+    env, log = shim
+    run(env, "--pilot-all", "--only", "Qwen3.5-*")
+    counts = gpus_in_submission_order(log)
+    assert counts == sorted(counts), counts
+    assert "Qwen3.5-122B-A10B" in calls(log)[-1]
+
+
+def test_ordering_is_stable_across_runs(shim, tmp_path):
+    """Same input, same order -- otherwise a resubmission is not reproducible."""
+    env, log = shim
+    run(env, "--pilot-all")
+    first = [line.split("--job-name=")[1].split()[0] for line in calls(log)]
+    log.unlink()
+    run(env, "--pilot-all")
+    second = [line.split("--job-name=")[1].split()[0] for line in calls(log)]
+    assert first == second
+
+
+def test_run_model_disables_the_flashinfer_sampler_by_default():
+    """Set in the job script, not per config, so every model in the sweep
+    samples through the same kernel -- otherwise it would be a confound."""
+    script = (PROJECT_ROOT / "slurm" / "run_model.slurm").read_text()
+    assert 'export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"' in script
 
 
 def test_no_arguments_prints_usage_and_fails(shim):

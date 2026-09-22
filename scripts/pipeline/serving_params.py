@@ -19,7 +19,21 @@ from belief_update_sim.serving import (
     GPU_MEMORY_GB,
     ServingConfigError,
     load_serving_config,
+    parse_slurm_time,
 )
+
+
+def sort_key(serving):
+    """Cheapest allocation first, so a chained batch starts immediately.
+
+    Primary key is GPU count: the four-GPU job may sit pending while other
+    users hold cards, and putting it last means the eleven ahead of it have
+    already produced results by the time it waits. Within a GPU tier, pilot_time
+    orders by weight-download size (it is set from the weights), so the tier
+    runs roughly smallest model first; the name breaks remaining ties so the
+    order is stable across runs.
+    """
+    return (serving.gpus, parse_slurm_time(serving.pilot_time), serving.model)
 
 
 def human_summary(serving) -> str:
@@ -52,10 +66,24 @@ def main(argv=None):
         "--check", action="store_true",
         help="validate only; print nothing on success, exit 1 on the first error",
     )
+    parser.add_argument(
+        "--sort-by-gpus", action="store_true",
+        help="print the given configs one per line, cheapest allocation first",
+    )
     args = parser.parse_args(argv)
 
-    if len(args.config) > 1 and not args.check:
-        parser.error("multiple configs are only supported with --check")
+    if len(args.config) > 1 and not (args.check or args.sort_by_gpus):
+        parser.error("multiple configs are only supported with --check/--sort-by-gpus")
+
+    if args.sort_by_gpus:
+        try:
+            servings = [(c, load_serving_config(c)) for c in args.config]
+        except ServingConfigError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+        for config, _ in sorted(servings, key=lambda pair: sort_key(pair[1])):
+            print(config)
+        return 0
 
     for config in args.config:
         try:

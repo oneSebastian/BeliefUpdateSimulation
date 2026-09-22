@@ -21,6 +21,9 @@
 #                       will then run as many as fit in the node's GPUs at once
 #     --after JOBID     chain the first job behind an existing job, e.g. to
 #                       queue the full sweep behind the pilots
+#     --only GLOB       restrict a batch to configs whose name matches, for
+#                       re-running one family after a fix:
+#                           ./slurm/submit_model.sh --pilot-all --only 'gemma-4-*'
 #
 # Pilot jobs request the config's `serving.pilot_time` rather than its full-run
 # walltime -- 15 calls do not need 48 hours, and asking for them would hold a
@@ -46,6 +49,7 @@ cd "$(dirname "$0")/.."
 BATCH_MODE=""          # "pilot" | "full" | ""
 SEQUENTIAL=1
 AFTER=""
+ONLY=""                # glob over config basenames, for re-running a subset
 PASSTHROUGH=()
 
 while [ $# -gt 0 ]; do
@@ -53,6 +57,12 @@ while [ $# -gt 0 ]; do
         --pilot-all) BATCH_MODE="pilot"; shift ;;
         --all)       BATCH_MODE="full";  shift ;;
         --parallel)  SEQUENTIAL=0;       shift ;;
+        --only)
+            if [ $# -lt 2 ]; then
+                echo "ERROR: --only needs a glob, e.g. --only 'gemma-4-*'." >&2
+                exit 2
+            fi
+            ONLY="$2"; shift 2 ;;
         --after)
             if [ $# -lt 2 ]; then
                 echo "ERROR: --after needs a job id." >&2
@@ -66,8 +76,8 @@ done
 
 usage() {
     echo "usage: $0 <config> [run_agent args...]" >&2
-    echo "       $0 --pilot-all [--parallel] [--after JOBID]" >&2
-    echo "       $0 --all [--resume] [--parallel] [--after JOBID]" >&2
+    echo "       $0 --pilot-all [--only GLOB] [--parallel] [--after JOBID]" >&2
+    echo "       $0 --all [--resume] [--only GLOB] [--parallel] [--after JOBID]" >&2
     echo "" >&2
     echo "configs:" >&2
     ls configs/model_size/*.json 2>/dev/null | sed 's|^|  |' >&2
@@ -159,11 +169,40 @@ submit_one() {
 # Dispatch
 # ---------------------------------------------------------------------------
 if [ -n "$BATCH_MODE" ]; then
-    configs=(configs/model_size/*.json)
-    if [ ! -e "${configs[0]}" ]; then
-        echo "ERROR: no configs found in configs/model_size/." >&2
+    configs=()
+    for candidate in configs/model_size/*.json; do
+        [ -e "$candidate" ] || continue
+        if [ -n "$ONLY" ]; then
+            # shellcheck disable=SC2254 -- $ONLY is a glob on purpose
+            case "$(basename "$candidate" .json)" in
+                $ONLY) ;;
+                *) continue ;;
+            esac
+        fi
+        configs+=("$candidate")
+    done
+
+    if [ ${#configs[@]} -eq 0 ]; then
+        if [ -n "$ONLY" ]; then
+            echo "ERROR: no configs in configs/model_size/ match '$ONLY'." >&2
+        else
+            echo "ERROR: no configs found in configs/model_size/." >&2
+        fi
         exit 1
     fi
+
+    # Cheapest allocation first. The 4-GPU job can sit pending while other users
+    # hold cards; submitting it last means the eleven ahead of it have already
+    # produced results by the time it waits, instead of stalling the chain at
+    # the front. Within a GPU tier, roughly smallest model first.
+    # tr -d '\r': a Python writing text-mode newlines (Windows) would otherwise
+    # leave a carriage return that mapfile -t does not strip, turning every
+    # path into one that does not exist.
+    ordered="$("$PYTHON" -m scripts.pipeline.serving_params --sort-by-gpus "${configs[@]}" | tr -d '\r')" || {
+        echo "ERROR: could not order configs by GPU count." >&2
+        exit 1
+    }
+    mapfile -t configs <<< "$ordered"
 
     extra=()
     [ "$BATCH_MODE" = "pilot" ] && extra=(--pilot)
@@ -173,6 +212,7 @@ if [ -n "$BATCH_MODE" ]; then
     else
         echo "Submitting ${#configs[@]} ${BATCH_MODE} job(s) unchained -- SLURM may run several at once."
     fi
+    echo "Ordered by GPU count, cheapest first."
     [ -n "$AFTER" ] && echo "First job waits for job $AFTER."
 
     for config in "${configs[@]}"; do

@@ -206,11 +206,20 @@ and the rest of the node stays free for other users. `afterany` rather than
 `afterok`: a model that OOMs or fails to load must not strand the eleven behind
 it.
 
+**Jobs are submitted cheapest-allocation-first** — all 1-GPU models, then the
+2-GPU ones, with `Qwen3.5-122B-A10B` (4 GPUs) last. When other users hold cards
+the four-GPU job may sit pending, and putting it at the end means the eleven
+ahead of it have already produced results rather than stalling the chain at the
+front. Within a GPU tier the order is by weight-download size, so each tier runs
+roughly smallest model first; ties break on name, so a resubmission reproduces
+the same order.
+
 | Flag | Effect |
 | --- | --- |
 | *(default)* | chained — one model at a time |
 | `--parallel` | no chain; SLURM runs as many as fit in the node's GPUs |
 | `--after JOBID` | chain the first job behind an existing one |
+| `--only GLOB` | restrict the batch, e.g. `--only 'gemma-4-*'` to re-run one family |
 
 Which lets you queue the full sweep behind the pilots — the last submitted job
 id is printed for exactly this:
@@ -317,10 +326,65 @@ their *total* parameters, not their active ones.
 in FP8; neither fits in 320 GB. Only `Qwen/Qwen3.5-397B-A17B-GPTQ-Int4` (~200 GB)
 would, which would make the largest point the only quantized one.
 
-Qwen models are served with `--reasoning-parser qwen3`, which splits thinking
-into `reasoning_content` and leaves clean JSON in `content`. Gemma has no such
-parser configured, so its `<think>` blocks arrive inline and are stripped by
-`_clean_json_text` — the path the existing Olmo runs already use.
+Each family is served with its own reasoning parser — `qwen3` and `gemma4` —
+which splits thinking into `reasoning_content` and leaves clean JSON in
+`content`. If a vLLM build lacks one, drop `reasoning_parser` from the config:
+the `<think>` block then arrives inline and is stripped by `_clean_json_text`,
+the path the existing Olmo runs already use.
+
+### Serving requirements
+
+**Gemma 4 needs vLLM ≥ 0.27.2rc0.** Earlier versions read `head_dim` off the
+config globally, which transformers ≥ 5.15 refuses because Gemma 4's genuinely
+varies per layer. On 0.27.1 every Gemma job dies at engine start with:
+
+```
+AmbiguousGlobalPerLayerAttributeError: 'head_dim' is a per-layer attribute
+```
+
+```bash
+uv pip install -U vllm --pre --extra-index-url https://wheels.vllm.ai/nightly/cu129
+```
+
+Do **not** take the workaround the error message suggests
+(`allow_global_per_layer_attribute_access=True`). It silences the exception by
+handing vLLM a single `head_dim` for a model whose layers genuinely differ, so
+the server starts and then computes against the wrong geometry — a wrong number
+instead of a crash. Pinning `transformers==5.14.1` also clears it, but pins you
+to an older transformers to serve a model that needs a newer one.
+
+**FlashInfer kernels are disabled, because the cluster's nvcc is too old.**
+FlashInfer JIT-compiles kernels at runtime using whatever `nvcc` is on `PATH`.
+A pre-CUDA-12 system toolkit cannot target Hopper, and the build fails *after*
+the weights have loaded:
+
+```
+nvcc fatal : Unsupported gpu architecture 'compute_90a'
+```
+
+Two JITs are affected, so both are routed to Triton:
+
+| JIT | Disabled by | Where |
+| --- | --- | --- |
+| top-k/top-p sampler | `VLLM_USE_FLASHINFER_SAMPLER=0` | `slurm/run_model.slurm` |
+| gated-delta-net prefill (Qwen3.5 only) | `--gdn-prefill-backend triton` | the Qwen configs' `extra_args` |
+
+The sampler setting lives in the job script rather than per config, so every
+model in the sweep samples through the same kernel — a sampler that varied
+across models would be a confound. The Triton path draws from the same
+distribution, so results are unaffected; it is somewhat slower, which does not
+matter for 1173 short calls, and it removes runtime compilation from the batch
+jobs entirely.
+
+To undo both once a CUDA ≥ 12.0 toolkit is available
+(`conda install -c nvidia cuda-nvcc`): set `VLLM_USE_FLASHINFER_SAMPLER=1` and
+drop `--gdn-prefill-backend` from `extra_args`.
+
+Re-run just the affected family after a fix, rather than the whole sweep:
+
+```bash
+./slurm/submit_model.sh --pilot-all --only 'gemma-4-*'
+```
 
 **On your own data.** To simulate a different participant set, place each persona
 under `data/prolific_data/<id>/` as `demographic.json` + `study_data.json` (the
