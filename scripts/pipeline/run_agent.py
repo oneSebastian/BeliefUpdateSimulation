@@ -245,6 +245,8 @@ EMPTY_META = {
     # vLLM counts thinking tokens in completion_tokens, so this is the number
     # to compare against max_tokens when sizing the budget.
     "completion_tokens": None,
+    # How much of completion_tokens was thinking, as reported by the server.
+    "reasoning_tokens": None,
     "reasoning_chars": None,
     "reasoning_excerpt": None,
 }
@@ -264,22 +266,69 @@ def _excerpt(text: str, limit: int = REASONING_EXCERPT_CHARS) -> str:
     return f"{text[:limit]}\n\n...[{omitted} characters omitted]...\n\n{text[-limit:]}"
 
 
-def _reasoning_content(message):
-    """Read `reasoning_content` however this OpenAI SDK version exposes it.
+# Servers disagree on the name. vLLM 0.30 returns "reasoning"; earlier vLLM and
+# several other OpenAI-compatible servers return "reasoning_content". Reading
+# only one of them silently discards the entire thinking trace -- which is what
+# happened to the first Qwen3.5 pilots: ~7.8k tokens per call generated and
+# recorded nowhere.
+REASONING_FIELDS = ("reasoning", "reasoning_content")
 
-    It is not part of the OpenAI schema, so depending on the client version it
-    arrives as a real attribute, in `model_extra`, or in `__pydantic_extra__`.
-    Reading only the attribute silently loses the entire thinking trace, which
-    is the one thing worth having when a response is truncated mid-thought.
-    """
-    value = getattr(message, "reasoning_content", None)
+
+def _extra_field(obj, field):
+    """Read a non-schema field however the SDK exposes it."""
+    value = getattr(obj, field, None)
     if value:
         return value
     for holder in ("model_extra", "__pydantic_extra__"):
-        extra = getattr(message, holder, None)
-        if isinstance(extra, dict) and extra.get("reasoning_content"):
-            return extra["reasoning_content"]
+        extra = getattr(obj, holder, None)
+        if isinstance(extra, dict) and extra.get(field):
+            return extra[field]
     return None
+
+
+def _reasoning_text(message):
+    for field in REASONING_FIELDS:
+        value = _extra_field(message, field)
+        if value:
+            return value
+    return None
+
+
+def _reasoning_tokens(usage):
+    """Exact thinking-token count, when the server reports one.
+
+    vLLM puts it in usage.completion_tokens_details.reasoning_tokens. It is the
+    number that matters for sizing max_tokens: completion_tokens includes the
+    thinking, and this says how much of it was.
+    """
+    details = getattr(usage, "completion_tokens_details", None)
+    if details is None:
+        details = _extra_field(usage, "completion_tokens_details")
+    if details is None:
+        return None
+    if isinstance(details, dict):
+        return details.get("reasoning_tokens")
+    return getattr(details, "reasoning_tokens", None)
+
+
+# How many budget-exhausted attempts in a row it takes before the next attempt
+# gives up on thinking. Two is the point at which the pilots stop being
+# ambiguous: across the Qwen3.5 pilots every response that ever parsed finished
+# under 12k tokens, while the ones that truncated ran away past 19k and hit the
+# 32k ceiling. A third *thinking* attempt on such a row buys another full budget
+# of runaway; a third attempt without thinking at least has a chance of
+# answering. The fallback is recorded per row -- see `thinking_disabled` in the
+# diagnostics -- because an answer produced without thinking is not comparable
+# to one produced with it.
+TRUNCATIONS_BEFORE_DISABLING_THINKING = 2
+
+
+def _parse_initial_belief(text: str) -> Optional[int]:
+    """The `probe-initial-belief` ablation's single output value, or None."""
+    try:
+        return int(json.loads(_clean_json_text(text))["belief"])
+    except (json.JSONDecodeError, KeyError, ValueError, TypeError):
+        return None
 
 
 def get_model_response(
@@ -348,13 +397,14 @@ def get_model_response(
         if usage is not None:
             meta["prompt_tokens"] = getattr(usage, "prompt_tokens", None)
             meta["completion_tokens"] = getattr(usage, "completion_tokens", None)
-        # With --reasoning-parser the thinking is split off into its own field
-        # and is NOT part of `content`, so an empty `content` plus a long
-        # reasoning_content is the signature of a model that thought itself out
-        # of its budget. Keep a sample: without it a truncated run records that
-        # 32k tokens were generated but nothing about what they said, which is
+            meta["reasoning_tokens"] = _reasoning_tokens(usage)
+        # With a reasoning parser the thinking is split off into its own field
+        # and is NOT part of `content`, so an empty `content` alongside a long
+        # thinking trace is the signature of a model that thought itself out of
+        # its budget. Keep a sample: without it a truncated run records that 32k
+        # tokens were generated but nothing about what they said, which is
         # exactly when you need to know.
-        reasoning = _reasoning_content(choice.message)
+        reasoning = _reasoning_text(choice.message)
         if reasoning:
             meta["reasoning_chars"] = len(reasoning)
             meta["reasoning_excerpt"] = _excerpt(reasoning)
@@ -369,6 +419,88 @@ def get_model_response(
         raise ValueError("Unsupported client type")
 
     return (content if isinstance(content, str) else ""), meta
+
+
+def generate_with_retries(
+    client,
+    model: str,
+    prompt: str,
+    max_completion_tokens: int | None,
+    max_tries: int,
+    temperature: float,
+    chat_template_kwargs: Optional[dict],
+    accept,
+):
+    """Call the model until ``accept(content)`` holds, at most ``max_tries`` times.
+
+    Returns ``(content, meta, stats)`` for the *last* attempt made -- the one
+    that succeeded, or the last that failed. ``stats`` accumulates across
+    attempts, because a retry that recovers still tells you what the first
+    attempt cost.
+
+    After :data:`TRUNCATIONS_BEFORE_DISABLING_THINKING` consecutive *thinking*
+    attempts end with ``finish_reason == "length"``, thinking is switched off
+    for the rest of this row's attempts. A thinking attempt that stops normally
+    resets the streak -- an isolated truncation is not the runaway pattern this
+    guards against -- but a no-thinking attempt stopping normally does not,
+    because that is simply what no-thinking attempts do. Without the latch,
+    one such attempt would hand the next one back to thinking and straight
+    back into the runaway.
+    """
+    stats = {
+        "n_tries": 0,
+        "n_truncated": 0,
+        # How many attempts ran without thinking, and whether the attempt whose
+        # answer is being kept was one of them.
+        "n_no_thinking": 0,
+        "thinking_disabled": False,
+        "completion_tokens_max": None,
+        "valid_output": False,
+    }
+    content, meta = "", dict(EMPTY_META)
+
+    # Only meaningful when the config asked for thinking in the first place.
+    # For a plain API model there is no chat template to switch, and sending
+    # `enable_thinking` to one would be an error rather than a fallback.
+    thinking_configurable = bool((chat_template_kwargs or {}).get("enable_thinking"))
+    truncated_streak = 0
+    disabled = False
+
+    for _ in range(max_tries):
+        stats["n_tries"] += 1
+
+        if thinking_configurable and truncated_streak >= TRUNCATIONS_BEFORE_DISABLING_THINKING:
+            disabled = True  # latches for the rest of this row
+        stats["thinking_disabled"] = disabled
+        if disabled:
+            stats["n_no_thinking"] += 1
+            attempt_kwargs = {**chat_template_kwargs, "enable_thinking": False}
+        else:
+            attempt_kwargs = chat_template_kwargs
+
+        content, meta = get_model_response(
+            client, model, prompt,
+            max_completion_tokens=max_completion_tokens,
+            temperature=temperature,
+            chat_template_kwargs=attempt_kwargs,
+        )
+
+        if meta["finish_reason"] == "length":
+            stats["n_truncated"] += 1
+            truncated_streak += 1
+        elif not disabled:
+            truncated_streak = 0
+        if meta["completion_tokens"] is not None:
+            stats["completion_tokens_max"] = (
+                meta["completion_tokens"] if stats["completion_tokens_max"] is None
+                else max(stats["completion_tokens_max"], meta["completion_tokens"])
+            )
+
+        if accept(content):
+            stats["valid_output"] = True
+            break
+
+    return content, meta, stats
 
 
 # --------------------------------------------------
@@ -544,64 +676,52 @@ def process_persona(
             print(user_prompt)
             print("\n==========================================\n")
 
-        n_tries = 0
-        n_truncated = 0
-        completion_tokens_max = None
-        valid_output = False
-        for _ in range(max_tries_cfg):
-            n_tries += 1
-            content, meta = get_model_response(
-                client, model, user_prompt,
-                max_completion_tokens=max_tokens_cfg,
-                temperature=temperature,
-                chat_template_kwargs=chat_template_kwargs,
-            )
+        probing_initial_belief = ablation in ["probe-initial-belief"]
+        if probing_initial_belief:
+            def accept(text):
+                return _parse_initial_belief(text) in {-2, -1, 0, 1, 2}
+        else:
+            def accept(text):
+                return is_valid_output(*parse_JSON_output(text))
 
-            # Accumulated over attempts, not just the last one: a retry that
-            # recovers from a truncated thought still means the budget was too
-            # small, and recording only the final attempt would hide that.
-            if meta["finish_reason"] == "length":
-                n_truncated += 1
-            if meta["completion_tokens"] is not None:
-                completion_tokens_max = (
-                    meta["completion_tokens"] if completion_tokens_max is None
-                    else max(completion_tokens_max, meta["completion_tokens"])
-                )
+        content, meta, stats = generate_with_retries(
+            client, model, user_prompt,
+            max_completion_tokens=max_tokens_cfg,
+            max_tries=max_tries_cfg,
+            temperature=temperature,
+            chat_template_kwargs=chat_template_kwargs,
+            accept=accept,
+        )
 
-            if ablation in ["probe-initial-belief"]:
-                cleaned_content = _clean_json_text(content)
-                try:
-                    initial_belief = int(json.loads(cleaned_content)["belief"])
-                except (json.decoder.JSONDecodeError, KeyError, ValueError):
-                    initial_belief = None
-                    continue
-                if initial_belief in {-2, -1, 0, 1, 2}:
-                    valid_output = True
-                    break
-            else:
-                llm_new_belief, ranking, reasoning, llm_general_public = parse_JSON_output(content)
-                if is_valid_output(llm_new_belief, ranking, reasoning, llm_general_public):
-                    valid_output = True
-                    break
+        if probing_initial_belief:
+            initial_belief = _parse_initial_belief(content)
+        else:
+            llm_new_belief, ranking, reasoning, llm_general_public = parse_JSON_output(content)
 
         # Why the last attempt ended, what it cost, and how many it took. For
         # small or heavily-thinking models these are the difference between
         # "the model cannot follow the format" and "the token budget was too
         # small", which look identical in the parsed columns alone.
+        # `thinking_disabled` says whether the answer in this row was produced
+        # with thinking switched off by the fallback, which makes it a different
+        # kind of observation from the rest and must be visible downstream.
         diagnostics = {
-            "n_tries": n_tries,
-            "n_truncated": n_truncated,
-            "valid_output": valid_output,
+            "n_tries": stats["n_tries"],
+            "n_truncated": stats["n_truncated"],
+            "n_no_thinking": stats["n_no_thinking"],
+            "thinking_disabled": stats["thinking_disabled"],
+            "valid_output": stats["valid_output"],
             "max_tokens_budget": max_tokens_cfg,
             "finish_reason": meta["finish_reason"],
             "prompt_tokens": meta["prompt_tokens"],
             "completion_tokens": meta["completion_tokens"],
-            "completion_tokens_max": completion_tokens_max,
+            "completion_tokens_max": stats["completion_tokens_max"],
+            "reasoning_tokens": meta["reasoning_tokens"],
             "reasoning_chars": meta["reasoning_chars"],
             "reasoning_excerpt": meta["reasoning_excerpt"],
         }
 
-        if ablation in ["probe-initial-belief"]:
+        if probing_initial_belief:
             results_by_topic[topic] = {
                 # identifiers
                 "persona_id": persona_id,

@@ -84,10 +84,31 @@ def summarize(df: pd.DataFrame, label: str) -> dict:
         summary["budget_used_pct"] = float("nan")
         summary["near_limit"] = 0
 
+    # Rows whose answer came from the no-thinking fallback. These are valid
+    # output, but they were not produced the same way as the rest, so they are
+    # counted separately rather than folded into the validity rate.
+    if "thinking_disabled" in df.columns:
+        summary["no_thinking"] = int(df["thinking_disabled"].fillna(False).astype(bool).sum())
+    else:
+        summary["no_thinking"] = 0
+
     if "n_tries" in df.columns and df["n_tries"].notna().any():
         summary["mean_tries"] = float(pd.to_numeric(df["n_tries"], errors="coerce").mean())
     else:
         summary["mean_tries"] = float("nan")
+
+    # How much of the generation was thinking rather than answer. A model using
+    # a quarter of its budget almost entirely on thinking behaves very
+    # differently from one writing a long answer, and only the first is at risk
+    # of running out of room as prompts get harder.
+    if "reasoning_tokens" in df.columns and df["reasoning_tokens"].notna().any():
+        reasoning = pd.to_numeric(df["reasoning_tokens"], errors="coerce")
+        completion = pd.to_numeric(df.get("completion_tokens"), errors="coerce")
+        both = reasoning.notna() & completion.notna() & (completion > 0)
+        summary["think_pct"] = (_pct(reasoning[both].sum(), completion[both].sum())
+                                if both.any() else float("nan"))
+    else:
+        summary["think_pct"] = float("nan")
 
     return summary
 
@@ -97,6 +118,13 @@ def verdict(row: dict) -> str:
     if row["n"] == 0:
         return "NO DATA - the run produced no rows"
     if row["truncated"]:
+        # A row that only parsed once thinking was switched off is not evidence
+        # that the budget was too small -- the fallback exists because for these
+        # models it is not. Say so, rather than recommending a bigger ceiling.
+        if row.get("no_thinking"):
+            return (f"NO-THINKING FALLBACK - {row['truncated']} attempt(s) across "
+                    f"{row['rows_truncated']}/{row['n']} rows hit the ceiling; "
+                    f"{row['no_thinking']}/{row['n']} row(s) answered with thinking off")
         recovered = "" if row["valid_pct"] < 100 else " (retries recovered, but they cost a call each)"
         return (f"RAISE max_tokens - {row['truncated']} attempt(s) across "
                 f"{row['rows_truncated']}/{row['n']} rows hit the ceiling{recovered}")
@@ -155,15 +183,21 @@ def main(argv=None):
             else f"{r['tok_median']}/{r['tok_max']} of {r['budget']} ({r['budget_used_pct']:.0f}%)",
             axis=1),
         tries=lambda d: d["mean_tries"].map(lambda v: "-" if pd.isna(v) else f"{v:.2f}"),
-    )[["model", "n", "valid", "tokens", "tries", "truncated", "verdict"]]
+        think=lambda d: d["think_pct"].map(lambda v: "-" if pd.isna(v) else f"{v:.0f}%"),
+    )[["model", "n", "valid", "tokens", "think", "tries", "truncated",
+       "no_thinking", "verdict"]]
     display.columns = ["model", "n", "valid", "tokens med/max of budget",
-                       "tries", "trunc", "verdict"]
+                       "think", "tries", "trunc", "no-think", "verdict"]
 
     print(display.to_string(index=False))
     print("\n'tokens' is completion tokens (thinking included), high-water mark "
           "across attempts, against max_tokens.")
     print("'trunc' counts attempts that ended with finish_reason == 'length', "
           "including ones a retry recovered from.")
+    print("'think' is the share of generated tokens that was thinking rather "
+          "than answer.")
+    print("'no-think' counts rows whose answer came from the no-thinking "
+          "fallback, after two truncated attempts in a row.")
 
     for label, bad in failures.items():
         if bad.empty:

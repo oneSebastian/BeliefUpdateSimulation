@@ -168,10 +168,22 @@ def test_sequential_is_the_same_as_max_gpus_one(shim):
 
 
 def test_max_gpus_two_packs_pairs_of_single_gpu_jobs(shim):
+    """A wave may only exceed the cap when one job alone does.
+
+    Qwen3.5-122B-A10B needs 4 GPUs; --max-gpus 2 cannot shrink that, so it
+    takes a solo wave rather than being dropped from the sweep.
+    """
     env, log = shim
     run(env, "--pilot-all", "--max-gpus", "2")
+    oversized = 0
     for wave in waves_from(parse_submissions(log)):
-        assert sum(gpus for _, gpus, _ in wave) <= 2, wave
+        total = sum(gpus for _, gpus, _ in wave)
+        if total > 2:
+            assert len(wave) == 1, f"packed past the cap: {wave}"
+            oversized += 1
+        # Pairs of 1-GPU jobs must actually share a wave.
+    assert oversized == 1, "only the 4-GPU model should exceed a cap of 2"
+    assert any(len(w) == 2 for w in waves_from(parse_submissions(log)))
 
 
 def test_max_gpus_without_a_number_is_rejected(shim):
@@ -214,12 +226,17 @@ def test_only_restricts_the_batch_to_matching_configs(shim):
     assert not any("Qwen" in line for line in submissions)
 
 
-def test_only_still_chains_what_it_selects(shim):
+def test_only_still_packs_what_it_selects(shim):
+    """The five Gemma models pack into 1+1+1 then 2+2, not a serial chain."""
     env, log = shim
     run(env, "--pilot-all", "--only", "gemma-4-*")
-    submissions = calls(log)
-    assert "--dependency" not in submissions[0]
-    assert all("--dependency=afterany:" in line for line in submissions[1:])
+    waves = waves_from(parse_submissions(log))
+
+    assert [sum(g for _, g, _ in w) for w in waves] == [3, 4]
+    assert all(deps == [] for _, _, deps in waves[0])
+    for previous, wave in zip(waves, waves[1:]):
+        expected = [jobid for jobid, _, _ in previous]
+        assert all(deps == expected for _, _, deps in wave)
 
 
 def test_only_matching_nothing_fails_loudly(shim):

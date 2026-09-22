@@ -5,6 +5,7 @@ is the state every published config ends up in -- so its path resolution
 deliberately does not go through `resolve_output_excel`.
 """
 
+import json
 import types
 
 import pytest
@@ -147,6 +148,117 @@ def test_a_short_thought_is_kept_whole():
     client, _ = fake_openai('{"ok": 1}', reasoning_content="brief thought")
     _, meta = get_model_response(client, "m", "p", 1024, 0.7)
     assert meta["reasoning_excerpt"] == "brief thought"
+
+
+# ---------------------------------------------------------------------------
+# Real HTTP round-trip
+#
+# The bug these guard against slipped through because the tests above build the
+# response by hand. A SimpleNamespace has whatever attribute you give it, so it
+# cannot tell you what the server actually sends or what the SDK preserves.
+# These serve vLLM's real wire format over a socket instead.
+# ---------------------------------------------------------------------------
+
+VLLM_030_RESPONSE = {
+    "id": "chatcmpl-1", "object": "chat.completion", "created": 0,
+    "model": "Qwen3.5-2B",
+    "choices": [{
+        "index": 0, "finish_reason": "stop",
+        "message": {
+            "role": "assistant",
+            "content": '\n\n{"new_belief": 1}',
+            "refusal": None, "annotations": None, "audio": None,
+            "function_call": None,
+            # vLLM 0.30 spells it "reasoning"; older versions used
+            # "reasoning_content". Both must work.
+            "reasoning": "Thinking Process:\n1. Analyze the persona...",
+        },
+    }],
+    "usage": {
+        "prompt_tokens": 21, "total_tokens": 1668, "completion_tokens": 1647,
+        "completion_tokens_details": {"reasoning_tokens": 1638},
+    },
+}
+
+
+@pytest.fixture
+def vllm_server():
+    """Serve one canned response over real HTTP; yields a base_url factory."""
+    import json as _json
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    state = {"body": VLLM_030_RESPONSE}
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def do_POST(self):
+            self.rfile.read(int(self.headers.get("Content-Length", 0)))
+            payload = _json.dumps(state["body"]).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
+
+    server = HTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    port = server.server_address[1]
+    try:
+        yield state, OpenAI(api_key="dummy", base_url=f"http://127.0.0.1:{port}/v1")
+    finally:
+        server.shutdown()
+
+
+def test_vllm_030_reasoning_field_is_captured_over_real_http(vllm_server):
+    """The regression: vLLM 0.30 returns 'reasoning', not 'reasoning_content'.
+
+    Reading only the latter discarded ~7.8k tokens per call in the first
+    Qwen3.5 pilots while every other column looked healthy.
+    """
+    _, client = vllm_server
+    content, meta = get_model_response(client, "Qwen3.5-2B", "p", 32768, 0.7)
+
+    assert content == '\n\n{"new_belief": 1}'
+    assert meta["reasoning_chars"] == len(VLLM_030_RESPONSE["choices"][0]["message"]["reasoning"])
+    assert meta["reasoning_excerpt"].startswith("Thinking Process:")
+
+
+def test_reasoning_token_count_is_read_from_usage_details(vllm_server):
+    """More precise than a character count, and it is what max_tokens is
+    compared against: completion_tokens includes the thinking."""
+    _, client = vllm_server
+    _, meta = get_model_response(client, "m", "p", 32768, 0.7)
+    assert meta["completion_tokens"] == 1647
+    assert meta["reasoning_tokens"] == 1638
+
+
+def test_the_older_reasoning_content_spelling_still_works(vllm_server):
+    """Older vLLM and other OpenAI-compatible servers use the other name."""
+    state, client = vllm_server
+    body = json.loads(json.dumps(VLLM_030_RESPONSE))
+    body["choices"][0]["message"].pop("reasoning")
+    body["choices"][0]["message"]["reasoning_content"] = "older spelling"
+    state["body"] = body
+
+    _, meta = get_model_response(client, "m", "p", 32768, 0.7)
+    assert meta["reasoning_excerpt"] == "older spelling"
+
+
+def test_a_server_that_reports_no_thinking_is_not_an_error(vllm_server):
+    """Non-thinking models and servers without a parser must still work."""
+    state, client = vllm_server
+    body = json.loads(json.dumps(VLLM_030_RESPONSE))
+    body["choices"][0]["message"].pop("reasoning")
+    body["usage"].pop("completion_tokens_details")
+    state["body"] = body
+
+    content, meta = get_model_response(client, "m", "p", 32768, 0.7)
+    assert content == '\n\n{"new_belief": 1}'
+    assert meta["reasoning_tokens"] is None
+    assert meta["reasoning_excerpt"] is None
 
 
 def test_reasoning_content_is_found_when_the_sdk_hides_it_in_model_extra():

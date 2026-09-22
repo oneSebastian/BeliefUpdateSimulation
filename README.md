@@ -200,25 +200,50 @@ chmod +x slurm/submit_model.sh                          # once, on the cluster
 ./slurm/submit_model.sh model_size/Qwen3.5-9B.json      # one model
 ```
 
-**Batch modes are sequential by default.** Each job carries
-`--dependency=afterany:<previous>`, so at most one model is resident at a time
-and the rest of the node stays free for other users. `afterany` rather than
-`afterok`: a model that OOMs or fails to load must not strand the eleven behind
-it.
+**Batch modes are packed into waves.** Jobs are greedily grouped so each wave
+totals at most `--max-gpus` (default 4, the size of the node). A wave's jobs run
+concurrently; every job in wave N+1 carries
+`--dependency=afterany:<all of wave N>`:
 
-**Jobs are submitted cheapest-allocation-first** — all 1-GPU models, then the
-2-GPU ones, with `Qwen3.5-122B-A10B` (4 GPUs) last. When other users hold cards
-the four-GPU job may sit pending, and putting it at the end means the eleven
-ahead of it have already produced results rather than stalling the chain at the
-front. Within a GPU tier the order is by weight-download size, so each tier runs
-roughly smallest model first; ties break on name, so a resubmission reproduces
-the same order.
+```
+  -- wave 1 --   Qwen3.5-0.8B  Qwen3.5-2B  Qwen3.5-4B  gemma-4-E2B-it     4 GPUs
+  -- wave 2 --   gemma-4-E4B-it  Qwen3.5-9B  gemma-4-12B-it               3 GPUs
+  -- wave 3 --   Qwen3.5-27B  Qwen3.5-35B-A3B                             4 GPUs
+  -- wave 4 --   gemma-4-26B-A4B-it  gemma-4-31B-it                       4 GPUs
+  -- wave 5 --   Qwen3.5-122B-A10B                                        4 GPUs
+```
+
+The dependency is what makes this neighbourly. Only wave 1 ever requests
+resources; the rest sit in `PENDING` with reason `Dependency`, which SLURM does
+not schedule or backfill against — so they cannot hold GPUs away from other
+users the way a queue of resource-pending jobs would. Check it with:
+
+```bash
+squeue -u $USER -o '%.10i %.24j %.8T %.20r %.6b'
+```
+
+Each job depends on the *whole* previous wave, not just its last job — waiting
+on one would let wave 2 start while wave 1 still had jobs running, over-
+subscribing the node. `afterany` rather than `afterok`: a model that OOMs or
+fails to load must not strand the waves behind it.
+
+**Waves are filled cheapest-allocation-first**, so the 4-GPU model lands last
+and the eleven ahead of it have produced results before it waits on a full node.
+Within a GPU tier the order is by weight-download size; ties break on name, so a
+resubmission reproduces the same plan. Greedy packing leaves wave 2 one GPU
+short — a tighter bin-pack still needs five waves, so it buys nothing but
+unpredictability.
+
+A job that needs more GPUs than `--max-gpus` takes a wave to itself rather than
+being dropped: `--max-gpus 2` cannot shrink the 4-GPU model.
 
 | Flag | Effect |
 | --- | --- |
-| *(default)* | chained — one model at a time |
-| `--parallel` | no chain; SLURM runs as many as fit in the node's GPUs |
-| `--after JOBID` | chain the first job behind an existing one |
+| *(default)* | waves of at most 4 GPUs |
+| `--max-gpus N` | change the wave capacity |
+| `--sequential` | one job at a time; the same as `--max-gpus 1` |
+| `--parallel` | no dependencies at all — the one mode where queued jobs *do* request resources |
+| `--after JOBID` | hold the first wave behind an existing job |
 | `--only GLOB` | restrict the batch, e.g. `--only 'gemma-4-*'` to re-run one family |
 
 Which lets you queue the full sweep behind the pilots — the last submitted job
@@ -293,6 +318,38 @@ report also flags responses that used more than 90% of the budget without
 truncating, since those will truncate on the full run. It exits non-zero when
 any model needs attention, so a pilot job fails visibly rather than printing a
 warning into a log nobody reads.
+
+The `no-think` column counts rows answered by the fallback described below; a
+model with rows there gets a `NO-THINKING FALLBACK` verdict rather than
+`RAISE max_tokens`, because for those rows the ceiling was not the problem.
+
+### The no-thinking fallback
+
+When two consecutive attempts on the same persona × topic both end with
+`finish_reason == "length"`, the remaining attempts for that row are made with
+`enable_thinking: false`, and the row records it:
+
+| Column | Meaning |
+| --- | --- |
+| `thinking_disabled` | the answer stored in this row was produced with thinking off |
+| `n_no_thinking` | how many of the row's attempts ran that way |
+
+The pilots are what motivates this. Across Qwen3.5-0.8B/2B, every response that
+ever parsed finished under ~12k tokens, while the ones that truncated ran away
+past 19k to the 32k ceiling — there is no mass in between, so a third *thinking*
+attempt on an already-truncated row buys another full budget of runaway rather
+than an answer. (Doubling 0.8B's ceiling from 16K to 32K changed nothing: 0/3
+valid both times, every attempt at the ceiling.)
+
+Two details matter. The switch only applies to configs that asked for thinking
+in the first place — a plain API model has no chat template to flip. And it
+**latches** for the rest of the row: a no-thinking attempt ends with
+`finish_reason == "stop"` by design, so treating that as "the runaway broke"
+would hand the next attempt back to thinking and straight back into it.
+
+`thinking_disabled` exists because these rows are not comparable to the rest —
+they answer a different question than the one the sweep asks. Filter or flag
+them in analysis rather than pooling them.
 
 Validate a config without submitting anything:
 
