@@ -39,15 +39,26 @@ def test_missing_output_key_exits_and_lists_what_was_found():
     assert "personas_root" in str(exc.value)
 
 
+# rglob, not glob: configs are grouped into subdirectories (configs/model_size/)
+# and a non-recursive glob would quietly stop covering them.
+def all_configs():
+    return sorted(CONFIGS_DIR.rglob("*.json"))
+
+
+def test_configs_are_discovered_in_subdirectories():
+    found = {p.relative_to(CONFIGS_DIR).as_posix() for p in all_configs()}
+    assert any(name.startswith("model_size/") for name in found), found
+
+
 def test_no_config_uses_the_misspelled_key():
     """The corrected spelling is what ships; the alias exists only for safety."""
-    offenders = [c.name for c in CONFIGS_DIR.glob("*.json")
-                 if "disabeled_output_excel" in c.read_text(encoding="utf-8")]
+    offenders = [c.name for c in all_configs()
+                 if "disabeled_output_excel" in c.read_text(encoding="utf-8-sig")]
     assert offenders == []
 
 
 def test_every_config_declares_exactly_one_output_key():
-    for config_path in sorted(CONFIGS_DIR.glob("*.json")):
+    for config_path in all_configs():
         entries = json.loads(config_path.read_bytes().decode("utf-8-sig"))
         for entry in entries:
             paths = entry["paths"]
@@ -58,7 +69,7 @@ def test_every_config_declares_exactly_one_output_key():
 
 def test_every_config_resolves_or_exits_cleanly():
     """No config may raise anything other than SystemExit."""
-    for config_path in sorted(CONFIGS_DIR.glob("*.json")):
+    for config_path in all_configs():
         entries = json.loads(config_path.read_bytes().decode("utf-8-sig"))
         for entry in entries:
             try:

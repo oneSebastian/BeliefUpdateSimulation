@@ -1,0 +1,28 @@
+[
+  {
+    "model": "Qwen3.5-122B-A10B",
+    "max_tokens": 32768,
+    "temperature": 0.7,
+    "max_tries": 3,
+    "port": 8111,
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    },
+    "serving": {
+      "hf_model_id": "Qwen/Qwen3.5-122B-A10B",
+      "gpus": 4,
+      "tensor_parallel_size": 4,
+      "max_model_len": 36864,
+      "gpu_memory_utilization": 0.9,
+      "partition": "verylong",
+      "time": "48:00:00",
+      "reasoning_parser": "qwen3",
+      "extra_args": []
+    },
+    "paths": {
+      "personas_root": "data/prolific_data",
+      "prompt_template_file": "prompt_templates/templates2.txt",
+      "output_excel": "results/model_size/Qwen3.5-122B-A10B_all_personas_results.xlsx"
+    }
+  }
+]

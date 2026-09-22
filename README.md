@@ -32,20 +32,23 @@ If you use this code or data, please cite:
 
 ```
 belief_update_sim/  Importable core: config, data loading, normalization,
-                    response parsing, permutation tests
+                    response parsing, permutation tests, cluster serving params
 scripts/
   pipeline/         run_agent.py (main entry point), academic_ai.py,
-                    extract_initial_beliefs.py
+                    extract_initial_beliefs.py, serving_params.py,
+                    pilot_report.py
   data/             excel_to_json.py, export_hf_dataset.py, and the
                     de-identification tools (pseudonymize, scan_text_pii,
                     strip_otree_identifiers)
   stats/            Permutation tests and statistics
   figures/          Figure generation
 
-configs/           One JSON per model / temperature variant (22 total)
+configs/           One JSON per model / temperature variant (22 total), plus
+                   model_size/ for the 12-model size sweep (34 total)
 prompt_templates/  Prompt templates, ablation variants, topic map
 data/              Inputs: personas and the cleaned survey exports
-results/           Simulation outputs (.xlsx per model, plus ablations/)
+results/           Simulation outputs (.xlsx per model, plus ablations/ and
+                   model_size/)
 outputs/           Generated stats, derived tables, and figures
 slurm/             Cluster job scripts for locally served models
 tests/             Test suite
@@ -85,9 +88,11 @@ left unpinned for portability. The versions the code has been tested with:
 **Hardware.** No special hardware is required for the analysis, statistics, and
 figures, or for API-based simulation — any normal desktop CPU is sufficient, and
 there are no particular CPU requirements. Serving the open-weight models locally
-(Llama-3.3-70B, Qwen3-32B) is the only step that needs a GPU: our runs used
-**4× NVIDIA H100 80GB HBM3** GPUs with vLLM tensor parallelism (see
-`slurm/run_Llama70b.slurm`: `--gpus=4`, `--tensor-parallel-size 4`).
+(Llama-3.3-70B, Qwen3-32B, and the twelve models of the size sweep) is the only
+step that needs a GPU: our runs used **4× NVIDIA H100 80GB HBM3** GPUs with vLLM
+tensor parallelism (see `slurm/run_Llama70b.slurm`: `--gpus=4`,
+`--tensor-parallel-size 4`). The size sweep sizes its allocation per model from
+each config's `serving` block — see [Model-size sweep](#model-size-sweep).
 
 ## Installation
 
@@ -139,6 +144,8 @@ config; per-persona progress is appended to `results/progress_log.jsonl`.
 | `--single_persona ID` | Run one persona folder only |
 | `--single_topic T` | Run one topic only (`UBI`, `penalty`, `weight_loss`) |
 | `--ablation NAME` | Run an ablation (see below) |
+| `--limit N` | Run only the first N personas (the list is sorted, so N is stable) |
+| `--pilot` | Smoke test on 5 personas, written to a `pilot/` folder |
 | `--print_prompt` | Print the assembled prompt |
 
 With `--ablation`, output is written to `results/ablations/{model}_{NAME}.xlsx`
@@ -155,6 +162,111 @@ server, waits for it to become healthy, runs the agent, then shuts the server do
 ```bash
 sbatch slurm/run_qwen32.slurm
 ```
+
+## Model-size sweep
+
+`configs/model_size/` holds twelve locally served models — Gemma 4 (E2B, E4B,
+12B, 26B-A4B, 31B) and Qwen3.5 (0.8B, 2B, 4B, 9B, 27B, 35B-A3B, 122B-A10B) —
+run under identical conditions so that parameter count is the only thing that
+varies. Results go to `results/model_size/`.
+
+**Held constant across the sweep**, and checked by `tests/test_serving.py`:
+temperature 0.7, `templates2.txt`, the full 391-persona set, `max_tries` 3, and
+`enable_thinking: true`. The two families default in opposite directions —
+Qwen3.5 thinks unless told not to, Gemma 4 only when asked — so reasoning mode
+is forced on for every model rather than left to the chat template, which would
+otherwise confound model family with reasoning mode.
+
+Each config carries a `serving` block with everything the cluster needs:
+
+```json
+"serving": {
+  "hf_model_id": "Qwen/Qwen3.5-9B",
+  "gpus": 1, "tensor_parallel_size": 1,
+  "max_model_len": 20480, "gpu_memory_utilization": 0.90,
+  "partition": "verylong", "time": "12:00:00",
+  "reasoning_parser": "qwen3", "extra_args": []
+}
+```
+
+`slurm/run_model.slurm` reads that block, so one job script serves all twelve
+models. Submit through the wrapper, which reads `--gpus`/`--time`/`--partition`
+out of the same config (SLURM fixes those at submit time, not run time):
+
+```bash
+chmod +x slurm/submit_model.sh                          # once, on the cluster
+./slurm/submit_model.sh --pilot-all                     # 5 personas per model
+./slurm/submit_model.sh model_size/Qwen3.5-9B.json      # full run
+./slurm/submit_model.sh model_size/Qwen3.5-9B.json --resume
+```
+
+### Pilot first
+
+`--pilot` runs 5 personas (15 calls) and writes to `results/model_size/pilot/`,
+never touching the real output — so it stays available for configs whose output
+has been disabled. It answers the two questions that are expensive to get wrong
+on 391 personas:
+
+```bash
+python -m scripts.pipeline.pilot_report 'results/model_size/pilot/*.xlsx'
+```
+
+```
+     model  n      valid  tokens med/max of budget tries  trunc  verdict
+Qwen3.5-9B  9 9/9 (100%)   340/2180 of 16384 (13%)  1.00      0  OK
+```
+
+A model can fail to produce usable output for two reasons that look identical in
+the parsed columns, so the report separates them by stop reason:
+
+| Signal | Meaning | Fix |
+| --- | --- | --- |
+| `finish_reason == "length"` | ran out of completion budget mid-thought | raise `max_tokens` (and `max_model_len` with it) |
+| unparseable, stopped normally | ignored the JSON format instructions | prompt or model capability — for the smallest models this is a *result*, not a bug |
+
+Truncation is counted over **attempts**, not final rows: a retry that recovers
+still means the budget was too small, it just paid for the discovery twice. The
+report also flags responses that used more than 90% of the budget without
+truncating, since those will truncate on the full run. It exits non-zero when
+any model needs attention, so a pilot job fails visibly rather than printing a
+warning into a log nobody reads.
+
+Validate a config without submitting anything:
+
+```bash
+python -m scripts.pipeline.serving_params --format human model_size/Qwen3.5-27B.json
+python -m scripts.pipeline.serving_params --check configs/model_size/*.json
+```
+
+### GPU allocation
+
+Sized for 4× H100 80GB on one node, BF16 weights at `gpu_memory_utilization`
+0.90. `max_tokens` is 16K below 26B and 32K at and above it, with
+`max_model_len` carrying another 4K for the ~2.2k-token prompt.
+
+| Model | Weights (BF16) | GPUs | `max_tokens` |
+| --- | --- | --- | --- |
+| gemma-4-E2B-it | ~10 GB (5.1B raw / 2.3B effective) | 1 | 16384 |
+| gemma-4-E4B-it | ~17 GB | 1 | 16384 |
+| gemma-4-12B-it | ~24 GB | 1 | 16384 |
+| gemma-4-26B-A4B-it | ~52 GB | 2 | 32768 |
+| gemma-4-31B-it | ~62 GB | 2 | 32768 |
+| Qwen3.5-0.8B / 2B / 4B / 9B | 2–18 GB | 1 | 16384 |
+| Qwen3.5-27B | ~54 GB | 2 | 32768 |
+| Qwen3.5-35B-A3B | ~70 GB | 2 | 32768 |
+| Qwen3.5-122B-A10B | ~244 GB | 4 | 32768 |
+
+MoE models keep all experts resident, so `26B-A4B` and `122B-A10B` are sized by
+their *total* parameters, not their active ones.
+
+**Qwen3.5-397B-A17B is not in the sweep.** It needs ~794 GB in BF16 and ~400 GB
+in FP8; neither fits in 320 GB. Only `Qwen/Qwen3.5-397B-A17B-GPTQ-Int4` (~200 GB)
+would, which would make the largest point the only quantized one.
+
+Qwen models are served with `--reasoning-parser qwen3`, which splits thinking
+into `reasoning_content` and leaves clean JSON in `content`. Gemma has no such
+parser configured, so its `<think>` blocks arrive inline and are stripped by
+`_clean_json_text` — the path the existing Olmo runs already use.
 
 **On your own data.** To simulate a different participant set, place each persona
 under `data/prolific_data/<id>/` as `demographic.json` + `study_data.json` (the

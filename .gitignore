@@ -16,6 +16,12 @@ slurm-*.out
 # Per-persona run log, rewritten by every run_agent invocation
 results/progress_log.jsonl
 
+# Pilot smoke tests (run_agent --pilot). Throwaway diagnostics on a handful of
+# personas, regenerated on demand -- the pilot_report output is what's worth
+# keeping, not the workbooks. Delete these two lines to version them.
+results/pilot/
+results/*/pilot/
+
 # Generated HF dataset — rebuild with `python -m scripts.data.export_hf_dataset`
 data/hf_dataset/
 

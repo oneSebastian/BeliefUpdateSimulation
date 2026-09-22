@@ -12,9 +12,21 @@ from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
 import pandas as pd
 from openai import OpenAI
 from dotenv import load_dotenv
-from google import genai
-from google.genai.types import GenerateContentConfig, ThinkingConfig
-import anthropic
+
+# The API providers are optional. The cluster environment that serves the
+# open-weight models (conda env `vllm`) has no reason to carry google-genai or
+# anthropic, and importing them unconditionally made `run_agent` unimportable
+# there. A missing provider is only an error once a config actually selects it.
+try:
+    from google import genai
+    from google.genai.types import GenerateContentConfig, ThinkingConfig
+except ImportError:  # pragma: no cover - depends on the installed extras
+    genai = None
+
+try:
+    import anthropic
+except ImportError:  # pragma: no cover - depends on the installed extras
+    anthropic = None
 
 from scripts.pipeline.academic_ai import AcademicAIClient
 
@@ -215,14 +227,43 @@ def is_valid_output(
     return True
 
 
+def _is_instance_of(client, module, attribute) -> bool:
+    """isinstance() against a provider that may not be installed."""
+    if module is None:
+        return False
+    return isinstance(client, getattr(module, attribute))
+
+
+# What a call cost and why it stopped. `finish_reason == "length"` is the one
+# that matters for the model-size sweep: a thinking model that exhausts its
+# completion budget mid-thought returns no JSON at all, which is indistinguishable
+# from a formatting failure unless the stop reason is recorded alongside it.
+EMPTY_META = {
+    "finish_reason": None,
+    "prompt_tokens": None,
+    # vLLM counts thinking tokens in completion_tokens, so this is the number
+    # to compare against max_tokens when sizing the budget.
+    "completion_tokens": None,
+    "reasoning_chars": None,
+}
+
+
 def get_model_response(
-    client: Union[OpenAI, genai.Client, anthropic.Anthropic, AcademicAIClient],
+    client,
     model: str,
     prompt: str,
     max_completion_tokens: int | None,
     temperature: float,
+    chat_template_kwargs: Optional[dict] = None,
 ):
-    if isinstance(client, genai.Client):
+    """Return ``(content, meta)``.
+
+    ``content`` is always a string -- a model that spends its whole budget
+    thinking returns ``None`` for the message content, and the callers parse it.
+    """
+    meta = dict(EMPTY_META)
+
+    if _is_instance_of(client, genai, "Client"):
         response = client.models.generate_content(
             model=model,
             contents=prompt,
@@ -233,7 +274,14 @@ def get_model_response(
             ),
         )
         content = response.text
-    elif isinstance(client, anthropic.Anthropic):
+        candidates = getattr(response, "candidates", None) or []
+        if candidates:
+            meta["finish_reason"] = str(getattr(candidates[0], "finish_reason", None))
+        usage = getattr(response, "usage_metadata", None)
+        if usage is not None:
+            meta["prompt_tokens"] = getattr(usage, "prompt_token_count", None)
+            meta["completion_tokens"] = getattr(usage, "candidates_token_count", None)
+    elif _is_instance_of(client, anthropic, "Anthropic"):
         response = client.messages.create(
             model=model,
             max_tokens=max_completion_tokens,
@@ -241,15 +289,39 @@ def get_model_response(
             messages=[{"role": "user", "content": prompt}]
         )
         content_blocks = response.content
-        content = "".join(block.text for block in content_blocks)
+        content = "".join(block.text for block in content_blocks
+                          if getattr(block, "type", None) == "text")
+        meta["finish_reason"] = getattr(response, "stop_reason", None)
+        usage = getattr(response, "usage", None)
+        if usage is not None:
+            meta["prompt_tokens"] = getattr(usage, "input_tokens", None)
+            meta["completion_tokens"] = getattr(usage, "output_tokens", None)
     elif isinstance(client, OpenAI):
+        # vLLM takes `chat_template_kwargs` (enable_thinking) through extra_body;
+        # the OpenAI API itself ignores an absent one, so only send it when set.
+        extra_body = {"chat_template_kwargs": chat_template_kwargs} if chat_template_kwargs else None
         response = client.chat.completions.create(
             model=model,
             max_completion_tokens=max_completion_tokens,
             temperature=temperature,
             messages=[{"role": "user", "content": prompt}],
+            extra_body=extra_body,
         )
-        content = response.choices[0].message.content
+        choice = response.choices[0]
+        content = choice.message.content
+        meta["finish_reason"] = choice.finish_reason
+        usage = getattr(response, "usage", None)
+        if usage is not None:
+            meta["prompt_tokens"] = getattr(usage, "prompt_tokens", None)
+            meta["completion_tokens"] = getattr(usage, "completion_tokens", None)
+        # With --reasoning-parser the thinking is split off into its own field
+        # and is NOT part of `content`, so an empty `content` plus a long
+        # reasoning_content is the signature of a model that thought itself out
+        # of its budget. Recorded in characters -- the token count is already
+        # covered by completion_tokens, which includes the thinking.
+        reasoning = getattr(choice.message, "reasoning_content", None)
+        if reasoning:
+            meta["reasoning_chars"] = len(reasoning)
     elif isinstance(client, AcademicAIClient):
         response = client.create_chat_completion(
             messages=[{"role": "user", "content": prompt}],
@@ -259,7 +331,8 @@ def get_model_response(
         content = response["data"]["content"]
     else:
         raise ValueError("Unsupported client type")
-    return content
+
+    return (content if isinstance(content, str) else ""), meta
 
 
 # --------------------------------------------------
@@ -277,6 +350,7 @@ def process_persona(
     print_prompt: bool = False,
     ablation: Optional[str] = None,
     results_path: Optional[str] = None,
+    chat_template_kwargs: Optional[dict] = None,
 ) -> Dict[str, Any]:
     demographic_path = os.path.join(persona_dir, "demographic.json")
     study_path = os.path.join(persona_dir, "study_data.json")
@@ -434,15 +508,29 @@ def process_persona(
             print(user_prompt)
             print("\n==========================================\n")
 
+        n_tries = 0
+        n_truncated = 0
+        completion_tokens_max = None
+        valid_output = False
         for _ in range(max_tries_cfg):
-            content = get_model_response(client, model, user_prompt, max_completion_tokens=max_tokens_cfg, temperature=temperature)
-            #response = client.chat.completions.create(
-            #    model=model,
-            #    max_completion_tokens=max_tokens_cfg,
-            #    temperature=temperature,
-            #    messages=[{"role": "user", "content": user_prompt}],
-            #)
-            #content = response.choices[0].message.content
+            n_tries += 1
+            content, meta = get_model_response(
+                client, model, user_prompt,
+                max_completion_tokens=max_tokens_cfg,
+                temperature=temperature,
+                chat_template_kwargs=chat_template_kwargs,
+            )
+
+            # Accumulated over attempts, not just the last one: a retry that
+            # recovers from a truncated thought still means the budget was too
+            # small, and recording only the final attempt would hide that.
+            if meta["finish_reason"] == "length":
+                n_truncated += 1
+            if meta["completion_tokens"] is not None:
+                completion_tokens_max = (
+                    meta["completion_tokens"] if completion_tokens_max is None
+                    else max(completion_tokens_max, meta["completion_tokens"])
+                )
 
             if ablation in ["probe-initial-belief"]:
                 cleaned_content = _clean_json_text(content)
@@ -452,12 +540,30 @@ def process_persona(
                     initial_belief = None
                     continue
                 if initial_belief in {-2, -1, 0, 1, 2}:
+                    valid_output = True
                     break
             else:
                 llm_new_belief, ranking, reasoning, llm_general_public = parse_JSON_output(content)
                 if is_valid_output(llm_new_belief, ranking, reasoning, llm_general_public):
+                    valid_output = True
                     break
-        
+
+        # Why the last attempt ended, what it cost, and how many it took. For
+        # small or heavily-thinking models these are the difference between
+        # "the model cannot follow the format" and "the token budget was too
+        # small", which look identical in the parsed columns alone.
+        diagnostics = {
+            "n_tries": n_tries,
+            "n_truncated": n_truncated,
+            "valid_output": valid_output,
+            "max_tokens_budget": max_tokens_cfg,
+            "finish_reason": meta["finish_reason"],
+            "prompt_tokens": meta["prompt_tokens"],
+            "completion_tokens": meta["completion_tokens"],
+            "completion_tokens_max": completion_tokens_max,
+            "reasoning_chars": meta["reasoning_chars"],
+        }
+
         if ablation in ["probe-initial-belief"]:
             results_by_topic[topic] = {
                 # identifiers
@@ -473,6 +579,7 @@ def process_persona(
                 # outputs
                 "initial_belief": initial_belief,
                 "raw_response": content,
+                **diagnostics,
             }
         else:
             rank_1 = ranking[0] if len(ranking) > 0 else None
@@ -504,6 +611,7 @@ def process_persona(
                 "llm_general_public_stance": llm_general_public,
                 "llm_reasoning": reasoning,
                 "raw_response": content,
+                **diagnostics,
             }
 
         if single_topic:
@@ -608,6 +716,27 @@ def resolve_output_excel(paths, config_path):
     )
 
 
+DEFAULT_PILOT_PERSONAS = 5
+
+
+def resolve_pilot_excel(paths, model):
+    """Where a pilot run writes: a `pilot/` folder beside the real output.
+
+    Deliberately bypasses :func:`resolve_output_excel`. A pilot cannot damage a
+    completed run -- it writes somewhere else entirely -- so it must stay
+    available for configs whose output has been disabled, which is exactly the
+    state every published config ends up in.
+    """
+    declared = paths.get("output_excel")
+    if declared is None:
+        for key in DISABLED_OUTPUT_KEYS:
+            if key in paths:
+                declared = paths[key]
+                break
+    results_dir = os.path.dirname(declared) if declared else "results"
+    return os.path.join(results_dir, "pilot", f"{model}_pilot.xlsx")
+
+
 # --------------------------------------------------
 # Main: loop over ALL personas, checkpoint after each persona
 # --------------------------------------------------
@@ -619,7 +748,15 @@ def main():
     parser.add_argument("--single_persona", type=str, default=None, help="Run only one persona folder.")
     parser.add_argument("--single_topic", type=str, default=None, help="Run only one topic (UBI|penalty|weight_loss).")
     parser.add_argument("--ablation", type=str, default=None, help="Specify changes to persona or question formulation")
+    parser.add_argument("--limit", type=int, default=None,
+                        help="Run only the first N personas (deterministic: the persona list is sorted).")
+    parser.add_argument("--pilot", action="store_true",
+                        help=f"Smoke test: first {DEFAULT_PILOT_PERSONAS} personas (unless --limit), "
+                             f"written to a pilot/ folder beside the real output.")
     args = parser.parse_args()
+
+    if args.limit is not None and args.limit < 1:
+        parser.error("--limit must be at least 1")
 
     config_path = os.path.join("configs", args.config)
     print(f"Load config from {config_path}")
@@ -631,15 +768,22 @@ def main():
     max_tries_cfg = config.get("max_tries", 1)
     port_cfg = config.get("port", 8000)
     temperature = config.get("temperature", 0.0)
+    # Forwarded to vLLM's chat template -- this is how thinking is turned on for
+    # Gemma 4 and kept on for Qwen3.5, which default in opposite directions.
+    chat_template_kwargs = config.get("chat_template_kwargs")
 
     paths = config["paths"]
     personas_root = paths["personas_root"]
     template_file = paths["prompt_template_file"]
-    if args.ablation is None:
+    if args.pilot:
+        output_excel = resolve_pilot_excel(paths, model)
+    elif args.ablation is None:
         output_excel = resolve_output_excel(paths, config_path)
     else:
         output_excel = f"results/ablations/{model}_{args.ablation}.xlsx"
     print("Saving results to path:", output_excel)
+    if chat_template_kwargs:
+        print("chat_template_kwargs:", safe_json_dumps(chat_template_kwargs))
 
     template_text = load_text(template_file)
 
@@ -647,8 +791,18 @@ def main():
     if model.startswith("gpt-"):
         client = OpenAI()
     elif model.startswith("gemini-"):
+        if genai is None:
+            raise SystemExit(
+                f"{model} needs the google-genai package, which is not installed "
+                f"in this environment. `pip install google-genai`."
+            )
         client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
     elif model.startswith("claude-"):
+        if anthropic is None:
+            raise SystemExit(
+                f"{model} needs the anthropic package, which is not installed "
+                f"in this environment. `pip install anthropic`."
+            )
         client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     elif model.startswith("academic-ai"):
         client = AcademicAIClient(model=model)
@@ -667,6 +821,13 @@ def main():
     if not persona_names:
         print(f"No persona folders found in: {personas_root}")
         return
+
+    # Truncate before the resume filter, not after, so that `--limit N` always
+    # means the same N personas however often the run is restarted.
+    limit = args.limit if args.limit is not None else (DEFAULT_PILOT_PERSONAS if args.pilot else None)
+    if limit is not None:
+        persona_names = persona_names[:limit]
+        print(f"Limited to the first {len(persona_names)} personas: {', '.join(persona_names)}")
 
     progress_log_path = os.path.join("results", "progress_log.jsonl")
 
@@ -698,6 +859,7 @@ def main():
             print_prompt=args.print_prompt,
             ablation=args.ablation,
             results_path=output_excel,
+            chat_template_kwargs=chat_template_kwargs,
         )
 
         if not persona_result or not persona_result.get("results_by_topic"):
@@ -750,6 +912,9 @@ def main():
 
     print("\nDone. Final Excel at:", output_excel)
     print("Progress log:", progress_log_path)
+    if args.pilot:
+        print(f"\nPilot finished. Check the token budget and format compliance with:\n"
+              f"    python -m scripts.pipeline.pilot_report {output_excel}")
 
 
 if __name__ == "__main__":
