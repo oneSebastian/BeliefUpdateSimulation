@@ -55,6 +55,11 @@ DEFAULT_PILOT_TIME = "04:00:00"
 
 _TIME_RE = re.compile(r"^(?:(\d+)-)?(\d{1,3}):([0-5]\d):([0-5]\d)$")
 
+# SLURM `--mem`: a positive integer with an optional unit (default MB). SLURM
+# also reads 0 as "all the node's memory", which is not something a config
+# should be able to ask for by accident, so it is rejected below.
+_MEM_RE = re.compile(r"^(\d+)([KMGT])?$")
+
 REQUIRED_SERVING_KEYS = (
     "hf_model_id",
     "gpus",
@@ -107,6 +112,14 @@ class ServingConfig:
     # 122B-A10B. One value for all twelve would either strand the big download
     # or make the small models hold a slot they cannot use.
     pilot_time: str = DEFAULT_PILOT_TIME
+    # Host RAM for the job, as a SLURM `--mem` string, or None to take the
+    # partition default. Only set where the default is known to be too small:
+    # vLLM prefetches the whole checkpoint into the page cache before loading
+    # it, and the page cache is charged to the job's cgroup, so a model whose
+    # weights dwarf the default gets OOM-killed *after* a long download. That
+    # is what happened to 122B-A10B (233 GiB of weights) on its first pilot.
+    # This is host memory and has nothing to do with gpu_memory_utilization.
+    mem: str | None = None
     reasoning_parser: str | None = None
     extra_args: tuple[str, ...] = field(default_factory=tuple)
 
@@ -157,6 +170,8 @@ class ServingConfig:
             f"PARTITION={q(self.partition)}",
             f"TIME_LIMIT={q(self.time_limit)}",
             f"PILOT_TIME={q(self.pilot_time)}",
+            # Empty means "no --mem flag", i.e. take the partition default.
+            f"MEM={q(self.mem or '')}",
             f"REASONING_PARSER={q(self.reasoning_parser or '')}",
             "EXTRA_ARGS=({})".format(" ".join(q(a) for a in self.extra_args)),
             "VLLM_ARGS=({})".format(" ".join(q(a) for a in self.vllm_args())),
@@ -238,6 +253,19 @@ def _validate(serving: ServingConfig) -> ServingConfig:
             f"full 391-persona run"
         )
 
+    if serving.mem is not None:
+        match = _MEM_RE.match(serving.mem)
+        if match is None:
+            raise ServingConfigError(
+                f"{name}: mem={serving.mem!r} is not a SLURM memory size "
+                f"(a number with an optional K/M/G/T suffix, e.g. '500G')"
+            )
+        if int(match.group(1)) == 0:
+            raise ServingConfigError(
+                f"{name}: mem={serving.mem!r} means 'the whole node' to SLURM; "
+                f"omit mem to take the partition default instead"
+            )
+
     if not 1024 <= serving.port <= 65535:
         raise ServingConfigError(f"{name}: port={serving.port} outside 1024..65535")
 
@@ -291,6 +319,7 @@ def load_serving_config(config: str | Path) -> ServingConfig:
         partition=serving["partition"],
         time_limit=serving["time"],
         pilot_time=serving.get("pilot_time", DEFAULT_PILOT_TIME),
+        mem=serving.get("mem") or None,
         reasoning_parser=serving.get("reasoning_parser") or None,
         extra_args=tuple(serving.get("extra_args", ())),
     ))

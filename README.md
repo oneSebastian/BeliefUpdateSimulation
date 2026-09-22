@@ -189,9 +189,20 @@ Each config carries a `serving` block with everything the cluster needs:
 }
 ```
 
+An optional `"mem"` sets the job's **host** RAM (`--mem`), which is unrelated to
+`gpu_memory_utilization`. Omit it to take the partition default, as eleven of
+the twelve configs do. Only `Qwen3.5-122B-A10B` declares one (`"500G"`), because
+vLLM prefetches the whole checkpoint into the page cache before loading it and
+the page cache is charged to the job's cgroup — with 233 GiB of weights across
+four ranks, the default was not enough and the job was OOM-killed *after* a
+26-minute download, reported only as `Worker proc VllmWorker-3 died
+unexpectedly` plus a `slurmstepd: Detected 1 oom-kill event(s)` at the very end
+of the job's stderr.
+
 `slurm/run_model.slurm` reads that block, so one job script serves all twelve
-models. Submit through the wrapper, which reads `--gpus`/`--time`/`--partition`
-out of the same config (SLURM fixes those at submit time, not run time):
+models. Submit through the wrapper, which reads
+`--gpus`/`--time`/`--partition`/`--mem` out of the same config (SLURM fixes
+those at submit time, not run time):
 
 ```bash
 chmod +x slurm/submit_model.sh                          # once, on the cluster
@@ -377,16 +388,62 @@ Sized for 4× H100 80GB on one node, BF16 weights at `gpu_memory_utilization`
 
 ### Token budget
 
-`max_tokens` is **32768 for every model**, with `max_model_len` at 36864 —
-another 4K for the ~2.2k-token prompt. It is deliberately uniform: an earlier
-tiering (16K below 26B, 32K at and above) gave the *small* models a smaller
-budget than the large ones, confounding budget with size in a sweep whose whole
-premise is that only size varies.
+`max_tokens` is **16384 for every model**, with `max_model_len` at 36864 —
+comfortably more than the 4K the ~2.2k-token prompt needs. It is deliberately
+uniform: an earlier tiering (16K below 26B, 32K at and above) gave the *small*
+models a smaller budget than the large ones, confounding budget with size in a
+sweep whose whole premise is that only size varies.
 
-Raising it costs the healthy models nothing — a model that answers stops at a
-few hundred tokens whatever the ceiling — and lengthens only the failures, since
-a model that loops burns whatever it is given. That asymmetry is why the value
-is checked by a test rather than left to per-model judgement.
+The level was briefly 32768, on the reasoning that a larger ceiling costs a
+healthy model nothing because a model that answers stops when it is done. That
+is true per *call* and false per *run*. The ceiling is precisely what a runaway
+spends, and a run's cost is dominated by runaways: at 32768, Qwen3.5-0.8B spent
+two full 32k attempts on 8 of 9 pilot rows before a third attempt answered in
+~150 tokens, which is ~52 h of walltime against ~26 h at 16384. Meanwhile no
+valid response in any of the seven pilots exceeded **13,257** tokens:
+
+| model | largest *valid* response |
+| --- | --- |
+| Qwen3.5-0.8B | 13,257 |
+| Qwen3.5-2B | 11,539 |
+| Qwen3.5-4B | 8,763 |
+| Qwen3.5-9B | 6,888 |
+| gemma-4-12B-it | 4,598 |
+
+So the headroom above 16K was never reached by anything that worked, and was
+paid for twice per failing row. Raise it only against evidence of a *valid*
+response near the ceiling — which is what pilot_report's
+`tokens med/max of budget` column exists to show — not against truncations,
+which are a capability limit at these sizes rather than a budget one.
+
+### Full-run walltime
+
+The seven single-GPU models have a measured pilot, so their `serving.time` is
+set from it rather than guessed. Two independent estimates were used and agreed
+within ~5%: measured agent walltime per row scaled to the full 1173 rows, and
+generated tokens per row over the decode rate vLLM reported. Estimates are at
+`max_tokens` 16384 and include server startup.
+
+| model | estimated | requested |
+| --- | --- | --- |
+| gemma-4-E2B-it | ~3 h | 06:00:00 |
+| gemma-4-E4B-it | ~4 h | 08:00:00 |
+| Qwen3.5-4B | ~10 h | 16:00:00 |
+| Qwen3.5-9B | ~12 h | 18:00:00 |
+| gemma-4-12B-it | ~12 h | 20:00:00 |
+| Qwen3.5-2B | ~20 h | 32:00:00 |
+| Qwen3.5-0.8B | ~26 h | 40:00:00 |
+
+The margin is wide on purpose: each estimate rests on 9 pilot rows from the
+first three personas, and for the two slow models the runtime is driven almost
+entirely by the truncation rate, whose 95% interval is 57–98% for Qwen3.5-0.8B.
+The five multi-GPU models keep their original guesses, having never completed a
+pilot.
+
+Note that 9B and 12B were at ~12 h against a 12:00:00 request — their pilots
+passed with 100% validity and zero truncations, so nothing flagged them, and
+they would have been killed near the end of the full run. A clean pilot says
+nothing about walltime.
 
 MoE models keep all experts resident, so `26B-A4B` and `122B-A10B` are sized by
 their *total* parameters, not their active ones.
@@ -424,30 +481,45 @@ to an older transformers to serve a model that needs a newer one.
 
 **FlashInfer kernels are disabled, because the cluster's nvcc is too old.**
 FlashInfer JIT-compiles kernels at runtime using whatever `nvcc` is on `PATH`.
-A pre-CUDA-12 system toolkit cannot target Hopper, and the build fails *after*
-the weights have loaded:
+The system toolkit cannot build them, and the build fails *after* the weights
+have loaded — ten minutes into a job that then dies. Two forms of the failure
+have been seen:
 
 ```
 nvcc fatal : Unsupported gpu architecture 'compute_90a'
+nvcc fatal : Unknown option '--compress-mode=size'
 ```
 
-Two JITs are affected, so both are routed to Triton:
+Three JITs are affected:
 
 | JIT | Disabled by | Where |
 | --- | --- | --- |
 | top-k/top-p sampler | `VLLM_USE_FLASHINFER_SAMPLER=0` | `slurm/run_model.slurm` |
+| fused all-reduce + RMSNorm (tensor-parallel only) | `VLLM_ALLREDUCE_USE_FLASHINFER=0` | `slurm/run_model.slurm` |
 | gated-delta-net prefill (Qwen3.5 only) | `--gdn-prefill-backend triton` | the Qwen configs' `extra_args` |
 
-The sampler setting lives in the job script rather than per config, so every
-model in the sweep samples through the same kernel — a sampler that varied
-across models would be a confound. The Triton path draws from the same
-distribution, so results are unaffected; it is somewhat slower, which does not
-matter for 1173 short calls, and it removes runtime compilation from the batch
-jobs entirely.
+The first two live in the job script rather than per config, so every model in
+the sweep runs the same kernels — a kernel that varied across models would be a
+confound on the size axis. The fallback paths draw from the same distributions,
+so results are unaffected; they are somewhat slower, which does not matter for
+1173 short calls, and it removes runtime compilation from the batch jobs
+entirely.
 
-To undo both once a CUDA ≥ 12.0 toolkit is available
+The all-reduce one is worth understanding before changing it, because it looks
+like a tensor-parallelism problem and is not. vLLM 0.30 promoted `FLASHINFER`
+to the front of the all-reduce dispatch order; 0.27.1 kept it in the candidate
+list and chose `CUSTOM`. The fused all-reduce+RMSNorm pass only builds
+`trtllm_mnnvl_allreduce.cu` once dispatch actually goes through FlashInfer — a
+working 0.27.1 run on 4 GPUs had `fuse_allreduce_rms: True` and never invoked
+`nvcc` at all. So do **not** "fix" this by disabling the fusion pass
+(`-O.pass_config.fuse_allreduce_rms=false`); that removes an optimization the
+older runs had. It is the backend choice that regressed, and
+`VLLM_ALLREDUCE_USE_FLASHINFER=0` is what restores the old behaviour.
+
+To undo all three once a CUDA ≥ 12.8 toolkit is available
 (`conda install -c nvidia cuda-nvcc`): set `VLLM_USE_FLASHINFER_SAMPLER=1` and
-drop `--gdn-prefill-backend` from `extra_args`.
+`VLLM_ALLREDUCE_USE_FLASHINFER=1`, and drop `--gdn-prefill-backend` from
+`extra_args`.
 
 Re-run just the affected family after a fix, rather than the whole sweep:
 

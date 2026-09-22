@@ -156,9 +156,19 @@ submit_one() {
         note=" (after ${DEP_SPEC//:/, })"
     fi
 
+    # Only the configs that declare `mem` get a --mem flag; the rest keep the
+    # partition default, which has been enough for every model that fits on one
+    # or two cards. Asking for memory a config did not ask for would make jobs
+    # pend behind each other for no reason.
+    local mem=()
+    if [ -n "${MEM:-}" ]; then
+        mem=(--mem="$MEM")
+    fi
+
     local jobid
     jobid="$(sbatch --parsable \
         "${dep[@]}" \
+        "${mem[@]}" \
         --job-name="${JOB_NAME}${suffix}" \
         --gpus="$GPUS" \
         --time="$TIME_LIMIT" \
@@ -167,7 +177,7 @@ submit_one() {
     # On a federated cluster --parsable appends ";clustername".
     jobid="${jobid%%;*}"
 
-    echo "    job $jobid  ${MODEL}${suffix}  ${GPUS} GPU(s)  ${TIME_LIMIT}  ${PARTITION}${note}"
+    echo "    job $jobid  ${MODEL}${suffix}  ${GPUS} GPU(s)  ${TIME_LIMIT}  ${PARTITION}${MEM:+  ${MEM} RAM}${note}"
     LAST_JOBID="$jobid"
 }
 

@@ -137,6 +137,59 @@ def test_unknown_partition_is_rejected(tmp_path):
         load_serving_config(write_config(tmp_path, partition="gpu"))
 
 
+# ---------------------------------------------------------------------------
+# host memory
+#
+# vLLM prefetches the whole checkpoint into the page cache, which is charged to
+# the job's cgroup, so a model whose weights dwarf the partition default is
+# OOM-killed after the download rather than at submit time. `mem` exists to
+# pre-empt that, and is optional because only the largest model needs it.
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("value", ["500G", "500000", "64G", "1T", "2048M"])
+def test_valid_memory_sizes_are_accepted(tmp_path, value):
+    assert load_serving_config(write_config(tmp_path, mem=value)).mem == value
+
+
+@pytest.mark.parametrize("value", ["500 G", "500GB", "lots", "-1G", "1.5G", "G500"])
+def test_malformed_memory_sizes_are_rejected(tmp_path, value):
+    with pytest.raises(ServingConfigError, match="not a SLURM memory size"):
+        load_serving_config(write_config(tmp_path, mem=value))
+
+
+def test_zero_memory_is_rejected_rather_than_meaning_the_whole_node(tmp_path):
+    """SLURM reads --mem=0 as 'give me all of it'. A config should have to say
+    that deliberately, not arrive at it by writing 0 and meaning 'unset'."""
+    with pytest.raises(ServingConfigError, match="whole node"):
+        load_serving_config(write_config(tmp_path, mem="0"))
+
+
+def test_memory_is_unset_when_a_config_omits_it(tmp_path):
+    """The other eleven models keep the partition default."""
+    assert load_serving_config(write_config(tmp_path)).mem is None
+
+
+def test_shell_assignments_always_define_mem(tmp_path):
+    """The submitter evals these per config in a loop. If MEM were omitted when
+    unset, a config declaring it would leak its value into the next one."""
+    assignments = load_serving_config(write_config(tmp_path)).to_shell_assignments()
+    assert "MEM=''" in assignments or 'MEM=""' in assignments
+
+
+def test_shell_assignments_quote_the_memory_value(tmp_path):
+    serving = load_serving_config(write_config(tmp_path, mem="500G"))
+    assert "MEM=500G" in serving.to_shell_assignments()
+
+
+def test_only_the_largest_model_asks_for_memory():
+    """A guard on the sweep itself: `mem` is a response to one model's weights,
+    not a default, and adding it everywhere would make jobs pend needlessly."""
+    declared = {path.stem: load_serving_config(path).mem
+                for path in sorted(MODEL_SIZE_DIR.glob("*.json"))}
+    assert declared.pop("Qwen3.5-122B-A10B") == "500G"
+    assert set(declared.values()) == {None}
+
+
 def test_missing_serving_key_names_the_key(tmp_path):
     serving = dict(hf_model_id="org/x", gpus=1, tensor_parallel_size=1,
                    max_model_len=20480, gpu_memory_utilization=0.9,
@@ -224,13 +277,29 @@ def test_every_sweep_config_is_held_constant_where_it_must_be(path):
 def test_the_token_budget_is_uniform_across_the_sweep():
     """It was tiered (16k small / 32k large), which gave the small models less
     room than the large ones -- budget confounded with size, in a sweep whose
-    premise is that only size varies. A model that answers stops when it is
-    done, so a uniform ceiling costs the healthy models nothing.
+    premise is that only size varies. Uniformity is the property that matters;
+    the level is set by :func:`test_the_token_budget_is_set_from_what_succeeds`.
     """
     budgets = {s.max_tokens for s in map(load_serving_config, model_size_configs())}
     contexts = {s.max_model_len for s in map(load_serving_config, model_size_configs())}
-    assert budgets == {32768}, f"token budget varies across the sweep: {budgets}"
+    assert len(budgets) == 1, f"token budget varies across the sweep: {budgets}"
     assert len(contexts) == 1, f"context length varies across the sweep: {contexts}"
+
+
+def test_the_token_budget_is_set_from_what_succeeds_not_from_headroom():
+    """16384, because it was briefly 32768 on the reasoning that a bigger
+    ceiling costs a healthy model nothing. That is true per *successful* call
+    and false per *run*: the ceiling is what a runaway spends, and the pilots
+    burn two of them before the row resolves. No valid response in any of the
+    seven pilots exceeded 13,257 tokens, so doubling the ceiling bought nothing
+    and doubled the price of every failure -- roughly 26 h against 52 h of
+    walltime for Qwen3.5-0.8B alone.
+
+    Raise this only against evidence of a *valid* response near the ceiling,
+    which is what pilot_report's `tokens med/max of budget` column is for.
+    """
+    budgets = {s.max_tokens for s in map(load_serving_config, model_size_configs())}
+    assert budgets == {16384}
 
 
 @pytest.mark.parametrize("path", model_size_configs(), ids=lambda p: p.stem)

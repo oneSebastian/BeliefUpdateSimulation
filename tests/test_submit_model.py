@@ -430,6 +430,50 @@ def test_run_model_disables_the_flashinfer_sampler_by_default():
     assert 'export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"' in script
 
 
+def test_run_model_disables_the_flashinfer_allreduce_by_default():
+    """Without this every tensor-parallel model in the sweep dies in startup:
+    vLLM 0.30 dispatches all-reduce through FlashInfer, whose fused
+    all-reduce+RMSNorm JIT-compiles a CUDA kernel, and the cluster's nvcc is too
+    old to build it. It cost the first pilot wave all five multi-GPU models.
+    """
+    script = (PROJECT_ROOT / "slurm" / "run_model.slurm").read_text()
+    assert 'export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"' in script
+
+
+def test_both_flashinfer_switches_stay_overridable():
+    """`${VAR:-0}` rather than a bare 0, so a future cluster with a newer nvcc
+    can re-enable either one from the environment without editing the script."""
+    script = (PROJECT_ROOT / "slurm" / "run_model.slurm").read_text()
+    for var in ("VLLM_USE_FLASHINFER_SAMPLER", "VLLM_ALLREDUCE_USE_FLASHINFER"):
+        assert f'export {var}="${{{var}:-0}}"' in script
+
+
+def test_the_memory_request_reaches_sbatch(shim):
+    """122B-A10B was OOM-killed on its first pilot: four ranks prefetching a
+    233 GiB checkpoint into a page cache charged to the job's cgroup."""
+    env, log = shim
+    run(env, "model_size/Qwen3.5-122B-A10B.json", "--pilot")
+    assert "--mem=500G" in calls(log)[0]
+
+
+def test_configs_without_a_memory_request_get_no_mem_flag(shim):
+    """Requesting memory a config did not ask for would make jobs pend behind
+    each other for no reason."""
+    env, log = shim
+    run(env, "model_size/Qwen3.5-9B.json", "--pilot")
+    assert "--mem" not in calls(log)[0]
+
+
+def test_a_memory_request_does_not_leak_into_the_next_job(shim):
+    """The submitter evals the serving params per config inside one loop, so a
+    stale MEM from the previous config would silently oversubscribe."""
+    env, log = shim
+    run(env, "--pilot-all")
+    with_mem = [line for line in calls(log) if "--mem" in line]
+    assert len(with_mem) == 1
+    assert "Qwen3.5-122B-A10B" in with_mem[0]
+
+
 def test_no_arguments_prints_usage_and_fails(shim):
     env, log = shim
     result = run(env)

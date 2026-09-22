@@ -81,22 +81,36 @@ nvidia-smi --query-gpu=index,name,memory.total --format=csv || true
 # ---------------------------------------------------------------------------
 # 2. Start the vLLM server
 # ---------------------------------------------------------------------------
-# FlashInfer JIT-compiles its sampling kernels on first use, with whichever
-# nvcc is on PATH. The system toolkit at /usr/bin/nvcc predates CUDA 12, so that
-# build dies with "nvcc fatal : Unsupported gpu architecture 'compute_90a'" --
-# and it dies during the profile run, after the weights have already loaded.
+# Nothing here may JIT-compile a CUDA kernel. The system toolkit at
+# /usr/bin/nvcc is too old for the flags FlashInfer emits -- it rejects
+# `--compress-mode=size` outright -- and there is no newer one on the cluster.
+# Every such build dies inside the profile run, after the weights have already
+# loaded, which costs ten minutes before the job fails.
 #
-# The native/Triton sampler needs no nvcc and draws from the same distribution,
-# so results are unaffected. Set here rather than per model, so every model in
-# the sweep samples through the same kernel.
-#
-# Set VLLM_USE_FLASHINFER_SAMPLER=1 to undo this once a CUDA >= 12.0 toolkit is
-# on PATH (`conda install -c nvidia cuda-nvcc`).
+# The sampler: the native/Triton path needs no nvcc and draws from the same
+# distribution, so results are unaffected. Set here rather than per model, so
+# every model in the sweep samples through the same kernel -- otherwise the
+# kernel would be a confound on the size axis.
 export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
+
+# The all-reduce: this one only bites at tensor-parallel > 1, which is why the
+# first pilot wave lost exactly the five multi-GPU models and kept the seven
+# single-GPU ones. vLLM 0.30 promoted FLASHINFER to the front of the all-reduce
+# dispatch order; 0.27.1 left it in the candidate list but chose CUSTOM. Once
+# dispatch goes through FlashInfer, the fused all-reduce+RMSNorm JIT-compiles
+# trtllm_mnnvl_allreduce.cu, and that is the build that fails.
+#
+# Turning it off restores what 0.27.1 did (dispatch falls back to CUSTOM, then
+# PYNCCL). Note this is NOT the same as disabling the fusion pass: a working
+# 0.27.1 run on 4 GPUs had `fuse_allreduce_rms: True` and never called nvcc,
+# because the fused op only builds that kernel when it dispatches to FlashInfer.
+# Leave the pass alone; it is the backend choice that regressed.
+export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"
 
 VLLM_LOG="logs/vllm_${MODEL}_${SLURM_JOB_ID:-local}.out"
 echo "[$(date)] Starting vllm server -> $VLLM_LOG"
 echo "[$(date)] VLLM_USE_FLASHINFER_SAMPLER=$VLLM_USE_FLASHINFER_SAMPLER"
+echo "[$(date)] VLLM_ALLREDUCE_USE_FLASHINFER=$VLLM_ALLREDUCE_USE_FLASHINFER"
 echo "[$(date)] nvcc: $(command -v nvcc || echo '(none on PATH)')"
 echo "[$(date)] vllm serve ${VLLM_ARGS[*]}"
 

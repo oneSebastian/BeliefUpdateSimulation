@@ -1,7 +1,7 @@
 [
   {
     "model": "Qwen3.5-27B",
-    "max_tokens": 32768,
+    "max_tokens": 16384,
     "temperature": 0.7,
     "max_tries": 3,
     "port": 8109,

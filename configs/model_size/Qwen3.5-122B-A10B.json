@@ -1,7 +1,7 @@
 [
   {
     "model": "Qwen3.5-122B-A10B",
-    "max_tokens": 32768,
+    "max_tokens": 16384,
     "temperature": 0.7,
     "max_tries": 3,
     "port": 8111,
@@ -17,6 +17,7 @@
       "partition": "verylong",
       "time": "48:00:00",
       "pilot_time": "16:00:00",
+      "mem": "500G",
       "reasoning_parser": "qwen3",
       "extra_args": [
         "--gdn-prefill-backend",
