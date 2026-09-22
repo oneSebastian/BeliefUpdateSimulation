@@ -17,10 +17,34 @@ import sys
 
 from belief_update_sim.serving import (
     GPU_MEMORY_GB,
+    MAX_GPUS,
     ServingConfigError,
     load_serving_config,
     parse_slurm_time,
 )
+
+
+def plan_waves(servings, capacity):
+    """Greedily pack into waves that each fit inside `capacity` GPUs.
+
+    Jobs within a wave run concurrently; a wave waits on the whole of the one
+    before it. Expressing the batch this way rather than as one long chain
+    keeps the node busy without ever requesting more than `capacity` GPUs --
+    and because the waiting jobs are held by a *dependency*, they request no
+    resources at all, so they cannot take a backfill reservation away from
+    another user. A job needing more than `capacity` gets a wave to itself
+    rather than being dropped.
+    """
+    waves, current, used = [], [], 0
+    for serving in servings:
+        if current and used + serving.gpus > capacity:
+            waves.append(current)
+            current, used = [], 0
+        current.append(serving)
+        used += serving.gpus
+    if current:
+        waves.append(current)
+    return waves
 
 
 def sort_key(serving):
@@ -70,19 +94,40 @@ def main(argv=None):
         "--sort-by-gpus", action="store_true",
         help="print the given configs one per line, cheapest allocation first",
     )
+    parser.add_argument(
+        "--plan-waves", action="store_true",
+        help="print '<wave> <config>' per line, packed into waves of --max-gpus",
+    )
+    parser.add_argument(
+        "--max-gpus", type=int, default=MAX_GPUS, metavar="N",
+        help=f"GPUs a single wave may use (default {MAX_GPUS}; 1 = strictly sequential)",
+    )
     args = parser.parse_args(argv)
 
-    if len(args.config) > 1 and not (args.check or args.sort_by_gpus):
-        parser.error("multiple configs are only supported with --check/--sort-by-gpus")
+    batch = args.check or args.sort_by_gpus or args.plan_waves
+    if len(args.config) > 1 and not batch:
+        parser.error("multiple configs need --check/--sort-by-gpus/--plan-waves")
 
-    if args.sort_by_gpus:
+    if args.sort_by_gpus or args.plan_waves:
+        if args.max_gpus < 1:
+            print("error: --max-gpus must be at least 1", file=sys.stderr)
+            return 1
         try:
             servings = [(c, load_serving_config(c)) for c in args.config]
         except ServingConfigError as exc:
             print(f"error: {exc}", file=sys.stderr)
             return 1
-        for config, _ in sorted(servings, key=lambda pair: sort_key(pair[1])):
-            print(config)
+        ordered = sorted(servings, key=lambda pair: sort_key(pair[1]))
+
+        if args.sort_by_gpus:
+            for config, _ in ordered:
+                print(config)
+            return 0
+
+        by_model = {serving.model: config for config, serving in ordered}
+        for index, wave in enumerate(plan_waves([s for _, s in ordered], args.max_gpus), 1):
+            for serving in wave:
+                print(f"{index} {by_model[serving.model]}")
         return 0
 
     for config in args.config:

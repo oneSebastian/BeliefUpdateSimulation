@@ -210,8 +210,8 @@ def test_every_sweep_config_validates(path):
 def test_every_sweep_config_is_held_constant_where_it_must_be(path):
     """Size is the only thing allowed to vary across the sweep.
 
-    Temperature, prompt template, persona set, retry budget and reasoning mode
-    are the confounds this ablation exists to exclude.
+    Temperature, prompt template, persona set, retry budget, reasoning mode and
+    token budget are the confounds this ablation exists to exclude.
     """
     entry = json.loads(path.read_text(encoding="utf-8-sig"))[0]
     assert entry["temperature"] == 0.7
@@ -219,6 +219,18 @@ def test_every_sweep_config_is_held_constant_where_it_must_be(path):
     assert entry["chat_template_kwargs"] == {"enable_thinking": True}
     assert entry["paths"]["prompt_template_file"] == "prompt_templates/templates2.txt"
     assert entry["paths"]["personas_root"] == "data/prolific_data"
+
+
+def test_the_token_budget_is_uniform_across_the_sweep():
+    """It was tiered (16k small / 32k large), which gave the small models less
+    room than the large ones -- budget confounded with size, in a sweep whose
+    premise is that only size varies. A model that answers stops when it is
+    done, so a uniform ceiling costs the healthy models nothing.
+    """
+    budgets = {s.max_tokens for s in map(load_serving_config, model_size_configs())}
+    contexts = {s.max_model_len for s in map(load_serving_config, model_size_configs())}
+    assert budgets == {32768}, f"token budget varies across the sweep: {budgets}"
+    assert len(contexts) == 1, f"context length varies across the sweep: {contexts}"
 
 
 @pytest.mark.parametrize("path", model_size_configs(), ids=lambda p: p.stem)
@@ -368,6 +380,82 @@ def test_sort_key_breaks_gpu_ties_by_download_size():
     first = make(model="aaa", pilot_time="02:00:00")
     second = make(model="zzz", pilot_time="02:00:00")
     assert sort_key(first) < sort_key(second)
+
+
+def test_waves_never_exceed_the_gpu_capacity():
+    from scripts.pipeline.serving_params import plan_waves
+    servings = sorted((load_serving_config(p) for p in model_size_configs()),
+                      key=lambda s: s.gpus)
+    for wave in plan_waves(servings, 4):
+        assert sum(s.gpus for s in wave) <= 4
+
+
+def test_every_job_lands_in_exactly_one_wave():
+    from scripts.pipeline.serving_params import plan_waves
+    servings = [load_serving_config(p) for p in model_size_configs()]
+    placed = [s.model for wave in plan_waves(servings, 4) for s in wave]
+    assert sorted(placed) == sorted(s.model for s in servings)
+    assert len(placed) == len(set(placed))
+
+
+def test_waves_are_packed_not_merely_split():
+    """Four 1-GPU jobs must share a wave, not take four of them."""
+    from scripts.pipeline.serving_params import plan_waves
+    ones = [make(model=f"m{i}") for i in range(4)]
+    assert len(plan_waves(ones, 4)) == 1
+
+
+def test_capacity_one_is_strictly_sequential():
+    """--sequential is expressed as --max-gpus 1; every wave holds one job."""
+    from scripts.pipeline.serving_params import plan_waves
+    servings = [load_serving_config(p) for p in model_size_configs()]
+    waves = plan_waves(servings, 1)
+    assert len(waves) == len(servings)
+    assert all(len(w) == 1 for w in waves)
+
+
+def test_a_job_larger_than_the_capacity_gets_its_own_wave():
+    """Otherwise the 4-GPU model could never be scheduled at all."""
+    from scripts.pipeline.serving_params import plan_waves
+    big = make(model="big", gpus=4, tensor_parallel_size=4)
+    small = make(model="small", gpus=1)
+    waves = plan_waves([small, big], 2)
+    assert [ [s.model for s in w] for w in waves ] == [["small"], ["big"]]
+
+
+def test_the_sweep_packs_into_the_expected_waves():
+    from scripts.pipeline.serving_params import plan_waves, sort_key
+    servings = sorted((load_serving_config(p) for p in model_size_configs()),
+                      key=sort_key)
+    waves = plan_waves(servings, 4)
+    sizes = [sum(s.gpus for s in w) for w in waves]
+    assert sizes == [4, 3, 4, 4, 4], sizes
+    # The 4-GPU model is alone in the last wave.
+    assert [s.model for s in waves[-1]] == ["Qwen3.5-122B-A10B"]
+
+
+def test_cli_plan_waves_emits_wave_and_config():
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.pipeline.serving_params", "--plan-waves",
+         *[str(p) for p in model_size_configs()]],
+        capture_output=True, text=True, cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 0, result.stderr
+    lines = [l.split(None, 1) for l in result.stdout.splitlines() if l.strip()]
+    assert len(lines) == 12
+    waves = [int(w) for w, _ in lines]
+    assert waves == sorted(waves), "waves must be emitted in order"
+    assert set(waves) == {1, 2, 3, 4, 5}
+
+
+def test_cli_plan_waves_rejects_a_zero_capacity():
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.pipeline.serving_params", "--plan-waves",
+         "--max-gpus", "0", *[str(p) for p in model_size_configs()]],
+        capture_output=True, text=True, cwd=PROJECT_ROOT,
+    )
+    assert result.returncode == 1
+    assert result.stdout == ""
 
 
 def test_cli_sort_by_gpus_lists_the_sweep_cheapest_first():

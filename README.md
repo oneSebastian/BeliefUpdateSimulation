@@ -145,7 +145,7 @@ config; per-persona progress is appended to `results/progress_log.jsonl`.
 | `--single_topic T` | Run one topic only (`UBI`, `penalty`, `weight_loss`) |
 | `--ablation NAME` | Run an ablation (see below) |
 | `--limit N` | Run only the first N personas (the list is sorted, so N is stable) |
-| `--pilot` | Smoke test on 5 personas, written to a `pilot/` folder |
+| `--pilot` | Smoke test on 3 personas, written to a `pilot/` folder |
 | `--print_prompt` | Print the assembled prompt |
 
 With `--ablation`, output is written to `results/ablations/{model}_{NAME}.xlsx`
@@ -195,7 +195,7 @@ out of the same config (SLURM fixes those at submit time, not run time):
 
 ```bash
 chmod +x slurm/submit_model.sh                          # once, on the cluster
-./slurm/submit_model.sh --pilot-all                     # 5 personas per model
+./slurm/submit_model.sh --pilot-all                     # 3 personas per model
 ./slurm/submit_model.sh --all --resume                  # the full sweep
 ./slurm/submit_model.sh model_size/Qwen3.5-9B.json      # one model
 ```
@@ -233,7 +233,7 @@ id is printed for exactly this:
 ### Pilot walltime and the first-run download
 
 Pilot jobs request the config's `serving.pilot_time`, not its full-run walltime
-— 15 calls do not need 48 hours, and asking for them holds a slot the job cannot
+— 9 calls do not need 48 hours, and asking for them holds a slot the job cannot
 use and loses backfill priority.
 
 `pilot_time` is sized **per model**, because the first run of each downloads its
@@ -265,7 +265,7 @@ walltime.
 
 ### Pilot first
 
-`--pilot` runs 5 personas (15 calls) and writes to `results/model_size/pilot/`,
+`--pilot` runs 3 personas x 3 topics = 9 calls, writing to `results/model_size/pilot/`,
 never touching the real output — so it stays available for configs whose output
 has been disabled. It answers the two questions that are expensive to get wrong
 on 391 personas:
@@ -276,7 +276,7 @@ python -m scripts.pipeline.pilot_report 'results/model_size/pilot/*.xlsx'
 
 ```
      model  n      valid  tokens med/max of budget tries  trunc  verdict
-Qwen3.5-9B  9 9/9 (100%)   340/2180 of 16384 (13%)  1.00      0  OK
+Qwen3.5-9B  9 9/9 (100%)   340/2180 of 32768 (7%)  1.00      0  OK
 ```
 
 A model can fail to produce usable output for two reasons that look identical in
@@ -304,20 +304,32 @@ python -m scripts.pipeline.serving_params --check configs/model_size/*.json
 ### GPU allocation
 
 Sized for 4× H100 80GB on one node, BF16 weights at `gpu_memory_utilization`
-0.90. `max_tokens` is 16K below 26B and 32K at and above it, with
-`max_model_len` carrying another 4K for the ~2.2k-token prompt.
+0.90.
 
-| Model | Weights (BF16) | GPUs | `max_tokens` |
-| --- | --- | --- | --- |
-| gemma-4-E2B-it | ~10 GB (5.1B raw / 2.3B effective) | 1 | 16384 |
-| gemma-4-E4B-it | ~17 GB | 1 | 16384 |
-| gemma-4-12B-it | ~24 GB | 1 | 16384 |
-| gemma-4-26B-A4B-it | ~52 GB | 2 | 32768 |
-| gemma-4-31B-it | ~62 GB | 2 | 32768 |
-| Qwen3.5-0.8B / 2B / 4B / 9B | 2–18 GB | 1 | 16384 |
-| Qwen3.5-27B | ~54 GB | 2 | 32768 |
-| Qwen3.5-35B-A3B | ~70 GB | 2 | 32768 |
-| Qwen3.5-122B-A10B | ~244 GB | 4 | 32768 |
+| Model | Weights (BF16) | GPUs |
+| --- | --- | --- |
+| gemma-4-E2B-it | ~10 GB (5.1B raw / 2.3B effective) | 1 |
+| gemma-4-E4B-it | ~17 GB | 1 |
+| gemma-4-12B-it | ~24 GB | 1 |
+| gemma-4-26B-A4B-it | ~52 GB | 2 |
+| gemma-4-31B-it | ~62 GB | 2 |
+| Qwen3.5-0.8B / 2B / 4B / 9B | 2–18 GB | 1 |
+| Qwen3.5-27B | ~54 GB | 2 |
+| Qwen3.5-35B-A3B | ~70 GB | 2 |
+| Qwen3.5-122B-A10B | ~244 GB | 4 |
+
+### Token budget
+
+`max_tokens` is **32768 for every model**, with `max_model_len` at 36864 —
+another 4K for the ~2.2k-token prompt. It is deliberately uniform: an earlier
+tiering (16K below 26B, 32K at and above) gave the *small* models a smaller
+budget than the large ones, confounding budget with size in a sweep whose whole
+premise is that only size varies.
+
+Raising it costs the healthy models nothing — a model that answers stops at a
+few hundred tokens whatever the ceiling — and lengthens only the failures, since
+a model that loops burns whatever it is given. That asymmetry is why the value
+is checked by a test rather than left to per-model judgement.
 
 MoE models keep all experts resident, so `26B-A4B` and `122B-A10B` are sized by
 their *total* parameters, not their active ones.

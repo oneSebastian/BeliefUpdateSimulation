@@ -11,25 +11,31 @@
 # job runs, so they are read here and passed on the command line, where they
 # override the #SBATCH defaults inside run_model.slurm.
 #
-# BATCH MODES ARE SEQUENTIAL BY DEFAULT. Each job is submitted with
-# --dependency=afterany on the one before it, so at most one model is resident
-# at a time and the rest of the node stays free for other users. `afterany`
-# rather than `afterok`: a model that OOMs or fails to load must not strand the
-# eleven behind it.
+# BATCH MODES ARE PACKED INTO WAVES. Jobs are greedily grouped so that each
+# wave totals at most --max-gpus (default 4). A wave's jobs run concurrently;
+# every job in a wave depends on ALL jobs of the wave before it. That keeps the
+# node busy without ever asking for more than the node has -- and, crucially,
+# the jobs that are waiting are held by a *dependency*, so SLURM does not have
+# them requesting resources and they cannot take a backfill reservation away
+# from another user. (A job pending on resources can; a job pending on
+# Dependency cannot.)
 #
-#     --parallel        submit batch jobs without the dependency chain; SLURM
-#                       will then run as many as fit in the node's GPUs at once
-#     --after JOBID     chain the first job behind an existing job, e.g. to
+# `afterany` rather than `afterok`: a model that OOMs or fails to load must not
+# strand the waves behind it.
+#
+#     --max-gpus N      GPUs one wave may use (default 4)
+#     --sequential      one job at a time; the same as --max-gpus 1
+#     --parallel        no dependencies at all; SLURM decides everything, and
+#                       queued jobs DO request resources
+#     --after JOBID     hold the first wave behind an existing job, e.g. to
 #                       queue the full sweep behind the pilots
-#     --only GLOB       restrict a batch to configs whose name matches, for
-#                       re-running one family after a fix:
+#     --only GLOB       restrict a batch to configs whose name matches:
 #                           ./slurm/submit_model.sh --pilot-all --only 'gemma-4-*'
 #
 # Pilot jobs request the config's `serving.pilot_time` rather than its full-run
-# walltime -- 15 calls do not need 48 hours, and asking for them would hold a
+# walltime -- 9 calls do not need 48 hours, and asking for them would hold a
 # slot the job cannot use. pilot_time is sized per model to cover a FIRST run,
-# where the weights still have to be downloaded: 2h for Qwen3.5-0.8B (~2GB) up
-# to 12h for 122B-A10B (~244GB), against a pessimistic ~10 MB/s.
+# where the weights still have to be downloaded.
 #
 # Set PILOT_TIME_LIMIT to override every model at once on a slower link:
 #     PILOT_TIME_LIMIT=24:00:00 ./slurm/submit_model.sh --pilot-all
@@ -47,37 +53,44 @@ cd "$(dirname "$0")/.."
 # Argument parsing
 # ---------------------------------------------------------------------------
 BATCH_MODE=""          # "pilot" | "full" | ""
-SEQUENTIAL=1
+MAX_GPUS=4
+CHAINED=1              # 0 only for --parallel
 AFTER=""
-ONLY=""                # glob over config basenames, for re-running a subset
+ONLY=""
 PASSTHROUGH=()
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --pilot-all) BATCH_MODE="pilot"; shift ;;
         --all)       BATCH_MODE="full";  shift ;;
-        --parallel)  SEQUENTIAL=0;       shift ;;
-        --only)
+        --parallel)  CHAINED=0;          shift ;;
+        --sequential) MAX_GPUS=1;        shift ;;
+        --max-gpus)
             if [ $# -lt 2 ]; then
-                echo "ERROR: --only needs a glob, e.g. --only 'gemma-4-*'." >&2
+                echo "ERROR: --max-gpus needs a number." >&2
                 exit 2
             fi
-            ONLY="$2"; shift 2 ;;
+            MAX_GPUS="$2"; shift 2 ;;
         --after)
             if [ $# -lt 2 ]; then
                 echo "ERROR: --after needs a job id." >&2
                 exit 2
             fi
             AFTER="$2"; shift 2 ;;
-        --sequential) SEQUENTIAL=1; shift ;;   # explicit form of the default
+        --only)
+            if [ $# -lt 2 ]; then
+                echo "ERROR: --only needs a glob, e.g. --only 'gemma-4-*'." >&2
+                exit 2
+            fi
+            ONLY="$2"; shift 2 ;;
         *)           PASSTHROUGH+=("$1"); shift ;;
     esac
 done
 
 usage() {
     echo "usage: $0 <config> [run_agent args...]" >&2
-    echo "       $0 --pilot-all [--only GLOB] [--parallel] [--after JOBID]" >&2
-    echo "       $0 --all [--resume] [--only GLOB] [--parallel] [--after JOBID]" >&2
+    echo "       $0 --pilot-all [--max-gpus N] [--only GLOB] [--after JOBID]" >&2
+    echo "       $0 --all [--resume] [--max-gpus N] [--only GLOB] [--after JOBID]" >&2
     echo "" >&2
     echo "configs:" >&2
     ls configs/model_size/*.json 2>/dev/null | sed 's|^|  |' >&2
@@ -113,11 +126,13 @@ fi
 mkdir -p logs
 
 PYTHON="${PYTHON:-python}"
-PREV_JOBID="$AFTER"
+LAST_JOBID=""
 
 # ---------------------------------------------------------------------------
-# Submit one config
+# Submit one config. $DEP_SPEC (may be empty) is the dependency to apply.
 # ---------------------------------------------------------------------------
+DEP_SPEC=""
+
 submit_one() {
     local config="$1"; shift
 
@@ -130,19 +145,15 @@ submit_one() {
     for arg in "$@"; do
         [ "$arg" = "--pilot" ] && suffix="-pilot"
     done
-
-    # A pilot is 15 calls. Reserving the full-run walltime for it would hold a
-    # multi-hour slot the job cannot use and lose backfill priority. The config's
-    # own pilot_time is sized per model to cover a first-run weight download
-    # (2h for Qwen3.5-0.8B, 12h for 122B-A10B); PILOT_TIME_LIMIT overrides all
-    # of them at once if the link is slower than that.
     if [ -n "$suffix" ]; then
         TIME_LIMIT="${PILOT_TIME_LIMIT:-$PILOT_TIME}"
     fi
 
     local dep=()
-    if [ "$SEQUENTIAL" -eq 1 ] && [ -n "$PREV_JOBID" ]; then
-        dep=(--dependency="afterany:$PREV_JOBID")
+    local note=""
+    if [ -n "$DEP_SPEC" ]; then
+        dep=(--dependency="afterany:$DEP_SPEC")
+        note=" (after ${DEP_SPEC//:/, })"
     fi
 
     local jobid
@@ -156,13 +167,8 @@ submit_one() {
     # On a federated cluster --parsable appends ";clustername".
     jobid="${jobid%%;*}"
 
-    local after_note=""
-    if [ ${#dep[@]} -gt 0 ]; then
-        after_note=" (after $PREV_JOBID)"
-    fi
-    echo "  job $jobid  ${MODEL}${suffix}  ${GPUS} GPU(s)  ${TIME_LIMIT}  ${PARTITION}${after_note}"
-
-    PREV_JOBID="$jobid"
+    echo "    job $jobid  ${MODEL}${suffix}  ${GPUS} GPU(s)  ${TIME_LIMIT}  ${PARTITION}${note}"
+    LAST_JOBID="$jobid"
 }
 
 # ---------------------------------------------------------------------------
@@ -191,43 +197,69 @@ if [ -n "$BATCH_MODE" ]; then
         exit 1
     fi
 
-    # Cheapest allocation first. The 4-GPU job can sit pending while other users
-    # hold cards; submitting it last means the eleven ahead of it have already
-    # produced results by the time it waits, instead of stalling the chain at
-    # the front. Within a GPU tier, roughly smallest model first.
-    # tr -d '\r': a Python writing text-mode newlines (Windows) would otherwise
-    # leave a carriage return that mapfile -t does not strip, turning every
-    # path into one that does not exist.
-    ordered="$("$PYTHON" -m scripts.pipeline.serving_params --sort-by-gpus "${configs[@]}" | tr -d '\r')" || {
-        echo "ERROR: could not order configs by GPU count." >&2
-        exit 1
-    }
-    mapfile -t configs <<< "$ordered"
-
     extra=()
     [ "$BATCH_MODE" = "pilot" ] && extra=(--pilot)
 
-    if [ "$SEQUENTIAL" -eq 1 ]; then
-        echo "Submitting ${#configs[@]} ${BATCH_MODE} job(s), chained -- one model resident at a time."
-    else
-        echo "Submitting ${#configs[@]} ${BATCH_MODE} job(s) unchained -- SLURM may run several at once."
-    fi
-    echo "Ordered by GPU count, cheapest first."
-    [ -n "$AFTER" ] && echo "First job waits for job $AFTER."
+    # tr -d '\r': a Python writing text-mode newlines (Windows) would otherwise
+    # leave a carriage return that mapfile -t does not strip.
+    plan="$("$PYTHON" -m scripts.pipeline.serving_params \
+                --plan-waves --max-gpus "$MAX_GPUS" "${configs[@]}" | tr -d '\r')" || {
+        echo "ERROR: could not plan waves for the given configs." >&2
+        exit 1
+    }
+    mapfile -t plan_lines <<< "$plan"
 
-    for config in "${configs[@]}"; do
+    if [ "$CHAINED" -eq 1 ]; then
+        echo "Submitting ${#configs[@]} ${BATCH_MODE} job(s) in waves of at most ${MAX_GPUS} GPU(s)."
+        echo "Waiting jobs are held by dependency, so they request no resources."
+    else
+        echo "Submitting ${#configs[@]} ${BATCH_MODE} job(s) unchained -- queued jobs WILL request resources."
+    fi
+    [ -n "$AFTER" ] && echo "First wave waits for job $AFTER."
+
+    prev_wave_ids="$AFTER"     # colon-joined ids of the wave before this one
+    this_wave_ids=""
+    current_wave=""
+
+    for line in "${plan_lines[@]}"; do
+        [ -n "$line" ] || continue
+        wave="${line%% *}"
+        config="${line#* }"
+
+        if [ "$wave" != "$current_wave" ]; then
+            if [ -n "$current_wave" ]; then
+                prev_wave_ids="$this_wave_ids"
+                this_wave_ids=""
+            fi
+            current_wave="$wave"
+            echo "  -- wave $wave --"
+        fi
+
+        if [ "$CHAINED" -eq 1 ]; then
+            DEP_SPEC="$prev_wave_ids"
+        else
+            DEP_SPEC=""
+        fi
+
         submit_one "$config" ${extra[@]+"${extra[@]}"} ${PASSTHROUGH[@]+"${PASSTHROUGH[@]}"}
+
+        if [ -n "$this_wave_ids" ]; then
+            this_wave_ids="${this_wave_ids}:${LAST_JOBID}"
+        else
+            this_wave_ids="$LAST_JOBID"
+        fi
     done
 
     echo ""
-    echo "Last job in the chain: $PREV_JOBID"
+    echo "Final wave: ${this_wave_ids//:/, }"
     echo "  watch:  squeue -u \$USER"
     if [ "$BATCH_MODE" = "pilot" ]; then
         echo "  then:   $PYTHON -m scripts.pipeline.pilot_report 'results/model_size/pilot/*.xlsx'"
         echo "  queue the full sweep behind these:"
-        echo "          $0 --all --after $PREV_JOBID"
+        echo "          $0 --all --after ${this_wave_ids}"
     fi
     exit 0
 fi
 
+DEP_SPEC="$AFTER"
 submit_one "${PASSTHROUGH[@]}"

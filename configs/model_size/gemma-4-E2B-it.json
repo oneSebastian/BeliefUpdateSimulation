@@ -1,7 +1,7 @@
 [
   {
     "model": "gemma-4-E2B-it",
-    "max_tokens": 16384,
+    "max_tokens": 32768,
     "temperature": 0.7,
     "max_tries": 3,
     "port": 8100,
@@ -12,7 +12,7 @@
       "hf_model_id": "google/gemma-4-E2B-it",
       "gpus": 1,
       "tensor_parallel_size": 1,
-      "max_model_len": 20480,
+      "max_model_len": 36864,
       "gpu_memory_utilization": 0.9,
       "partition": "verylong",
       "time": "12:00:00",

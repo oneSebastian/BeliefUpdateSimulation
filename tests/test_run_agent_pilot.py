@@ -123,6 +123,45 @@ def test_a_model_that_thinks_past_its_budget_returns_empty_content_not_none():
     assert meta["reasoning_chars"] == len("thinking " * 500)
 
 
+def test_the_thinking_trace_is_kept_when_the_content_is_empty():
+    """The whole point of a truncated row: 16k tokens were generated, and
+    without a sample there is no way to tell looping from verbosity."""
+    reasoning = "".join(f"step {i} of my reasoning. " for i in range(2000))
+    client, _ = fake_openai(None, finish_reason="length", reasoning_content=reasoning)
+    _, meta = get_model_response(client, "m", "p", 16384, 0.7)
+    excerpt = meta["reasoning_excerpt"]
+    assert excerpt, "thinking was discarded"
+    assert excerpt.startswith("step 0 of my reasoning.")
+    assert excerpt.rstrip().endswith("step 1999 of my reasoning.")
+    assert "characters omitted" in excerpt
+
+
+def test_the_excerpt_stays_inside_the_excel_cell_limit():
+    """Excel refuses a cell over 32,767 characters; a 16k-token thought is ~60kB."""
+    client, _ = fake_openai(None, reasoning_content="x" * 200_000)
+    _, meta = get_model_response(client, "m", "p", 16384, 0.7)
+    assert len(meta["reasoning_excerpt"]) < 32_767
+
+
+def test_a_short_thought_is_kept_whole():
+    client, _ = fake_openai('{"ok": 1}', reasoning_content="brief thought")
+    _, meta = get_model_response(client, "m", "p", 1024, 0.7)
+    assert meta["reasoning_excerpt"] == "brief thought"
+
+
+def test_reasoning_content_is_found_when_the_sdk_hides_it_in_model_extra():
+    """Extra fields are not part of the OpenAI schema; depending on the client
+    version they arrive as an attribute or only inside model_extra. Reading
+    just the attribute is what lost the trace on the first Qwen3.5-0.8B pilot."""
+    client, _ = fake_openai(None, finish_reason="length")
+    message = client.chat.completions.create().choices[0].message
+    del message.reasoning_content
+    message.model_extra = {"reasoning_content": "hidden thinking"}
+    _, meta = get_model_response(client, "m", "p", 16384, 0.7)
+    assert meta["reasoning_chars"] == len("hidden thinking")
+    assert meta["reasoning_excerpt"] == "hidden thinking"
+
+
 def test_chat_template_kwargs_are_forwarded_through_extra_body():
     """This is the only mechanism that turns thinking on for Gemma 4."""
     client, captured = fake_openai('{"new_belief": 1}')

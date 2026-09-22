@@ -16,7 +16,7 @@
       "gpu_memory_utilization": 0.9,
       "partition": "verylong",
       "time": "24:00:00",
-      "pilot_time": "06:00:00",
+      "pilot_time": "08:00:00",
       "reasoning_parser": "qwen3",
       "extra_args": [
         "--gdn-prefill-backend",

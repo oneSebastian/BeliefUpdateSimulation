@@ -170,11 +170,23 @@ def main(argv=None):
             continue
         print(f"\n--- {label}: first {len(bad)} failed response(s) ---")
         for _, r in bad.iterrows():
-            raw = str(r.get("raw_response", ""))[:600]
             print(f"  [{r.get('persona_id')} / {r.get('topic')}] "
                   f"finish_reason={r.get('finish_reason')} "
-                  f"completion_tokens={r.get('completion_tokens')}")
-            print(f"    {raw!r}")
+                  f"completion_tokens={r.get('completion_tokens')} "
+                  f"reasoning_chars={r.get('reasoning_chars')}")
+            raw = r.get("raw_response")
+            raw = str(raw) if isinstance(raw, str) else ""
+            if raw:
+                print(f"    content: {raw[:600]!r}")
+            else:
+                print("    content: (empty -- the whole budget went to thinking)")
+            # The excerpt is head+tail: identical text at both ends means the
+            # model was looping, rather than reasoning at length.
+            excerpt = r.get("reasoning_excerpt")
+            if isinstance(excerpt, str) and excerpt:
+                print("    thinking (head/tail):")
+                for line in excerpt.splitlines():
+                    print(f"      {line}")
 
     # Non-zero exit when any model needs attention, so the SLURM pilot job fails
     # visibly instead of printing a warning into a log nobody reads.

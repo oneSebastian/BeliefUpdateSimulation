@@ -246,7 +246,40 @@ EMPTY_META = {
     # to compare against max_tokens when sizing the budget.
     "completion_tokens": None,
     "reasoning_chars": None,
+    "reasoning_excerpt": None,
 }
+
+# A 32k-token thought is ~120kB, and Excel refuses a cell over 32,767 characters,
+# so the thinking is stored as a head-and-tail sample rather than in full. Head
+# and tail together are what distinguish a model looping on one phrase from one
+# reasoning at length and running out of room: a loop shows the same text at
+# both ends.
+REASONING_EXCERPT_CHARS = 1500
+
+
+def _excerpt(text: str, limit: int = REASONING_EXCERPT_CHARS) -> str:
+    if len(text) <= 2 * limit:
+        return text
+    omitted = len(text) - 2 * limit
+    return f"{text[:limit]}\n\n...[{omitted} characters omitted]...\n\n{text[-limit:]}"
+
+
+def _reasoning_content(message):
+    """Read `reasoning_content` however this OpenAI SDK version exposes it.
+
+    It is not part of the OpenAI schema, so depending on the client version it
+    arrives as a real attribute, in `model_extra`, or in `__pydantic_extra__`.
+    Reading only the attribute silently loses the entire thinking trace, which
+    is the one thing worth having when a response is truncated mid-thought.
+    """
+    value = getattr(message, "reasoning_content", None)
+    if value:
+        return value
+    for holder in ("model_extra", "__pydantic_extra__"):
+        extra = getattr(message, holder, None)
+        if isinstance(extra, dict) and extra.get("reasoning_content"):
+            return extra["reasoning_content"]
+    return None
 
 
 def get_model_response(
@@ -318,11 +351,13 @@ def get_model_response(
         # With --reasoning-parser the thinking is split off into its own field
         # and is NOT part of `content`, so an empty `content` plus a long
         # reasoning_content is the signature of a model that thought itself out
-        # of its budget. Recorded in characters -- the token count is already
-        # covered by completion_tokens, which includes the thinking.
-        reasoning = getattr(choice.message, "reasoning_content", None)
+        # of its budget. Keep a sample: without it a truncated run records that
+        # 32k tokens were generated but nothing about what they said, which is
+        # exactly when you need to know.
+        reasoning = _reasoning_content(choice.message)
         if reasoning:
             meta["reasoning_chars"] = len(reasoning)
+            meta["reasoning_excerpt"] = _excerpt(reasoning)
     elif isinstance(client, AcademicAIClient):
         response = client.create_chat_completion(
             messages=[{"role": "user", "content": prompt}],
@@ -563,6 +598,7 @@ def process_persona(
             "completion_tokens": meta["completion_tokens"],
             "completion_tokens_max": completion_tokens_max,
             "reasoning_chars": meta["reasoning_chars"],
+            "reasoning_excerpt": meta["reasoning_excerpt"],
         }
 
         if ablation in ["probe-initial-belief"]:
@@ -717,7 +753,9 @@ def resolve_output_excel(paths, config_path):
     )
 
 
-DEFAULT_PILOT_PERSONAS = 5
+# 3 personas x 3 topics = 9 rows, which is enough to see whether the format
+# holds and whether the token budget does. --limit overrides it.
+DEFAULT_PILOT_PERSONAS = 3
 
 
 def resolve_pilot_excel(paths, model):
