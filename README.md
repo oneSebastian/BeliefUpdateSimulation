@@ -196,9 +196,63 @@ out of the same config (SLURM fixes those at submit time, not run time):
 ```bash
 chmod +x slurm/submit_model.sh                          # once, on the cluster
 ./slurm/submit_model.sh --pilot-all                     # 5 personas per model
-./slurm/submit_model.sh model_size/Qwen3.5-9B.json      # full run
-./slurm/submit_model.sh model_size/Qwen3.5-9B.json --resume
+./slurm/submit_model.sh --all --resume                  # the full sweep
+./slurm/submit_model.sh model_size/Qwen3.5-9B.json      # one model
 ```
+
+**Batch modes are sequential by default.** Each job carries
+`--dependency=afterany:<previous>`, so at most one model is resident at a time
+and the rest of the node stays free for other users. `afterany` rather than
+`afterok`: a model that OOMs or fails to load must not strand the eleven behind
+it.
+
+| Flag | Effect |
+| --- | --- |
+| *(default)* | chained — one model at a time |
+| `--parallel` | no chain; SLURM runs as many as fit in the node's GPUs |
+| `--after JOBID` | chain the first job behind an existing one |
+
+Which lets you queue the full sweep behind the pilots — the last submitted job
+id is printed for exactly this:
+
+```bash
+./slurm/submit_model.sh --pilot-all
+#   ... Last job in the chain: 481203
+./slurm/submit_model.sh --all --resume --after 481203
+```
+
+### Pilot walltime and the first-run download
+
+Pilot jobs request the config's `serving.pilot_time`, not its full-run walltime
+— 15 calls do not need 48 hours, and asking for them holds a slot the job cannot
+use and loses backfill priority.
+
+`pilot_time` is sized **per model**, because the first run of each downloads its
+weights — 2 GB for Qwen3.5-0.8B against 244 GB for 122B-A10B, roughly 565 GB
+across the sweep. A single shared value would either strand the large download
+or make the small models over-reserve. The values assume a pessimistic ~10 MB/s,
+so a cold 244 GB fetch still fits:
+
+| Weights | Models | `pilot_time` |
+| --- | --- | --- |
+| ≤ 10 GB | Qwen3.5-0.8B / 2B / 4B | 02:00:00 |
+| 10–20 GB | Qwen3.5-9B, gemma-4-E2B/E4B | 03:00:00 |
+| 20–40 GB | gemma-4-12B | 04:00:00 |
+| 40–80 GB | Qwen3.5-27B / 35B-A3B, gemma-4-26B-A4B / 31B | 06:00:00 |
+| ~244 GB | Qwen3.5-122B-A10B | 12:00:00 |
+
+Once weights are cached these are very generous — but a job ends when it ends,
+so only the *reservation* is bounded. On a slower link, override every model at
+once, or pre-fetch and keep the reservations small:
+
+```bash
+PILOT_TIME_LIMIT=24:00:00 ./slurm/submit_model.sh --pilot-all
+hf download Qwen/Qwen3.5-122B-A10B      # the alternative
+```
+
+`tests/test_serving.py` checks that every sweep config declares `pilot_time`,
+that it is monotone in model size, and that it stays below the full-run
+walltime.
 
 ### Pilot first
 

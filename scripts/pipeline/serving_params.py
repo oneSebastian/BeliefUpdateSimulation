@@ -33,6 +33,7 @@ def human_summary(serving) -> str:
         f"(utilization {serving.gpu_memory_utilization})",
         f"context / completion   {serving.max_model_len} / {serving.max_tokens} tokens",
         f"partition / time       {serving.partition} / {serving.time_limit}",
+        f"pilot walltime         {serving.pilot_time}",
         f"port                   {serving.port}",
         f"reasoning parser       {serving.reasoning_parser or '(none)'}",
         f"vllm serve             {' '.join(serving.vllm_args())}",

@@ -114,6 +114,24 @@ def test_walltime_beyond_the_partition_limit_is_rejected(tmp_path):
         load_serving_config(write_config(tmp_path, partition="short", time="12:00:00"))
 
 
+def test_pilot_time_beyond_the_partition_limit_is_rejected(tmp_path):
+    with pytest.raises(ServingConfigError, match="pilot_time.*exceeds the"):
+        load_serving_config(write_config(tmp_path, partition="long", time="06:00:00",
+                                         pilot_time="08:00:00"))
+
+
+def test_pilot_time_longer_than_the_full_run_is_rejected(tmp_path):
+    """A 15-call pilot cannot need longer than 391 personas."""
+    with pytest.raises(ServingConfigError, match="cannot need longer"):
+        load_serving_config(write_config(tmp_path, time="04:00:00",
+                                         pilot_time="08:00:00"))
+
+
+def test_pilot_time_defaults_when_a_config_omits_it(tmp_path):
+    from belief_update_sim.serving import DEFAULT_PILOT_TIME
+    assert load_serving_config(write_config(tmp_path)).pilot_time == DEFAULT_PILOT_TIME
+
+
 def test_unknown_partition_is_rejected(tmp_path):
     with pytest.raises(ServingConfigError, match="unknown partition"):
         load_serving_config(write_config(tmp_path, partition="gpu"))
@@ -148,7 +166,7 @@ def test_shell_assignments_cover_what_the_scripts_read():
     emitted = make().to_shell_assignments()
     for key in ("MODEL", "JOB_NAME", "HF_MODEL_ID", "GPUS", "TENSOR_PARALLEL_SIZE",
                 "MAX_MODEL_LEN", "MAX_TOKENS", "PORT", "PARTITION", "TIME_LIMIT",
-                "EXTRA_ARGS", "VLLM_ARGS"):
+                "PILOT_TIME", "EXTRA_ARGS", "VLLM_ARGS"):
         assert f"{key}=" in emitted, f"{key} missing from shell output"
 
 
@@ -236,6 +254,32 @@ def test_sweep_ports_do_not_collide_with_the_existing_configs():
     for path in model_size_configs():
         entry = json.loads(path.read_text(encoding="utf-8-sig"))[0]
         assert entry["port"] not in existing, f"{path.name} reuses port {entry['port']}"
+
+
+@pytest.mark.parametrize("path", model_size_configs(), ids=lambda p: p.stem)
+def test_every_sweep_config_sizes_its_own_pilot_walltime(path):
+    """Left to the default, the 244GB download would hit the walltime."""
+    entry = json.loads(path.read_text(encoding="utf-8-sig"))[0]
+    assert "pilot_time" in entry["serving"], (
+        f"{path.name}: declare pilot_time so a cold weight download fits"
+    )
+
+
+def test_pilot_walltime_is_monotone_in_model_size():
+    """Bigger weights mean a longer download, so a longer pilot reservation."""
+    pilot = {s.model: parse_slurm_time(s.pilot_time)
+             for s in map(load_serving_config, model_size_configs())}
+    assert pilot["Qwen3.5-0.8B"] <= pilot["Qwen3.5-9B"] <= pilot["Qwen3.5-27B"] \
+        <= pilot["Qwen3.5-122B-A10B"]
+    assert pilot["gemma-4-E2B-it"] <= pilot["gemma-4-31B-it"]
+    # The largest download in the sweep (~244GB) gets the longest slot.
+    assert pilot["Qwen3.5-122B-A10B"] == max(pilot.values())
+
+
+@pytest.mark.parametrize("path", model_size_configs(), ids=lambda p: p.stem)
+def test_pilot_walltime_is_well_under_the_full_run(path):
+    serving = load_serving_config(path)
+    assert parse_slurm_time(serving.pilot_time) < parse_slurm_time(serving.time_limit)
 
 
 def test_larger_models_are_not_given_fewer_gpus():

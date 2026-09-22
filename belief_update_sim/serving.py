@@ -49,6 +49,10 @@ PARTITION_TIME_LIMITS_HOURS = {
 # rejected by the server rather than merely truncated.
 PROMPT_HEADROOM_TOKENS = 4096
 
+# Fallback pilot walltime for a config that does not declare one. Enough for a
+# small model's download plus a cold load; the sweep sets its own per model.
+DEFAULT_PILOT_TIME = "04:00:00"
+
 _TIME_RE = re.compile(r"^(?:(\d+)-)?(\d{1,3}):([0-5]\d):([0-5]\d)$")
 
 REQUIRED_SERVING_KEYS = (
@@ -97,6 +101,12 @@ class ServingConfig:
     port: int
     partition: str
     time_limit: str
+    # Walltime for a --pilot run. Much shorter than time_limit (a pilot is 15
+    # calls), but sized per model rather than shared, because the first run of
+    # each downloads its weights -- 1.6GB for Qwen3.5-0.8B against 244GB for
+    # 122B-A10B. One value for all twelve would either strand the big download
+    # or make the small models hold a slot they cannot use.
+    pilot_time: str = DEFAULT_PILOT_TIME
     reasoning_parser: str | None = None
     extra_args: tuple[str, ...] = field(default_factory=tuple)
 
@@ -146,6 +156,7 @@ class ServingConfig:
             f"PORT={q(self.port)}",
             f"PARTITION={q(self.partition)}",
             f"TIME_LIMIT={q(self.time_limit)}",
+            f"PILOT_TIME={q(self.pilot_time)}",
             f"REASONING_PARSER={q(self.reasoning_parser or '')}",
             "EXTRA_ARGS=({})".format(" ".join(q(a) for a in self.extra_args)),
             "VLLM_ARGS=({})".format(" ".join(q(a) for a in self.vllm_args())),
@@ -214,6 +225,19 @@ def _validate(serving: ServingConfig) -> ServingConfig:
             f"{allowed}h limit of partition {serving.partition!r}"
         )
 
+    pilot = parse_slurm_time(serving.pilot_time)
+    if pilot > allowed:
+        raise ServingConfigError(
+            f"{name}: pilot_time={serving.pilot_time} ({pilot:.2f}h) exceeds the "
+            f"{allowed}h limit of partition {serving.partition!r}"
+        )
+    if pilot > requested:
+        raise ServingConfigError(
+            f"{name}: pilot_time={serving.pilot_time} exceeds time="
+            f"{serving.time_limit}; a 15-call pilot cannot need longer than the "
+            f"full 391-persona run"
+        )
+
     if not 1024 <= serving.port <= 65535:
         raise ServingConfigError(f"{name}: port={serving.port} outside 1024..65535")
 
@@ -266,6 +290,7 @@ def load_serving_config(config: str | Path) -> ServingConfig:
         port=int(_require(entry, "port", name, "config")),
         partition=serving["partition"],
         time_limit=serving["time"],
+        pilot_time=serving.get("pilot_time", DEFAULT_PILOT_TIME),
         reasoning_parser=serving.get("reasoning_parser") or None,
         extra_args=tuple(serving.get("extra_args", ())),
     ))
