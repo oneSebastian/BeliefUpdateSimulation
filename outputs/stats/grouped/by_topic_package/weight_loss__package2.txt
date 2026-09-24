@@ -1,0 +1,116 @@
+==============================================================================
+BELIEF UPDATE SIMULATION -- EFFECT SIZES, TEST STATISTICS, SENSITIVITY
+==============================================================================
+
+SUBSET: topic = weight_loss, package = package2
+Design: 130 participants x 1 cell = 130 observations. Each participant
+appears once in this cell, so the nominal and independent sample sizes
+coincide and no within-participant clustering is left to correct for.
+Bonferroni threshold alpha = 0.05/6 = 0.0083; power target = 0.80.
+That alpha is across the 6 models, as in the whole-design report.
+Treating all 9 subsets as one family instead gives alpha = 0.05/54 = 0.00093;
+both are marked in the cross-subset overview, so the choice stays yours.
+
+------------------------------------------------------------------------------
+1. PERMUTATION TEST -- paired post-stance difference (human - LLM)
+   statistic: mean of paired differences; two-sided sign-flip permutation (1,000,000 resamples)
+   effect size: paired Cohen's d_z = mean(diff) / sd(diff)
+------------------------------------------------------------------------------
+model                          n  mean diff   sd diff      d_z           p
+GPT-5.2                      130    -0.3692    0.8817  -0.4188       5e-06
+GPT-5-Mini                   130    -0.3308    0.9514  -0.3476      0.0002
+Gemini-3-Flash-Preview       130    -0.2154    0.8978  -0.2399    0.009073
+Claude-Opus-4.6              130    -0.5231    0.7697  -0.6796           0
+Qwen-3-32B                   130    -0.2000    0.9099  -0.2198     0.01735
+Llama-3.3-70B-Instruct       130    -0.0923    0.9760  -0.0946      0.3241
+
+------------------------------------------------------------------------------
+2. CHI-SQUARED TEST OF INDEPENDENCE -- post-stance distribution
+   statistic: chi-squared on 2 x 5 contingency table, df = 4; non-directional
+   effect size: Cramer's V = sqrt(chi2 / N)
+------------------------------------------------------------------------------
+model                           chi2  df           p   CramerV    min E      N
+GPT-5.2                       34.070   4   7.209e-07    0.3620     10.0    260
+GPT-5-Mini                    25.920   4   3.285e-05    0.3157     11.0    260
+Gemini-3-Flash-Preview        20.939   4   0.0003256    0.2838     13.0    260
+Claude-Opus-4.6               28.136   4    1.17e-05    0.3290     10.0    260
+Qwen-3-32B                    12.174   4      0.0161    0.2164     13.5    260
+Llama-3.3-70B-Instruct        48.896   4   6.138e-10    0.4337      8.0    260
+
+------------------------------------------------------------------------------
+3. BROWN-FORSYTHE TEST -- spread of |belief change| = |post - initial|
+   statistic: median-centred Levene W ~ F(1, N-2); two-sided
+   effect size: variance ratio and SD ratio, human / model
+   human: n = 130, SD = 0.6888
+------------------------------------------------------------------------------
+model                       sd model  var ratio  sd ratio        W    df2           p
+GPT-5.2                       0.4230      2.652     1.628    5.699    258      0.0177
+GPT-5-Mini                    0.3956      3.031     1.741    8.888    258    0.003145
+Gemini-3-Flash-Preview        0.4845      2.021     1.422    0.174    258      0.6773
+Claude-Opus-4.6               0.4800      2.059     1.435    0.393    258      0.5313
+Qwen-3-32B                    0.5303      1.687     1.299    0.043    258      0.8363
+Llama-3.3-70B-Instruct        0.2906      5.619     2.370   22.023    258   4.376e-06
+
+------------------------------------------------------------------------------
+4. BROWN-FORSYTHE TEST -- spread of the 27 comment mean-ranks
+   statistic: median-centred Levene W ~ F(1, 52); two-sided
+   effect size: variance ratio and SD ratio, model / human
+   human: n = 3 comments, SD = 0.0504
+------------------------------------------------------------------------------
+model                       sd model  var ratio  sd ratio        W           p
+GPT-5.2                       0.5253    108.442    10.414    1.332      0.3127
+GPT-5-Mini                    0.7810    239.744    15.484    3.183       0.149
+Gemini-3-Flash-Preview        0.0335      0.442     0.665    0.272      0.6297
+Claude-Opus-4.6               0.5888    136.256    11.673    1.518      0.2855
+Qwen-3-32B                    0.5266    109.000    10.440    1.760      0.2553
+Llama-3.3-70B-Instruct        0.2340     21.512     4.638    0.759      0.4328
+
+------------------------------------------------------------------------------
+5. KENDALL RANK CORRELATION -- human vs LLM comment ranking
+   tau = (Nc - Nd)/N per human-LLM pair; tau in {-1, -1/3, 1/3, 1}
+   effect size: mean tau IS the effect size (a rank correlation, like
+   Pearson r); reported descriptively -- no significance test / p-value
+------------------------------------------------------------------------------
+model                       n pairs   mean tau       sd       se                95% CI
+GPT-5.2                         130   +0.05641   0.5555   0.0487    [-0.0391, +0.1519]
+GPT-5-Mini                      130   +0.01538   0.6548   0.0574    [-0.0972, +0.1279]
+Gemini-3-Flash-Preview          130   +0.07179   0.6456   0.0566    [-0.0392, +0.1828]
+Claude-Opus-4.6                 130   +0.09231   0.6430   0.0564    [-0.0182, +0.2028]
+Qwen-3-32B                      130   +0.00513   0.6705   0.0588    [-0.1101, +0.1204]
+Llama-3.3-70B-Instruct          130   -0.02564   0.6109   0.0536    [-0.1307, +0.0794]
+
+------------------------------------------------------------------------------
+6. SENSITIVITY -- minimum detectable effect (MDE) at 80% power, alpha = 0.0083
+   nominal n = observation level (130); independent n = 130 participants
+------------------------------------------------------------------------------
+metric                                      MDE nom  MDE indep    obs min    obs max
+permutation  detectable d_z                  0.3094     0.3094     0.0946     0.6796
+chi-squared  detectable Cramer V             0.2577     0.2577     0.2164     0.4337
+BF |belief change|  SD ratio                  2.253      2.253      1.299      2.370
+BF |belief change|  variance ratio            5.075      5.075      1.687      5.619
+BF mean-rank spread  SD ratio (n=3)                        nan      0.665     15.484
+Kendall  detectable mean |tau|               0.1975     0.1975     0.0051     0.0923
+
+MDE = minimum detectable effect at 80% power; obs min/max = smallest and
+largest observed effect across the six models (|d_z| and |mean tau| as
+absolute values). An observed effect below the MDE was not resolvable at
+that sample size. The Kendall row is the MDE for a HYPOTHETICAL one-sample
+test of mean tau vs 0 -- that test is not run in the paper and is shown
+only for the power reporting; tau itself remains the reported effect size.
+
+------------------------------------------------------------------------------
+READING THIS SUBSET -- topic = weight_loss, package = package2
+------------------------------------------------------------------------------
+n = 130 here against 1173 for the whole design, so every
+test is correspondingly less sensitive. Section 6 re-solves the minimum
+detectable effect at this n -- compare each observed effect against it
+before reading a non-significant result as an absence of a difference.
+
+Paired d_z below 0.3094 is not resolvable at this n.
+
+Section 4 compares the spread of only 3 comment mean-ranks per group
+(the 27 comments are 3 topics x 3 packages x 3 messages, so a subset holds
+a third or a ninth of them). A Brown-Forsythe test on groups that small has
+almost no power; the SD and variance ratios remain descriptive, the p-values
+essentially uninformative.
+

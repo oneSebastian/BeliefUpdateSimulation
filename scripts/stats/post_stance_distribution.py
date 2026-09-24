@@ -22,6 +22,7 @@ from scipy.stats import chi2_contingency
 from belief_update_sim.comment_ranks import MODELS
 from belief_update_sim.config import RESULTS_DIR, STATS_OUTPUT_DIR, ensure_output_dirs
 from belief_update_sim.data_loading import load_human_normalized_data, load_normalized_data
+from belief_update_sim.grouping import ALL
 
 LIKERT = [-2, -1, 0, 1, 2]
 LABELS = ["SD", "D", "N", "A", "SA"]
@@ -35,8 +36,8 @@ def counts(series):
     return [int((series == v).sum()) for v in LIKERT]
 
 
-def compute():
-    human = post_stance(load_human_normalized_data()["new_belief"])
+def compute(group=ALL):
+    human = post_stance(group.filter(load_human_normalized_data())["new_belief"])
     human_counts = counts(human)
 
     results = {}
@@ -44,10 +45,22 @@ def compute():
         path = RESULTS_DIR / filename
         if not path.exists():
             raise SystemExit(f"missing results file: {path}")
-        model = post_stance(load_normalized_data(path)["new_belief"])
+        model = post_stance(group.filter(load_normalized_data(path))["new_belief"])
         model_counts = counts(model)
 
         table = np.array([human_counts, model_counts])
+        # A level that neither side used gives an all-zero column, and
+        # chi2_contingency then refuses the table over a zero expected
+        # frequency. Whole-design tables are never that thin; a small subset
+        # could be, so say which level is missing instead of letting scipy
+        # report a bare matrix position.
+        empty = [v for v, total in zip(LIKERT, table.sum(axis=0)) if total == 0]
+        if empty:
+            raise ValueError(
+                f"{name}: no observations at post-stance {', '.join(map(str, empty))} "
+                "for either humans or the model in this subset, so the 2 x 5 "
+                "table has an empty column and no chi-squared test is defined."
+            )
         chi2, p, dof, expected = chi2_contingency(table)
         n_total = int(table.sum())
         # 2 rows -> min(r, c) - 1 = 1, so Cramer's V = sqrt(chi2 / N)

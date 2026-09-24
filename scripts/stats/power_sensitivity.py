@@ -26,6 +26,12 @@ found by simulation: the empirical human distribution is resampled and one
 group's spread is scaled until a two-sided median-centred Levene test rejects at
 80% power. Seeded, so the numbers are reproducible.
 
+``compute()`` takes a :class:`belief_update_sim.grouping.Group`, which is how
+``scripts.stats.effect_size_report --group-by`` re-solves the MDEs at a topic's
+or a topic x package cell's own sample size. Inside a cell the nesting is gone
+-- one observation per participant -- so the nominal and independent n coincide
+there and the simulation is run once rather than twice.
+
     python -m scripts.stats.power_sensitivity
 """
 
@@ -39,15 +45,18 @@ from statsmodels.stats.power import GofChisquarePower, TTestPower
 
 from belief_update_sim.comment_ranks import HUMAN
 from belief_update_sim.config import STATS_OUTPUT_DIR, ensure_output_dirs
+from belief_update_sim.grouping import ALL, design_counts
 from scripts.stats import comment_rank_variability as crv
 from scripts.stats.belief_change_variability import human_abs_delta
 
 ALPHA = 0.05 / 6            # 0.00833, the correction used everywhere in the paper
 POWER = 0.80
 
+# The whole-design sample sizes. compute() reads the sizes it actually uses
+# from the data (see belief_update_sim.grouping.design_counts), so that a
+# subset run solves at its own n; for the ungrouped run they are these.
 N_OBS = 1173               # persona x topic observations
 N_PARTICIPANTS = 391       # independent participants
-N_COMMENTS = 27            # aggregated comment mean-ranks (already at its level)
 
 TAU_SD_NULL = math.sqrt(11 / 27)   # sd of the 3-item tau under independence (0.638)
 
@@ -132,36 +141,53 @@ def bf_ratio_mde(base, n, human_more_variable, rng):
 # assembly
 # ---------------------------------------------------------------------------
 
-def compute():
+def compute(group=ALL):
+    """MDEs at the sample sizes `group` actually supplies.
+
+    For the whole design these are the module constants (1173 / 391 / 27). For
+    a subset they are read from the data: inside a cell each participant
+    contributes one observation, so the nominal and independent n coincide and
+    the expensive Brown-Forsythe simulation is run once instead of twice.
+    """
     rng = np.random.default_rng(SEED)
 
-    delta_base = human_abs_delta()
-    means, comments = crv.collect()
-    rank_base = np.array([means[HUMAN][k] for k in comments], dtype=float)
+    counts = design_counts(group)
+    n_obs, n_participants = counts["n_obs"], counts["n_participants"]
 
+    delta_base = human_abs_delta(group)
+    means, comments = crv.collect(group)
+    rank_base = np.array([means[HUMAN][k] for k in comments], dtype=float)
+    n_comments = len(comments)
+
+    bf_nominal = bf_ratio_mde(delta_base, n_obs, True, rng)
     bf_delta = {
-        "nominal": bf_ratio_mde(delta_base, N_OBS, True, rng),
-        "independent": bf_ratio_mde(delta_base, N_PARTICIPANTS, True, rng),
+        "nominal": bf_nominal,
+        "independent": (bf_nominal if n_participants == n_obs
+                        else bf_ratio_mde(delta_base, n_participants, True, rng)),
     }
     bf_rank = {
-        "fixed_27": bf_ratio_mde(rank_base, N_COMMENTS, False, rng),
+        "n": n_comments,
+        "fixed_n": bf_ratio_mde(rank_base, n_comments, False, rng),
     }
 
     return {
         "alpha": ALPHA, "power": POWER,
+        "group": group.label,
+        "n_obs": n_obs, "n_participants": n_participants,
+        "n_comments": n_comments,
         "permutation_dz": {
-            "nominal": paired_dz_mde(N_OBS),
-            "independent": paired_dz_mde(N_PARTICIPANTS),
+            "nominal": paired_dz_mde(n_obs),
+            "independent": paired_dz_mde(n_participants),
         },
         "chi2_cramers_v": {
-            "nominal": cramers_v_mde(2 * N_OBS),
-            "independent": cramers_v_mde(2 * N_PARTICIPANTS),
+            "nominal": cramers_v_mde(2 * n_obs),
+            "independent": cramers_v_mde(2 * n_participants),
         },
         "brown_forsythe_belief_change_sd_ratio": bf_delta,
         "brown_forsythe_mean_rank_sd_ratio": bf_rank,
         "kendall_tau": {
-            "nominal": kendall_tau_mde(N_OBS),
-            "independent": kendall_tau_mde(N_PARTICIPANTS),
+            "nominal": kendall_tau_mde(n_obs),
+            "independent": kendall_tau_mde(n_participants),
         },
     }
 
@@ -176,7 +202,10 @@ def render(r):
     out("=" * 84)
     out("Sensitivity power analysis: minimum detectable effect at 80% power")
     out(f"alpha = {r['alpha']:.5f} (Bonferroni 0.05/6), power = {r['power']:.2f}")
-    out("nominal n = observation level; independent n = 391 participants")
+    out(f"nominal n = {r['n_obs']} observations; "
+        f"independent n = {r['n_participants']} participants")
+    if r["group"] != "overall":
+        out(f"subset: {r['group']}")
     out("=" * 84)
     out()
 
@@ -202,9 +231,9 @@ def render(r):
     out(f"{'  (equivalently, variance ratio)':<44}"
         f"{b['nominal']**2:>16.3f}{b['independent']**2:>16.3f}")
 
-    br = r["brown_forsythe_mean_rank_sd_ratio"]["fixed_27"]
+    rank = r["brown_forsythe_mean_rank_sd_ratio"]
     out(f"{'Brown-Forsythe mean-rank spread  SD ratio':<44}"
-        f"{'n = 27:':>16}{br:>16.3f}")
+        f"{'n = ' + str(rank['n']) + ':':>16}{rank['fixed_n']:>16.3f}")
 
     k = r["kendall_tau"]
     out(f"{'Kendall  detectable mean |tau|':<44}"

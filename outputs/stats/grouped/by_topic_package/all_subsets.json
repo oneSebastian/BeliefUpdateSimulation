@@ -1,0 +1,3494 @@
+{
+  "UBI__package1": {
+    "group": "UBI__package1",
+    "title": "topic = UBI, package = package1",
+    "topic": "UBI",
+    "package": "package1",
+    "counts": {
+      "n_obs": 129,
+      "n_participants": 129
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 129,
+        "mean_diff": 0.35658914728682173,
+        "sd_diff": 0.8731985886347953,
+        "d_z": 0.4083711906180838,
+        "p": 8e-06
+      },
+      "GPT-5-Mini": {
+        "n": 129,
+        "mean_diff": -0.10077519379844961,
+        "sd_diff": 1.0668657457149169,
+        "d_z": -0.0944591146573173,
+        "p": 0.323568
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 129,
+        "mean_diff": -0.17054263565891473,
+        "sd_diff": 0.8937633828346986,
+        "d_z": -0.19081407779094098,
+        "p": 0.039963
+      },
+      "Claude-Opus-4.6": {
+        "n": 129,
+        "mean_diff": -0.3333333333333333,
+        "sd_diff": 0.8868248605746989,
+        "d_z": -0.3758727885879516,
+        "p": 3.8e-05
+      },
+      "Qwen-3-32B": {
+        "n": 129,
+        "mean_diff": 0.18604651162790697,
+        "sd_diff": 0.9981814860383699,
+        "d_z": 0.18638545618221924,
+        "p": 0.04448
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 129,
+        "mean_diff": -0.31007751937984496,
+        "sd_diff": 1.029247674368905,
+        "d_z": -0.3012661841281038,
+        "p": 0.001067
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 129,
+        "n_model": 129,
+        "human_counts": [
+          12,
+          26,
+          20,
+          35,
+          36
+        ],
+        "model_counts": [
+          10,
+          19,
+          56,
+          38,
+          6
+        ],
+        "chi2": 39.87519774945874,
+        "dof": 4,
+        "p_value": 4.5934363365655434e-08,
+        "cramers_v": 0.39313487512132755,
+        "min_expected": 11.0
+      },
+      "GPT-5-Mini": {
+        "n_human": 129,
+        "n_model": 129,
+        "human_counts": [
+          12,
+          26,
+          20,
+          35,
+          36
+        ],
+        "model_counts": [
+          9,
+          22,
+          20,
+          46,
+          32
+        ],
+        "chi2": 2.491026040045648,
+        "dof": 4,
+        "p_value": 0.6462434373250718,
+        "cramers_v": 0.09826057037336701,
+        "min_expected": 10.5
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 129,
+        "n_model": 129,
+        "human_counts": [
+          12,
+          26,
+          20,
+          35,
+          36
+        ],
+        "model_counts": [
+          13,
+          17,
+          9,
+          58,
+          32
+        ],
+        "chi2": 12.019600883993817,
+        "dof": 4,
+        "p_value": 0.017206101684478087,
+        "cramers_v": 0.21584160934712618,
+        "min_expected": 12.5
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 129,
+        "n_model": 129,
+        "human_counts": [
+          12,
+          26,
+          20,
+          35,
+          36
+        ],
+        "model_counts": [
+          4,
+          15,
+          23,
+          51,
+          36
+        ],
+        "chi2": 10.137266023823027,
+        "dof": 4,
+        "p_value": 0.038177855280176184,
+        "cramers_v": 0.1982214135115272,
+        "min_expected": 8.0
+      },
+      "Qwen-3-32B": {
+        "n_human": 129,
+        "n_model": 129,
+        "human_counts": [
+          12,
+          26,
+          20,
+          35,
+          36
+        ],
+        "model_counts": [
+          12,
+          27,
+          28,
+          40,
+          22
+        ],
+        "chi2": 5.0648449360225545,
+        "dof": 4,
+        "p_value": 0.2807084814074923,
+        "cramers_v": 0.14011131975171756,
+        "min_expected": 12.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 129,
+        "n_model": 129,
+        "human_counts": [
+          12,
+          26,
+          20,
+          35,
+          36
+        ],
+        "model_counts": [
+          0,
+          27,
+          18,
+          44,
+          40
+        ],
+        "chi2": 13.359973853908715,
+        "dof": 4,
+        "p_value": 0.0096444844943981,
+        "cramers_v": 0.22755844171332124,
+        "min_expected": 6.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 0.7965982666624453,
+      "n_human": 129,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 129,
+          "sd_model": 0.48085941312799346,
+          "sd_ratio": 1.656613648219068,
+          "variance_ratio": 2.7443687794656904,
+          "W": 0.4387241186345828,
+          "p_value": 0.508334761249867,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 129,
+          "sd_model": 0.45550572457026234,
+          "sd_ratio": 1.7488216364656664,
+          "variance_ratio": 3.058377116170451,
+          "W": 3.0122022080185946,
+          "p_value": 0.08384325402803164,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 129,
+          "sd_model": 0.35577325982021335,
+          "sd_ratio": 2.2390616626583983,
+          "variance_ratio": 5.0133971291865915,
+          "W": 11.773392743475492,
+          "p_value": 0.0007003516057068241,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 129,
+          "sd_model": 0.4891011768952416,
+          "sd_ratio": 1.6286983231550578,
+          "variance_ratio": 2.652658227848097,
+          "W": 0.07984474632658708,
+          "p_value": 0.7777362445464447,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 129,
+          "sd_model": 0.5160927670351977,
+          "sd_ratio": 1.5435175951770643,
+          "variance_ratio": 2.382446566621188,
+          "W": 0.7085839256424277,
+          "p_value": 0.4006999714856785,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 129,
+          "sd_model": 0.510784849805373,
+          "sd_ratio": 1.5595573497647341,
+          "variance_ratio": 2.4322191272052014,
+          "W": 0.0790882877934916,
+          "p_value": 0.7787639286365317,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.11576112033386116,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.8890428626933727,
+          "sd_ratio": 7.679978045559047,
+          "variance_ratio": 58.98206278026897,
+          "W": 2.513072724965097,
+          "p_value": 0.18808609270383433,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.5404718763892514,
+          "sd_ratio": 4.668854921501296,
+          "variance_ratio": 21.798206278026875,
+          "W": 1.7866165413533812,
+          "p_value": 0.2522999545036688,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.13426750446270352,
+          "sd_ratio": 1.1598670095405865,
+          "variance_ratio": 1.345291479820623,
+          "W": 0.002987303958177593,
+          "p_value": 0.9590333158999625,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.23113258164148173,
+          "sd_ratio": 1.9966339387082919,
+          "variance_ratio": 3.986547085201787,
+          "W": 0.5257009345794378,
+          "p_value": 0.5085630989797327,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.3109483894594044,
+          "sd_ratio": 2.6861211135708856,
+          "variance_ratio": 7.215246636771294,
+          "W": 0.7841280209013712,
+          "p_value": 0.42590557083315306,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.6537876221775427,
+          "sd_ratio": 5.64773060499056,
+          "variance_ratio": 31.896860986547036,
+          "W": 0.8858714139925165,
+          "p_value": 0.39988953153440576,
+          "significant": false
+        }
+      },
+      "largest_p": 0.9590333158999625,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 129,
+        "mean": 0.0025839793281653744,
+        "sd": 0.624299780018871,
+        "se": 0.054966530713650257,
+        "ci_low": -0.10515042087058914,
+        "ci_high": 0.11031837952691988
+      },
+      "GPT-5-Mini": {
+        "n": 129,
+        "mean": 0.012919896640826873,
+        "sd": 0.651391540354818,
+        "se": 0.05735182720782437,
+        "ci_low": -0.09948968468650889,
+        "ci_high": 0.12532947796816263
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 129,
+        "mean": 0.033591731266149866,
+        "sd": 0.5649559982256086,
+        "se": 0.04974160206718346,
+        "ci_low": -0.06390180878552972,
+        "ci_high": 0.13108527131782943
+      },
+      "Claude-Opus-4.6": {
+        "n": 129,
+        "mean": -0.012919896640826873,
+        "sd": 0.635198870836913,
+        "se": 0.055926142152537286,
+        "ci_low": -0.12253513525979996,
+        "ci_high": 0.09669534197814621
+      },
+      "Qwen-3-32B": {
+        "n": 129,
+        "mean": 0.0025839793281653757,
+        "sd": 0.6620886092078022,
+        "se": 0.05829365160448812,
+        "ci_low": -0.11167157781663134,
+        "ci_high": 0.11683953647296208
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 129,
+        "mean": 0.02325581395348837,
+        "sd": 0.6669088707315753,
+        "se": 0.05871805196722138,
+        "ci_low": -0.09183156790226553,
+        "ci_high": 0.13834319580924226
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "UBI__package1",
+      "n_obs": 129,
+      "n_participants": 129,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.310619562042449,
+        "independent": 0.310619562042449
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.2587255175475387,
+        "independent": 0.2587255175475387
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 2.579231381416321,
+        "independent": 2.579231381416321
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.19826372593256159,
+        "independent": 0.19826372593256159
+      }
+    }
+  },
+  "UBI__package2": {
+    "group": "UBI__package2",
+    "title": "topic = UBI, package = package2",
+    "topic": "UBI",
+    "package": "package2",
+    "counts": {
+      "n_obs": 131,
+      "n_participants": 131
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 131,
+        "mean_diff": 0.22900763358778625,
+        "sd_diff": 1.1803838065267214,
+        "d_z": 0.19401116172682953,
+        "p": 0.033292
+      },
+      "GPT-5-Mini": {
+        "n": 131,
+        "mean_diff": 0.3893129770992366,
+        "sd_diff": 1.1804335519302251,
+        "d_z": 0.32980507582374174,
+        "p": 0.000273
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 131,
+        "mean_diff": -0.03816793893129771,
+        "sd_diff": 1.3032774080558587,
+        "d_z": -0.02928612028058867,
+        "p": 0.79033
+      },
+      "Claude-Opus-4.6": {
+        "n": 131,
+        "mean_diff": 0.0,
+        "sd_diff": 1.2770157519659775,
+        "d_z": 0.0,
+        "p": 1.0
+      },
+      "Qwen-3-32B": {
+        "n": 131,
+        "mean_diff": 0.16793893129770993,
+        "sd_diff": 1.2412938148172108,
+        "d_z": 0.1352934569503515,
+        "p": 0.14224
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 131,
+        "mean_diff": 0.0,
+        "sd_diff": 1.3008872711759818,
+        "d_z": 0.0,
+        "p": 1.0
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          17,
+          37,
+          24,
+          27,
+          26
+        ],
+        "model_counts": [
+          20,
+          38,
+          26,
+          38,
+          9
+        ],
+        "chi2": 10.455257895257898,
+        "dof": 4,
+        "p_value": 0.033418913275753574,
+        "cramers_v": 0.19976377170477425,
+        "min_expected": 17.5
+      },
+      "GPT-5-Mini": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          17,
+          37,
+          24,
+          27,
+          26
+        ],
+        "model_counts": [
+          33,
+          26,
+          25,
+          45,
+          2
+        ],
+        "chi2": 32.1324716553288,
+        "dof": 4,
+        "p_value": 1.7974639034576656e-06,
+        "cramers_v": 0.3502042569490331,
+        "min_expected": 14.0
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          17,
+          37,
+          24,
+          27,
+          26
+        ],
+        "model_counts": [
+          20,
+          38,
+          8,
+          39,
+          26
+        ],
+        "chi2": 10.438394758394757,
+        "dof": 4,
+        "p_value": 0.03365624949982523,
+        "cramers_v": 0.1996026086200251,
+        "min_expected": 16.0
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          17,
+          37,
+          24,
+          27,
+          26
+        ],
+        "model_counts": [
+          19,
+          28,
+          34,
+          26,
+          24
+        ],
+        "chi2": 3.180270812827742,
+        "dof": 4,
+        "p_value": 0.5281234310857469,
+        "cramers_v": 0.11017458062956165,
+        "min_expected": 18.0
+      },
+      "Qwen-3-32B": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          17,
+          37,
+          24,
+          27,
+          26
+        ],
+        "model_counts": [
+          19,
+          33,
+          24,
+          53,
+          2
+        ],
+        "chi2": 29.361111111111107,
+        "dof": 4,
+        "p_value": 6.602025180810997e-06,
+        "cramers_v": 0.33476157124794587,
+        "min_expected": 14.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          17,
+          37,
+          24,
+          27,
+          26
+        ],
+        "model_counts": [
+          16,
+          32,
+          11,
+          72,
+          0
+        ],
+        "chi2": 51.675738753999624,
+        "dof": 4,
+        "p_value": 1.6125156571741993e-10,
+        "cramers_v": 0.444112197647436,
+        "min_expected": 13.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 1.0771747042664213,
+      "n_human": 131,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 131,
+          "sd_model": 0.46850294428955885,
+          "sd_ratio": 2.2991844926393292,
+          "variance_ratio": 5.2862493311931695,
+          "W": 21.958038982041025,
+          "p_value": 4.498649839099778e-06,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 131,
+          "sd_model": 0.3746205753226574,
+          "sd_ratio": 2.8753751801770635,
+          "variance_ratio": 8.26778242677828,
+          "W": 41.56230176710466,
+          "p_value": 5.521740148454822e-10,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 131,
+          "sd_model": 0.4941228281998401,
+          "sd_ratio": 2.179973566877536,
+          "variance_ratio": 4.752284752284766,
+          "W": 14.137051592942552,
+          "p_value": 0.0002099613089624839,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 131,
+          "sd_model": 0.5007334608607678,
+          "sd_ratio": 2.151193775656101,
+          "variance_ratio": 4.627634660421551,
+          "W": 10.473574698293799,
+          "p_value": 0.001367988797111308,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 131,
+          "sd_model": 0.4710029777505782,
+          "sd_ratio": 2.2869806671091664,
+          "variance_ratio": 5.230280571731088,
+          "W": 28.420938502905713,
+          "p_value": 2.119581690472141e-07,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 131,
+          "sd_model": 0.42180720160506446,
+          "sd_ratio": 2.553713403108213,
+          "variance_ratio": 6.521452145214531,
+          "W": 32.08644142167617,
+          "p_value": 3.900798404089416e-08,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.1388809572416812,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.9962051414624555,
+          "sd_ratio": 7.173086658157571,
+          "variance_ratio": 51.45317220543814,
+          "W": 2.918577471059662,
+          "p_value": 0.16274839347391876,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.9237272074854369,
+          "sd_ratio": 6.651215730591222,
+          "variance_ratio": 44.23867069486412,
+          "W": 2.469688320584542,
+          "p_value": 0.19115842818365428,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.6688434442676444,
+          "sd_ratio": 4.8159478272008185,
+          "variance_ratio": 23.193353474320286,
+          "W": 2.128800675675677,
+          "p_value": 0.2183168896918621,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.6112592738677131,
+          "sd_ratio": 4.401318121706184,
+          "variance_ratio": 19.37160120845925,
+          "W": 2.2024465653985774,
+          "p_value": 0.21195402906623137,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.8969709270688541,
+          "sd_ratio": 6.458559509407338,
+          "variance_ratio": 41.712990936555954,
+          "W": 2.794967444384157,
+          "p_value": 0.16987872862372613,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 1.0,
+          "sd_ratio": 7.200411200074003,
+          "variance_ratio": 51.84592145015114,
+          "W": 2.923944284766748,
+          "p_value": 0.16244940823133092,
+          "significant": false
+        }
+      },
+      "largest_p": 0.2183168896918621,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 131,
+        "mean": -0.11450381679389313,
+        "sd": 0.5814379351411615,
+        "se": 0.05080046826294502,
+        "ci_low": -0.21407273458926535,
+        "ci_high": -0.014934898998520893
+      },
+      "GPT-5-Mini": {
+        "n": 131,
+        "mean": -0.08905852417302798,
+        "sd": 0.6143921010344547,
+        "se": 0.053679687105430134,
+        "ci_low": -0.19427071089967105,
+        "ci_high": 0.016153662553615084
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 131,
+        "mean": -0.04834605597964376,
+        "sd": 0.6299126752728252,
+        "se": 0.055035725972807446,
+        "ci_low": -0.15621607888634637,
+        "ci_high": 0.05952396692705884
+      },
+      "Claude-Opus-4.6": {
+        "n": 131,
+        "mean": -0.06870229007633588,
+        "sd": 0.582827703575031,
+        "se": 0.05092189289479415,
+        "ci_low": -0.16850920015013243,
+        "ci_high": 0.031104619997460656
+      },
+      "Qwen-3-32B": {
+        "n": 131,
+        "mean": -0.09923664122137404,
+        "sd": 0.590081345237689,
+        "se": 0.05155564650941712,
+        "ci_low": -0.20028570837983162,
+        "ci_high": 0.0018124259370835144
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 131,
+        "mean": -0.11959287531806616,
+        "sd": 0.5862654547232335,
+        "se": 0.05122225060719172,
+        "ci_low": -0.21998848650816194,
+        "ci_high": -0.01919726412797039
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "UBI__package2",
+      "n_obs": 131,
+      "n_participants": 131,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.3081735460368081,
+        "independent": 0.3081735460368081
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.2567431451892288,
+        "independent": 0.2567431451892288
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 1.7776108980178833,
+        "independent": 1.7776108980178833
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.1967024712460239,
+        "independent": 0.1967024712460239
+      }
+    }
+  },
+  "UBI__package3": {
+    "group": "UBI__package3",
+    "title": "topic = UBI, package = package3",
+    "topic": "UBI",
+    "package": "package3",
+    "counts": {
+      "n_obs": 131,
+      "n_participants": 131
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 131,
+        "mean_diff": 0.09923664122137404,
+        "sd_diff": 1.1221885336736561,
+        "d_z": 0.08843134486190804,
+        "p": 0.353278
+      },
+      "GPT-5-Mini": {
+        "n": 131,
+        "mean_diff": 0.2366412213740458,
+        "sd_diff": 1.1082353337189321,
+        "d_z": 0.21352975687929313,
+        "p": 0.019197
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 131,
+        "mean_diff": -0.04580152671755725,
+        "sd_diff": 1.2144172101486967,
+        "d_z": -0.037714820190953305,
+        "p": 0.720875
+      },
+      "Claude-Opus-4.6": {
+        "n": 131,
+        "mean_diff": 0.11450381679389313,
+        "sd_diff": 1.0715999639219984,
+        "d_z": 0.10685313610390142,
+        "p": 0.256597
+      },
+      "Qwen-3-32B": {
+        "n": 131,
+        "mean_diff": 0.0916030534351145,
+        "sd_diff": 1.1990405246207951,
+        "d_z": 0.0763969620326924,
+        "p": 0.424911
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 131,
+        "mean_diff": 0.2366412213740458,
+        "sd_diff": 1.239305395209518,
+        "d_z": 0.19094665631955796,
+        "p": 0.036319
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          29,
+          37,
+          20,
+          21,
+          24
+        ],
+        "model_counts": [
+          29,
+          30,
+          30,
+          35,
+          7
+        ],
+        "chi2": 15.55392392874338,
+        "dof": 4,
+        "p_value": 0.0036800400845202978,
+        "cramers_v": 0.24365164039142595,
+        "min_expected": 15.5
+      },
+      "GPT-5-Mini": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          29,
+          37,
+          20,
+          21,
+          24
+        ],
+        "model_counts": [
+          42,
+          19,
+          29,
+          36,
+          5
+        ],
+        "chi2": 26.214701483466527,
+        "dof": 4,
+        "p_value": 2.8641473992057124e-05,
+        "cramers_v": 0.31631647527802753,
+        "min_expected": 14.5
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          29,
+          37,
+          20,
+          21,
+          24
+        ],
+        "model_counts": [
+          34,
+          25,
+          16,
+          39,
+          17
+        ],
+        "chi2": 9.758972437650645,
+        "dof": 4,
+        "p_value": 0.044689494002732116,
+        "cramers_v": 0.19299737408381165,
+        "min_expected": 18.0
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          29,
+          37,
+          20,
+          21,
+          24
+        ],
+        "model_counts": [
+          33,
+          26,
+          30,
+          33,
+          9
+        ],
+        "chi2": 13.663547921612437,
+        "dof": 4,
+        "p_value": 0.008450033129462475,
+        "cramers_v": 0.22836581676270273,
+        "min_expected": 16.5
+      },
+      "Qwen-3-32B": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          29,
+          37,
+          20,
+          21,
+          24
+        ],
+        "model_counts": [
+          26,
+          34,
+          27,
+          40,
+          4
+        ],
+        "chi2": 21.53669719110554,
+        "dof": 4,
+        "p_value": 0.0002477885019514258,
+        "cramers_v": 0.28670740192258154,
+        "min_expected": 14.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          29,
+          37,
+          20,
+          21,
+          24
+        ],
+        "model_counts": [
+          41,
+          28,
+          9,
+          53,
+          0
+        ],
+        "chi2": 45.31354833423799,
+        "dof": 4,
+        "p_value": 3.421712572313966e-09,
+        "cramers_v": 0.4158755517677858,
+        "min_expected": 12.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 1.048220817372461,
+      "n_human": 131,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 131,
+          "sd_model": 0.4767033001840258,
+          "sd_ratio": 2.198895658930424,
+          "variance_ratio": 4.835142118863063,
+          "W": 20.724470817465235,
+          "p_value": 8.15208525823134e-06,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 131,
+          "sd_model": 0.42027309858333367,
+          "sd_ratio": 2.494142073108719,
+          "variance_ratio": 6.22074468085106,
+          "W": 36.752788104089205,
+          "p_value": 4.696444128127804e-09,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 131,
+          "sd_model": 0.501787761044915,
+          "sd_ratio": 2.0889724675421784,
+          "variance_ratio": 4.363805970149257,
+          "W": 9.501304347826085,
+          "p_value": 0.0022741679099762078,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 131,
+          "sd_model": 0.47137683914910405,
+          "sd_ratio": 2.2237427262328686,
+          "variance_ratio": 4.9450317124735905,
+          "W": 22.21372688477951,
+          "p_value": 3.979033969667399e-06,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 131,
+          "sd_model": 0.5115231190772885,
+          "sd_ratio": 2.049214939225611,
+          "variance_ratio": 4.199281867145425,
+          "W": 24.572745168217597,
+          "p_value": 1.2919793994750847e-06,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 131,
+          "sd_model": 0.5964270205479418,
+          "sd_ratio": 1.7575005512148878,
+          "variance_ratio": 3.0888081875206344,
+          "W": 17.93576770787505,
+          "p_value": 3.173364089651104e-05,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.18176917404260548,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.7957626255891884,
+          "sd_ratio": 4.377874465131623,
+          "variance_ratio": 19.165784832451497,
+          "W": 1.274130250318201,
+          "p_value": 0.3221061245419232,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.8751368236527629,
+          "sd_ratio": 4.814550257282001,
+          "variance_ratio": 23.17989417989418,
+          "W": 2.178571428571428,
+          "p_value": 0.21398425591085435,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.6281844461508698,
+          "sd_ratio": 3.455945979066987,
+          "variance_ratio": 11.943562610229275,
+          "W": 1.725057863320745,
+          "p_value": 0.25931465143860144,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.6606031186662576,
+          "sd_ratio": 3.6342967510619633,
+          "variance_ratio": 13.208112874779541,
+          "W": 1.9060027919962774,
+          "p_value": 0.23953670369324145,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.8131473140090013,
+          "sd_ratio": 4.473516030932753,
+          "variance_ratio": 20.012345679012334,
+          "W": 0.5644185912572711,
+          "p_value": 0.49426999213531103,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.8751368236527629,
+          "sd_ratio": 4.814550257282001,
+          "variance_ratio": 23.17989417989418,
+          "W": 0.9867841409691628,
+          "p_value": 0.3767567955343689,
+          "significant": false
+        }
+      },
+      "largest_p": 0.49426999213531103,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 131,
+        "mean": -0.022900763358778626,
+        "sd": 0.6204366255433765,
+        "se": 0.05420779966383334,
+        "ci_low": -0.129148050699892,
+        "ci_high": 0.08334652398233473
+      },
+      "GPT-5-Mini": {
+        "n": 131,
+        "mean": 0.017811704834605594,
+        "sd": 0.6528215906581708,
+        "se": 0.057037287203395536,
+        "ci_low": -0.09398137808404966,
+        "ci_high": 0.12960478775326084
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 131,
+        "mean": -0.03816793893129771,
+        "sd": 0.6029007109848695,
+        "se": 0.05267567969513045,
+        "ci_low": -0.1414122711337534,
+        "ci_high": 0.06507639327115797
+      },
+      "Claude-Opus-4.6": {
+        "n": 131,
+        "mean": -0.007633587786259543,
+        "sd": 0.6208150816177368,
+        "se": 0.054240865524577,
+        "ci_low": -0.11394568421443045,
+        "ci_high": 0.09867850864191137
+      },
+      "Qwen-3-32B": {
+        "n": 131,
+        "mean": -0.04834605597964376,
+        "sd": 0.6078153923017583,
+        "se": 0.05310507739550664,
+        "ci_low": -0.15243200767483678,
+        "ci_high": 0.05573989571554925
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 131,
+        "mean": -0.07888040712468194,
+        "sd": 0.6157922574951264,
+        "se": 0.05380201934339504,
+        "ci_low": -0.18433236503773623,
+        "ci_high": 0.02657155078837234
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "UBI__package3",
+      "n_obs": 131,
+      "n_participants": 131,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.3081735460368081,
+        "independent": 0.3081735460368081
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.2567431451892288,
+        "independent": 0.2567431451892288
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 1.7636796236038208,
+        "independent": 1.7636796236038208
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.1967024712460239,
+        "independent": 0.1967024712460239
+      }
+    }
+  },
+  "weight_loss__package1": {
+    "group": "weight_loss__package1",
+    "title": "topic = weight_loss, package = package1",
+    "topic": "weight_loss",
+    "package": "package1",
+    "counts": {
+      "n_obs": 133,
+      "n_participants": 133
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 133,
+        "mean_diff": -0.43609022556390975,
+        "sd_diff": 0.8647418905385709,
+        "d_z": -0.5043010294000074,
+        "p": 1e-06
+      },
+      "GPT-5-Mini": {
+        "n": 133,
+        "mean_diff": -0.7142857142857143,
+        "sd_diff": 0.9658677098342353,
+        "d_z": -0.7395274808475593,
+        "p": 0.0
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 132,
+        "mean_diff": -0.16666666666666666,
+        "sd_diff": 0.8485881104343155,
+        "d_z": -0.19640466866942655,
+        "p": 0.032461
+      },
+      "Claude-Opus-4.6": {
+        "n": 133,
+        "mean_diff": -0.45864661654135336,
+        "sd_diff": 0.8025648108964305,
+        "d_z": -0.5714761104826722,
+        "p": 0.0
+      },
+      "Qwen-3-32B": {
+        "n": 133,
+        "mean_diff": -0.045112781954887216,
+        "sd_diff": 1.0507188135094265,
+        "d_z": -0.042935161505493015,
+        "p": 0.681133
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 133,
+        "mean_diff": -0.14285714285714285,
+        "sd_diff": 1.0881096838015387,
+        "d_z": -0.13128928543126422,
+        "p": 0.15323
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          29,
+          39,
+          22,
+          35,
+          8
+        ],
+        "model_counts": [
+          7,
+          25,
+          55,
+          41,
+          5
+        ],
+        "chi2": 31.815793490135594,
+        "dof": 4,
+        "p_value": 2.0863050625386966e-06,
+        "cramers_v": 0.3458442513668794,
+        "min_expected": 6.5
+      },
+      "GPT-5-Mini": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          29,
+          39,
+          22,
+          35,
+          8
+        ],
+        "model_counts": [
+          7,
+          25,
+          40,
+          34,
+          27
+        ],
+        "chi2": 32.06152936396625,
+        "dof": 4,
+        "p_value": 1.8584954670249958e-06,
+        "cramers_v": 0.3471772822032983,
+        "min_expected": 17.5
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 133,
+        "n_model": 132,
+        "human_counts": [
+          29,
+          39,
+          22,
+          35,
+          8
+        ],
+        "model_counts": [
+          26,
+          42,
+          2,
+          54,
+          8
+        ],
+        "chi2": 20.9941192868522,
+        "dof": 4,
+        "p_value": 0.00031752045264404254,
+        "cramers_v": 0.2814659688994371,
+        "min_expected": 7.969811320754717
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          29,
+          39,
+          22,
+          35,
+          8
+        ],
+        "model_counts": [
+          13,
+          26,
+          34,
+          53,
+          7
+        ],
+        "chi2": 15.015151515151514,
+        "dof": 4,
+        "p_value": 0.004669894841552602,
+        "cramers_v": 0.23758774805718705,
+        "min_expected": 7.5
+      },
+      "Qwen-3-32B": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          29,
+          39,
+          22,
+          35,
+          8
+        ],
+        "model_counts": [
+          23,
+          37,
+          36,
+          31,
+          6
+        ],
+        "chi2": 4.652388144221175,
+        "dof": 4,
+        "p_value": 0.3248585757038062,
+        "cramers_v": 0.13225044798908125,
+        "min_expected": 7.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          29,
+          39,
+          22,
+          35,
+          8
+        ],
+        "model_counts": [
+          12,
+          42,
+          46,
+          27,
+          6
+        ],
+        "chi2": 16.94845218444052,
+        "dof": 4,
+        "p_value": 0.0019780356483764293,
+        "cramers_v": 0.2524202560330518,
+        "min_expected": 7.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 0.6466874070330495,
+      "n_human": 133,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 133,
+          "sd_model": 0.4914395925155199,
+          "sd_ratio": 1.315904165805743,
+          "variance_ratio": 1.7316037735849086,
+          "W": 0.10257295803833534,
+          "p_value": 0.7490169015819255,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 133,
+          "sd_model": 0.3647737963911422,
+          "sd_ratio": 1.7728450163662934,
+          "variance_ratio": 3.1429794520548033,
+          "W": 12.3724224119975,
+          "p_value": 0.0005128192503405741,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 132,
+          "sd_model": 0.39922432308593014,
+          "sd_ratio": 1.6198597370878496,
+          "variance_ratio": 2.6239455678383172,
+          "W": 7.335266739552826,
+          "p_value": 0.007205045763554868,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 133,
+          "sd_model": 0.5017626710722585,
+          "sd_ratio": 1.2888312429680935,
+          "variance_ratio": 1.6610859728506808,
+          "W": 2.5250807685767724,
+          "p_value": 0.11324587768467799,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 133,
+          "sd_model": 0.515094551418809,
+          "sd_ratio": 1.2554732043889278,
+          "variance_ratio": 1.5762129669386027,
+          "W": 1.898230088495575,
+          "p_value": 0.1694433200018579,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 133,
+          "sd_model": 0.41667236268606106,
+          "sd_ratio": 1.5520285599558512,
+          "variance_ratio": 2.4087926509186333,
+          "W": 8.96083550913838,
+          "p_value": 0.0030197657761649867,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.09022556390977454,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.704242813213375,
+          "sd_ratio": 7.8053578464482305,
+          "variance_ratio": 60.92361111111096,
+          "W": 2.433668200168997,
+          "p_value": 0.19376953411220446,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.7630745537663323,
+          "sd_ratio": 8.45740963757684,
+          "variance_ratio": 71.5277777777776,
+          "W": 2.411709747742136,
+          "p_value": 0.19538890483358914,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.06943296507508842,
+          "sd_ratio": 0.7695486962488958,
+          "variance_ratio": 0.5922051958983753,
+          "W": 0.13555387209501435,
+          "p_value": 0.7313980175502316,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.5316060653928882,
+          "sd_ratio": 5.891967224771171,
+          "variance_ratio": 34.71527777777769,
+          "W": 2.0368088710919445,
+          "p_value": 0.2267006590799439,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.3034652040693318,
+          "sd_ratio": 3.3634060117684235,
+          "variance_ratio": 11.312499999999972,
+          "W": 1.1058020477815664,
+          "p_value": 0.3523269294701428,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.5474283202787186,
+          "sd_ratio": 6.06733054975579,
+          "variance_ratio": 36.8124999999999,
+          "W": 1.6918798665183525,
+          "p_value": 0.2632270613846159,
+          "significant": false
+        }
+      },
+      "largest_p": 0.7313980175502316,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 133,
+        "mean": 0.017543859649122806,
+        "sd": 0.617254414793414,
+        "se": 0.053522745680014576,
+        "ci_low": -0.08736072188370576,
+        "ci_high": 0.12244844118195138
+      },
+      "GPT-5-Mini": {
+        "n": 133,
+        "mean": 0.07769423558897244,
+        "sd": 0.6394537047198865,
+        "se": 0.055447668241174634,
+        "ci_low": -0.03098319416372984,
+        "ci_high": 0.1863716653416747
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 132,
+        "mean": 0.10101010101010101,
+        "sd": 0.6640398553539899,
+        "se": 0.0577972507405916,
+        "ci_low": -0.012272510441458537,
+        "ci_high": 0.21429271246166054
+      },
+      "Claude-Opus-4.6": {
+        "n": 133,
+        "mean": 0.03258145363408521,
+        "sd": 0.6690168947630114,
+        "se": 0.05801112192290762,
+        "ci_low": -0.08112034533481371,
+        "ci_high": 0.14628325260298414
+      },
+      "Qwen-3-32B": {
+        "n": 133,
+        "mean": 0.03258145363408521,
+        "sd": 0.6537442812570693,
+        "se": 0.056686818379738504,
+        "ci_low": -0.07852471039020226,
+        "ci_high": 0.14368761765837268
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 133,
+        "mean": 0.007518796992481206,
+        "sd": 0.6747816274943539,
+        "se": 0.05851098764520653,
+        "ci_low": -0.10716273879212358,
+        "ci_high": 0.12220033277708599
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "weight_loss__package1",
+      "n_obs": 133,
+      "n_participants": 133,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.3057824820749007,
+        "independent": 0.3057824820749007
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.2548058839048025,
+        "independent": 0.2548058839048025
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 2.2360388040542603,
+        "independent": 2.2360388040542603
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.195176291610351,
+        "independent": 0.195176291610351
+      }
+    }
+  },
+  "weight_loss__package2": {
+    "group": "weight_loss__package2",
+    "title": "topic = weight_loss, package = package2",
+    "topic": "weight_loss",
+    "package": "package2",
+    "counts": {
+      "n_obs": 130,
+      "n_participants": 130
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 130,
+        "mean_diff": -0.36923076923076925,
+        "sd_diff": 0.8816691493799671,
+        "d_z": -0.4187860826143572,
+        "p": 5e-06
+      },
+      "GPT-5-Mini": {
+        "n": 130,
+        "mean_diff": -0.33076923076923076,
+        "sd_diff": 0.9514449357228099,
+        "d_z": -0.3476493681874993,
+        "p": 0.0002
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 130,
+        "mean_diff": -0.2153846153846154,
+        "sd_diff": 0.8977544370365672,
+        "d_z": -0.23991484363540097,
+        "p": 0.009073
+      },
+      "Claude-Opus-4.6": {
+        "n": 130,
+        "mean_diff": -0.5230769230769231,
+        "sd_diff": 0.7697315007093429,
+        "d_z": -0.6795576413267269,
+        "p": 0.0
+      },
+      "Qwen-3-32B": {
+        "n": 130,
+        "mean_diff": -0.2,
+        "sd_diff": 0.9098939370850795,
+        "d_z": -0.219805838734036,
+        "p": 0.017347
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 130,
+        "mean_diff": -0.09230769230769231,
+        "sd_diff": 0.9760397266517313,
+        "d_z": -0.09457370410971953,
+        "p": 0.324104
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 130,
+        "n_model": 130,
+        "human_counts": [
+          20,
+          43,
+          21,
+          30,
+          16
+        ],
+        "model_counts": [
+          0,
+          33,
+          47,
+          40,
+          10
+        ],
+        "chi2": 34.07015275745926,
+        "dof": 4,
+        "p_value": 7.209054616894012e-07,
+        "cramers_v": 0.36199316163036976,
+        "min_expected": 10.0
+      },
+      "GPT-5-Mini": {
+        "n_human": 130,
+        "n_model": 130,
+        "human_counts": [
+          20,
+          43,
+          21,
+          30,
+          16
+        ],
+        "model_counts": [
+          4,
+          33,
+          36,
+          51,
+          6
+        ],
+        "chi2": 25.919723551302496,
+        "dof": 4,
+        "p_value": 3.284616443488507e-05,
+        "cramers_v": 0.3157392031852974,
+        "min_expected": 11.0
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 130,
+        "n_model": 130,
+        "human_counts": [
+          20,
+          43,
+          21,
+          30,
+          16
+        ],
+        "model_counts": [
+          8,
+          54,
+          5,
+          49,
+          14
+        ],
+        "chi2": 20.939387255921254,
+        "dof": 4,
+        "p_value": 0.00032555295938609287,
+        "cramers_v": 0.28378883845293557,
+        "min_expected": 13.0
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 130,
+        "n_model": 130,
+        "human_counts": [
+          20,
+          43,
+          21,
+          30,
+          16
+        ],
+        "model_counts": [
+          0,
+          33,
+          33,
+          48,
+          16
+        ],
+        "chi2": 28.136302294197034,
+        "dof": 4,
+        "p_value": 1.17041412438674e-05,
+        "cramers_v": 0.3289628357206528,
+        "min_expected": 10.0
+      },
+      "Qwen-3-32B": {
+        "n_human": 130,
+        "n_model": 130,
+        "human_counts": [
+          20,
+          43,
+          21,
+          30,
+          16
+        ],
+        "model_counts": [
+          7,
+          39,
+          38,
+          34,
+          12
+        ],
+        "chi2": 12.174114866653108,
+        "dof": 4,
+        "p_value": 0.01610239581798745,
+        "cramers_v": 0.2163874273563429,
+        "min_expected": 13.5
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 130,
+        "n_model": 130,
+        "human_counts": [
+          20,
+          43,
+          21,
+          30,
+          16
+        ],
+        "model_counts": [
+          0,
+          44,
+          51,
+          35,
+          0
+        ],
+        "chi2": 48.89610963748895,
+        "dof": 4,
+        "p_value": 6.137610025906892e-10,
+        "cramers_v": 0.43366111209582564,
+        "min_expected": 8.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 0.6887805199417021,
+      "n_human": 130,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 130,
+          "sd_model": 0.4229549344378136,
+          "sd_ratio": 1.62849623886578,
+          "variance_ratio": 2.6519999999999917,
+          "W": 5.698795180722891,
+          "p_value": 0.017697229860134514,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 130,
+          "sd_model": 0.3956381136779333,
+          "sd_ratio": 1.7409357089959223,
+          "variance_ratio": 3.0308571428571347,
+          "W": 8.887723277573011,
+          "p_value": 0.0031453163520749213,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 130,
+          "sd_model": 0.4844634455288314,
+          "sd_ratio": 1.4217388872133416,
+          "variance_ratio": 2.021341463414631,
+          "W": 0.17356205852674067,
+          "p_value": 0.6773116905330501,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 130,
+          "sd_model": 0.480011925910284,
+          "sd_ratio": 1.4349237649367022,
+          "variance_ratio": 2.05900621118012,
+          "W": 0.39289340101522846,
+          "p_value": 0.5313366626589123,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 130,
+          "sd_model": 0.5302984612090098,
+          "sd_ratio": 1.2988544571134042,
+          "variance_ratio": 1.687022900763356,
+          "W": 0.042786069651741296,
+          "p_value": 0.836291770222053,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 130,
+          "sd_model": 0.29057958245344623,
+          "sd_ratio": 2.3703679182347632,
+          "variance_ratio": 5.618644067796605,
+          "W": 22.02304737516005,
+          "p_value": 4.375820491684243e-06,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.050441834802323005,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.5252781736978167,
+          "sd_ratio": 10.413542167059038,
+          "variance_ratio": 108.44186046511665,
+          "W": 1.3318302930928465,
+          "p_value": 0.312737936538625,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.7810249675906654,
+          "sd_ratio": 15.483674823713923,
+          "variance_ratio": 239.74418604651237,
+          "W": 3.1831224380680814,
+          "p_value": 0.14896554549794574,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.033529991873389675,
+          "sd_ratio": 0.6647258571142522,
+          "variance_ratio": 0.4418604651162773,
+          "W": 0.2717391304347857,
+          "p_value": 0.6296972034094529,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.5888008071772187,
+          "sd_ratio": 11.672866569677252,
+          "variance_ratio": 136.25581395348877,
+          "W": 1.51759816059427,
+          "p_value": 0.28545036612881397,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.5266282162080842,
+          "sd_ratio": 10.440306508910563,
+          "variance_ratio": 109.00000000000027,
+          "W": 1.7603034134007598,
+          "p_value": 0.25526043336634363,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.2339524050114699,
+          "sd_ratio": 4.638062947716082,
+          "variance_ratio": 21.511627906976795,
+          "W": 0.759036144578313,
+          "p_value": 0.43279834086327057,
+          "significant": false
+        }
+      },
+      "largest_p": 0.6296972034094529,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 130,
+        "mean": 0.05641025641025641,
+        "sd": 0.5555118249534884,
+        "se": 0.04872161008953397,
+        "ci_low": -0.03908409936523017,
+        "ci_high": 0.151904612185743
+      },
+      "GPT-5-Mini": {
+        "n": 130,
+        "mean": 0.015384615384615384,
+        "sd": 0.6547534248147912,
+        "se": 0.05742567419025546,
+        "ci_low": -0.09716970602828531,
+        "ci_high": 0.12793893679751608
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 130,
+        "mean": 0.0717948717948718,
+        "sd": 0.6456434743147826,
+        "se": 0.05662667867610321,
+        "ci_low": -0.039193418410290476,
+        "ci_high": 0.18278316200003408
+      },
+      "Claude-Opus-4.6": {
+        "n": 130,
+        "mean": 0.09230769230769231,
+        "sd": 0.6430110378979071,
+        "se": 0.05639579872912956,
+        "ci_low": -0.018228073201401615,
+        "ci_high": 0.20284345781678625
+      },
+      "Qwen-3-32B": {
+        "n": 130,
+        "mean": 0.005128205128205127,
+        "sd": 0.6705116708519632,
+        "se": 0.05880776379596696,
+        "ci_low": -0.11013501191189011,
+        "ci_high": 0.12039142216830036
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 130,
+        "mean": -0.02564102564102564,
+        "sd": 0.610862601031659,
+        "se": 0.05357619429295669,
+        "ci_low": -0.13065036645522074,
+        "ci_high": 0.07936831517316947
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "weight_loss__package2",
+      "n_obs": 130,
+      "n_participants": 130,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.3093893464521239,
+        "independent": 0.3093893464521239
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.25772858893371076,
+        "independent": 0.25772858893371076
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 2.252811074256897,
+        "independent": 2.252811074256897
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.19747849809618712,
+        "independent": 0.19747849809618712
+      }
+    }
+  },
+  "weight_loss__package3": {
+    "group": "weight_loss__package3",
+    "title": "topic = weight_loss, package = package3",
+    "topic": "weight_loss",
+    "package": "package3",
+    "counts": {
+      "n_obs": 128,
+      "n_participants": 128
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 128,
+        "mean_diff": 0.1171875,
+        "sd_diff": 0.682988958419413,
+        "d_z": 0.1715803726478942,
+        "p": 0.072185
+      },
+      "GPT-5-Mini": {
+        "n": 128,
+        "mean_diff": 0.4140625,
+        "sd_diff": 0.6819072806255105,
+        "d_z": 0.6072123172232188,
+        "p": 0.0
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 128,
+        "mean_diff": 0.2265625,
+        "sd_diff": 0.7122642585555926,
+        "d_z": 0.31808770028619465,
+        "p": 0.00071
+      },
+      "Claude-Opus-4.6": {
+        "n": 128,
+        "mean_diff": 0.234375,
+        "sd_diff": 0.6458148121973847,
+        "d_z": 0.3629136334029552,
+        "p": 0.000133
+      },
+      "Qwen-3-32B": {
+        "n": 128,
+        "mean_diff": 0.0,
+        "sd_diff": 0.7735794702875677,
+        "d_z": 0.0,
+        "p": 1.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 128,
+        "mean_diff": 0.3203125,
+        "sd_diff": 1.156519307858204,
+        "d_z": 0.27696251832855023,
+        "p": 0.002648
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 128,
+        "n_model": 128,
+        "human_counts": [
+          51,
+          39,
+          10,
+          23,
+          5
+        ],
+        "model_counts": [
+          38,
+          54,
+          29,
+          7,
+          0
+        ],
+        "chi2": 27.107974832947647,
+        "dof": 4,
+        "p_value": 1.8904276131249367e-05,
+        "cramers_v": 0.3254082461942256,
+        "min_expected": 2.5
+      },
+      "GPT-5-Mini": {
+        "n_human": 128,
+        "n_model": 128,
+        "human_counts": [
+          51,
+          39,
+          10,
+          23,
+          5
+        ],
+        "model_counts": [
+          74,
+          22,
+          23,
+          9,
+          0
+        ],
+        "chi2": 25.215917039244907,
+        "dof": 4,
+        "p_value": 4.5522506189794564e-05,
+        "cramers_v": 0.31384658024988965,
+        "min_expected": 2.5
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 128,
+        "n_model": 128,
+        "human_counts": [
+          51,
+          39,
+          10,
+          23,
+          5
+        ],
+        "model_counts": [
+          60,
+          32,
+          21,
+          15,
+          0
+        ],
+        "chi2": 12.007306907567553,
+        "dof": 4,
+        "p_value": 0.017297011831274852,
+        "cramers_v": 0.21657225724382556,
+        "min_expected": 2.5
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 128,
+        "n_model": 128,
+        "human_counts": [
+          51,
+          39,
+          10,
+          23,
+          5
+        ],
+        "model_counts": [
+          53,
+          39,
+          29,
+          7,
+          0
+        ],
+        "chi2": 22.828205128205127,
+        "dof": 4,
+        "p_value": 0.00013703565175877906,
+        "cramers_v": 0.29861794367058936,
+        "min_expected": 2.5
+      },
+      "Qwen-3-32B": {
+        "n_human": 128,
+        "n_model": 128,
+        "human_counts": [
+          51,
+          39,
+          10,
+          23,
+          5
+        ],
+        "model_counts": [
+          40,
+          47,
+          23,
+          17,
+          1
+        ],
+        "chi2": 10.761735164060745,
+        "dof": 4,
+        "p_value": 0.029376404077577932,
+        "cramers_v": 0.20503177310995555,
+        "min_expected": 3.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 128,
+        "n_model": 128,
+        "human_counts": [
+          51,
+          39,
+          10,
+          23,
+          5
+        ],
+        "model_counts": [
+          77,
+          30,
+          0,
+          7,
+          14
+        ],
+        "chi2": 29.251654271548436,
+        "dof": 4,
+        "p_value": 6.949074971558711e-06,
+        "cramers_v": 0.33802999053077537,
+        "min_expected": 5.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 0.590067058780837,
+      "n_human": 128,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 128,
+          "sd_model": 0.5014128660143499,
+          "sd_ratio": 1.1768087713248865,
+          "variance_ratio": 1.3848788842671889,
+          "W": 4.703703703703703,
+          "p_value": 0.031025886858470367,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 128,
+          "sd_model": 0.48697351946632306,
+          "sd_ratio": 1.211702557107201,
+          "variance_ratio": 1.46822308690013,
+          "W": 0.6980370162647224,
+          "p_value": 0.4042292766660171,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 128,
+          "sd_model": 0.4989531363599838,
+          "sd_ratio": 1.1826101807587728,
+          "variance_ratio": 1.3985668396342972,
+          "W": 2.9437519315957554,
+          "p_value": 0.08742965791936062,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 128,
+          "sd_model": 0.4980276057238114,
+          "sd_ratio": 1.1848079343378155,
+          "variance_ratio": 1.4037698412698414,
+          "W": 2.5683037556747834,
+          "p_value": 0.11026739176801663,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 128,
+          "sd_model": 0.515268831294827,
+          "sd_ratio": 1.1451635009593892,
+          "variance_ratio": 1.311399443929565,
+          "W": 3.2590216519647153,
+          "p_value": 0.07221556333544665,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 128,
+          "sd_model": 0.733705875009613,
+          "sd_ratio": 0.8042283411906793,
+          "variance_ratio": 0.6467832247743117,
+          "W": 4.2565221427908275,
+          "p_value": 0.0401162649666793,
+          "human_more_variable": false
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.0703125,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.5330850659134994,
+          "sd_ratio": 7.581654270769769,
+          "variance_ratio": 57.481481481481474,
+          "W": 1.8209331651954603,
+          "p_value": 0.24852132960146875,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.9378905436536824,
+          "sd_ratio": 13.338887731963483,
+          "variance_ratio": 177.92592592592592,
+          "W": 3.378161628624306,
+          "p_value": 0.13992627866568025,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.8984375,
+          "sd_ratio": 12.777777777777779,
+          "variance_ratio": 163.27160493827162,
+          "W": 3.3777243348865182,
+          "p_value": 0.13994558901417317,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.619260758258385,
+          "sd_ratio": 8.807264117452586,
+          "variance_ratio": 77.56790123456788,
+          "W": 1.723224568138195,
+          "p_value": 0.25952837451895533,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.807186653116087,
+          "sd_ratio": 11.479987955428792,
+          "variance_ratio": 131.79012345679013,
+          "W": 2.8885676524037667,
+          "p_value": 0.16443611198813676,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 1.0,
+          "sd_ratio": 14.222222222222221,
+          "variance_ratio": 202.2716049382716,
+          "W": 3.44026723352566,
+          "p_value": 0.13722495259218437,
+          "significant": false
+        }
+      },
+      "largest_p": 0.25952837451895533,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 128,
+        "mean": -0.11458333333333333,
+        "sd": 0.6266709945681792,
+        "se": 0.0553904137290097,
+        "ci_low": -0.22314854424219233,
+        "ci_high": -0.0060181224244743176
+      },
+      "GPT-5-Mini": {
+        "n": 128,
+        "mean": -0.020833333333333332,
+        "sd": 0.6530767078618759,
+        "se": 0.05772437109551478,
+        "ci_low": -0.1339731006805423,
+        "ci_high": 0.09230643401387564
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 128,
+        "mean": -0.057291666666666664,
+        "sd": 0.6668101879633015,
+        "se": 0.058938250709140855,
+        "ci_low": -0.17281063805658273,
+        "ci_high": 0.058227304723249405
+      },
+      "Claude-Opus-4.6": {
+        "n": 128,
+        "mean": 0.020833333333333336,
+        "sd": 0.6530767078618759,
+        "se": 0.05772437109551478,
+        "ci_low": -0.09230643401387564,
+        "ci_high": 0.1339731006805423
+      },
+      "Qwen-3-32B": {
+        "n": 128,
+        "mean": -0.020833333333333332,
+        "sd": 0.6530767078618759,
+        "se": 0.05772437109551478,
+        "ci_low": -0.1339731006805423,
+        "ci_high": 0.09230643401387564
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 128,
+        "mean": -0.020833333333333332,
+        "sd": 0.6637073425617865,
+        "se": 0.05866399533109276,
+        "ci_low": -0.13581476418227514,
+        "ci_high": 0.09414809751560849
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "weight_loss__package3",
+      "n_obs": 128,
+      "n_participants": 128,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.31186457201929824,
+        "independent": 0.31186457201929824
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.25973414464644284,
+        "independent": 0.25973414464644284
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 2.3745115995407104,
+        "independent": 2.3745115995407104
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.19905839680006995,
+        "independent": 0.19905839680006995
+      }
+    }
+  },
+  "penalty__package1": {
+    "group": "penalty__package1",
+    "title": "topic = penalty, package = package1",
+    "topic": "penalty",
+    "package": "package1",
+    "counts": {
+      "n_obs": 133,
+      "n_participants": 133
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 133,
+        "mean_diff": -0.19548872180451127,
+        "sd_diff": 1.1511433487370444,
+        "d_z": -0.16982135371670967,
+        "p": 0.061398
+      },
+      "GPT-5-Mini": {
+        "n": 133,
+        "mean_diff": -0.2857142857142857,
+        "sd_diff": 1.1185178814316072,
+        "d_z": -0.2554400698079103,
+        "p": 0.004567
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 133,
+        "mean_diff": -0.3233082706766917,
+        "sd_diff": 1.1251186616237905,
+        "d_z": -0.28735482016633507,
+        "p": 0.001447
+      },
+      "Claude-Opus-4.6": {
+        "n": 133,
+        "mean_diff": -0.3458646616541353,
+        "sd_diff": 1.0943734389910118,
+        "d_z": -0.3160389765791602,
+        "p": 0.000439
+      },
+      "Qwen-3-32B": {
+        "n": 133,
+        "mean_diff": 0.21052631578947367,
+        "sd_diff": 1.1285055254154237,
+        "d_z": 0.18655319894156036,
+        "p": 0.03969
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 133,
+        "mean_diff": 0.10526315789473684,
+        "sd_diff": 1.2568789983872437,
+        "d_z": 0.08374963543014446,
+        "p": 0.371735
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          7,
+          20,
+          15,
+          60,
+          31
+        ],
+        "model_counts": [
+          0,
+          13,
+          39,
+          35,
+          46
+        ],
+        "chi2": 28.65254044201413,
+        "dof": 4,
+        "p_value": 9.196368711729862e-06,
+        "cramers_v": 0.32820164145107644,
+        "min_expected": 3.5
+      },
+      "GPT-5-Mini": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          7,
+          20,
+          15,
+          60,
+          31
+        ],
+        "model_counts": [
+          0,
+          19,
+          32,
+          19,
+          63
+        ],
+        "chi2": 45.346675229788616,
+        "dof": 4,
+        "p_value": 3.3678603837300887e-09,
+        "cramers_v": 0.41288766349744366,
+        "min_expected": 3.5
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          7,
+          20,
+          15,
+          60,
+          31
+        ],
+        "model_counts": [
+          0,
+          16,
+          29,
+          29,
+          59
+        ],
+        "chi2": 31.407853819089773,
+        "dof": 4,
+        "p_value": 2.5274919437876805e-06,
+        "cramers_v": 0.3436199039893218,
+        "min_expected": 3.5
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          7,
+          20,
+          15,
+          60,
+          31
+        ],
+        "model_counts": [
+          0,
+          13,
+          32,
+          29,
+          59
+        ],
+        "chi2": 34.142648575161125,
+        "dof": 4,
+        "p_value": 6.9663941466072e-07,
+        "cramers_v": 0.35826780724917506,
+        "min_expected": 3.5
+      },
+      "Qwen-3-32B": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          7,
+          20,
+          15,
+          60,
+          31
+        ],
+        "model_counts": [
+          2,
+          22,
+          47,
+          38,
+          24
+        ],
+        "chi2": 25.21882950638711,
+        "dof": 4,
+        "p_value": 4.546112746063361e-05,
+        "cramers_v": 0.307908476212104,
+        "min_expected": 4.5
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 133,
+        "n_model": 133,
+        "human_counts": [
+          7,
+          20,
+          15,
+          60,
+          31
+        ],
+        "model_counts": [
+          0,
+          24,
+          45,
+          30,
+          34
+        ],
+        "chi2": 32.5020979020979,
+        "dof": 4,
+        "p_value": 1.510339646968018e-06,
+        "cramers_v": 0.3495544849916986,
+        "min_expected": 3.5
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 1.0067554910800218,
+      "n_human": 133,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 133,
+          "sd_model": 0.3660208899312017,
+          "sd_ratio": 2.750541072312169,
+          "variance_ratio": 7.565476190476176,
+          "W": 38.84781097984712,
+          "p_value": 1.8041840722190958e-09,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 133,
+          "sd_model": 0.3796185923913938,
+          "sd_ratio": 2.6520183975658345,
+          "variance_ratio": 7.033201581027656,
+          "W": 36.53316276323558,
+          "p_value": 5.095161399815872e-09,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 133,
+          "sd_model": 0.419533314915504,
+          "sd_ratio": 2.39970332578424,
+          "variance_ratio": 5.758576051779943,
+          "W": 29.22658494541276,
+          "p_value": 1.4409294469446625e-07,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 133,
+          "sd_model": 0.40375882570784566,
+          "sd_ratio": 2.493457546878483,
+          "variance_ratio": 6.217330538085263,
+          "W": 32.213981409759874,
+          "p_value": 3.629168672527047e-08,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 133,
+          "sd_model": 0.5059455121295373,
+          "sd_ratio": 1.9898496319150314,
+          "variance_ratio": 3.959501557632386,
+          "W": 18.43149926144756,
+          "p_value": 2.4758167642464973e-05,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 133,
+          "sd_model": 0.5525474878789672,
+          "sd_ratio": 1.8220252795729777,
+          "variance_ratio": 3.3197761194029876,
+          "W": 18.207934336525305,
+          "p_value": 2.762880948204521e-05,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.17029701733693423,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.6177779639592924,
+          "sd_ratio": 3.62764993550658,
+          "variance_ratio": 13.159844054580894,
+          "W": 1.879612423679321,
+          "p_value": 0.24226741912279756,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.9456064292416384,
+          "sd_ratio": 5.552689319101504,
+          "variance_ratio": 30.83235867446393,
+          "W": 2.345145089285714,
+          "p_value": 0.20043014104079857,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.8401898194277414,
+          "sd_ratio": 4.93367313512848,
+          "variance_ratio": 24.34113060428848,
+          "W": 0.6312918766266126,
+          "p_value": 0.4713600066136633,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.7659215118653975,
+          "sd_ratio": 4.497562692774675,
+          "variance_ratio": 20.22807017543859,
+          "W": 0.8026889534883722,
+          "p_value": 0.4209346663599445,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.8934722851280462,
+          "sd_ratio": 5.246552752948709,
+          "variance_ratio": 27.526315789473678,
+          "W": 1.9687500000000004,
+          "p_value": 0.23323831289885694,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.8662293731606764,
+          "sd_ratio": 5.086579828035588,
+          "variance_ratio": 25.873294346978554,
+          "W": 0.6416336942940442,
+          "p_value": 0.46799929938411455,
+          "significant": false
+        }
+      },
+      "largest_p": 0.4713600066136633,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 133,
+        "mean": -0.047619047619047616,
+        "sd": 0.6630493493205764,
+        "se": 0.05749367010823525,
+        "ci_low": -0.1603066410311887,
+        "ci_high": 0.06506854579309347
+      },
+      "GPT-5-Mini": {
+        "n": 133,
+        "mean": -0.07268170426065163,
+        "sd": 0.6294382427654514,
+        "se": 0.05457921755016661,
+        "ci_low": -0.17965697065897818,
+        "ci_high": 0.03429356213767494
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 133,
+        "mean": -0.08771929824561403,
+        "sd": 0.6056617507320736,
+        "se": 0.05251753422192135,
+        "ci_low": -0.19065366532057987,
+        "ci_high": 0.015215068829351808
+      },
+      "Claude-Opus-4.6": {
+        "n": 133,
+        "mean": -0.12280701754385964,
+        "sd": 0.6322873928489862,
+        "se": 0.05482627019437696,
+        "ci_low": -0.23026650712483848,
+        "ci_high": -0.015347527962880803
+      },
+      "Qwen-3-32B": {
+        "n": 133,
+        "mean": -0.08771929824561403,
+        "sd": 0.6381459054980145,
+        "se": 0.05533426766683253,
+        "ci_low": -0.1961744628726058,
+        "ci_high": 0.020735866381377727
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 133,
+        "mean": -0.17293233082706766,
+        "sd": 0.6417063529107303,
+        "se": 0.055642997611585754,
+        "ci_low": -0.2819926061457757,
+        "ci_high": -0.06387205550835959
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "penalty__package1",
+      "n_obs": 133,
+      "n_participants": 133,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.3057824820749007,
+        "independent": 0.3057824820749007
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.2548058839048025,
+        "independent": 0.2548058839048025
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 1.810827374458313,
+        "independent": 1.810827374458313
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.195176291610351,
+        "independent": 0.195176291610351
+      }
+    }
+  },
+  "penalty__package2": {
+    "group": "penalty__package2",
+    "title": "topic = penalty, package = package2",
+    "topic": "penalty",
+    "package": "package2",
+    "counts": {
+      "n_obs": 131,
+      "n_participants": 131
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 131,
+        "mean_diff": 0.4351145038167939,
+        "sd_diff": 0.8952802452624835,
+        "d_z": 0.48600927599963367,
+        "p": 0.0
+      },
+      "GPT-5-Mini": {
+        "n": 131,
+        "mean_diff": 0.3053435114503817,
+        "sd_diff": 1.0876448074835992,
+        "d_z": 0.2807382606430417,
+        "p": 0.002068
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 131,
+        "mean_diff": 0.1984732824427481,
+        "sd_diff": 0.915001869087997,
+        "d_z": 0.2169102481075486,
+        "p": 0.017937
+      },
+      "Claude-Opus-4.6": {
+        "n": 131,
+        "mean_diff": 0.29770992366412213,
+        "sd_diff": 0.9421306171778098,
+        "d_z": 0.31599644278191935,
+        "p": 0.000511
+      },
+      "Qwen-3-32B": {
+        "n": 131,
+        "mean_diff": 0.17557251908396945,
+        "sd_diff": 1.0036925366675125,
+        "d_z": 0.17492659621332848,
+        "p": 0.057413
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 131,
+        "mean_diff": 0.48854961832061067,
+        "sd_diff": 1.0104561971531654,
+        "d_z": 0.4834941085987083,
+        "p": 0.0
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          5,
+          28,
+          25,
+          51,
+          22
+        ],
+        "model_counts": [
+          2,
+          42,
+          41,
+          46,
+          0
+        ],
+        "chi2": 30.222234123265054,
+        "dof": 4,
+        "p_value": 4.410124986904084e-06,
+        "cramers_v": 0.3396351551862914,
+        "min_expected": 3.5
+      },
+      "GPT-5-Mini": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          5,
+          28,
+          25,
+          51,
+          22
+        ],
+        "model_counts": [
+          14,
+          30,
+          26,
+          47,
+          14
+        ],
+        "chi2": 6.292774339015702,
+        "dof": 4,
+        "p_value": 0.17832460319693508,
+        "cramers_v": 0.15497813609667288,
+        "min_expected": 9.5
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          5,
+          28,
+          25,
+          51,
+          22
+        ],
+        "model_counts": [
+          2,
+          47,
+          9,
+          64,
+          9
+        ],
+        "chi2": 20.549637504370615,
+        "dof": 4,
+        "p_value": 0.00038887720128235757,
+        "cramers_v": 0.28006022733103725,
+        "min_expected": 3.5
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          5,
+          28,
+          25,
+          51,
+          22
+        ],
+        "model_counts": [
+          5,
+          41,
+          29,
+          43,
+          13
+        ],
+        "chi2": 5.740708436730639,
+        "dof": 4,
+        "p_value": 0.2193672120061561,
+        "cramers_v": 0.14802398759509236,
+        "min_expected": 5.0
+      },
+      "Qwen-3-32B": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          5,
+          28,
+          25,
+          51,
+          22
+        ],
+        "model_counts": [
+          3,
+          33,
+          36,
+          45,
+          14
+        ],
+        "chi2": 5.046220400728597,
+        "dof": 4,
+        "p_value": 0.2825877884112514,
+        "cramers_v": 0.13878178269819053,
+        "min_expected": 4.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 131,
+        "n_model": 131,
+        "human_counts": [
+          5,
+          28,
+          25,
+          51,
+          22
+        ],
+        "model_counts": [
+          0,
+          44,
+          50,
+          37,
+          0
+        ],
+        "chi2": 41.11616161616162,
+        "dof": 4,
+        "p_value": 2.5430157035500422e-08,
+        "cramers_v": 0.39614632973877517,
+        "min_expected": 2.5
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 0.777925029634757,
+      "n_human": 131,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 131,
+          "sd_model": 0.49269472455370694,
+          "sd_ratio": 1.578918934720516,
+          "variance_ratio": 2.492985002418969,
+          "W": 0.14404432132963985,
+          "p_value": 0.704602860298071,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 131,
+          "sd_model": 0.4623207306786779,
+          "sd_ratio": 1.6826522758189495,
+          "variance_ratio": 2.83131868131869,
+          "W": 0.7550552129642909,
+          "p_value": 0.38568183058121946,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 131,
+          "sd_model": 0.4654851805564542,
+          "sd_ratio": 1.6712133106037947,
+          "variance_ratio": 2.7929539295392956,
+          "W": 0.5944555587310659,
+          "p_value": 0.4414014233553653,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 131,
+          "sd_model": 0.48367355281825236,
+          "sd_ratio": 1.6083679272971827,
+          "variance_ratio": 2.5868473895582356,
+          "W": 0.009097270818754402,
+          "p_value": 0.9240867774820405,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 131,
+          "sd_model": 0.4857330362467317,
+          "sd_ratio": 1.6015485288910927,
+          "variance_ratio": 2.564957690393223,
+          "W": 0.0,
+          "p_value": 1.0,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 131,
+          "sd_model": 0.4201333569008056,
+          "sd_ratio": 1.8516145334740148,
+          "variance_ratio": 3.4284763805721936,
+          "W": 6.185292326431182,
+          "p_value": 0.013509433567346041,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.03498149385462472,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.8674456627018345,
+          "sd_ratio": 24.797273275599522,
+          "variance_ratio": 614.9047619047623,
+          "W": 1.1126352509903625,
+          "p_value": 0.3510074217061965,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.7902514833336407,
+          "sd_ratio": 22.590558499809912,
+          "variance_ratio": 510.3333333333339,
+          "W": 2.0893621946984595,
+          "p_value": 0.2218497931570941,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.9327669551641055,
+          "sd_ratio": 26.664583251946777,
+          "variance_ratio": 711.0000000000006,
+          "W": 3.3576158940397347,
+          "p_value": 0.14083801424976555,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.8740708020025323,
+          "sd_ratio": 24.98666310921356,
+          "variance_ratio": 624.3333333333338,
+          "W": 1.4645319496765943,
+          "p_value": 0.29283207813386225,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.7601459105040977,
+          "sd_ratio": 21.72994422888555,
+          "variance_ratio": 472.19047619047643,
+          "W": 2.4448174869633537,
+          "p_value": 0.1929553644423672,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.9809383072885554,
+          "sd_ratio": 28.041635710730823,
+          "variance_ratio": 786.3333333333342,
+          "W": 3.717152181796205,
+          "p_value": 0.1261063607873547,
+          "significant": false
+        }
+      },
+      "largest_p": 0.3510074217061965,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 131,
+        "mean": -0.03307888040712468,
+        "sd": 0.6574425480499639,
+        "se": 0.057441022125282286,
+        "ci_low": -0.14566328377267795,
+        "ci_high": 0.07950552295842861
+      },
+      "GPT-5-Mini": {
+        "n": 131,
+        "mean": -0.01272264631043257,
+        "sd": 0.663330859617436,
+        "se": 0.05795548629562073,
+        "ci_low": -0.12631539944984918,
+        "ci_high": 0.10087010682898405
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 131,
+        "mean": 0.0025445292620865133,
+        "sd": 0.6478052139525541,
+        "se": 0.056599004335651806,
+        "ci_low": -0.10838951923579103,
+        "ci_high": 0.11347857775996405
+      },
+      "Claude-Opus-4.6": {
+        "n": 131,
+        "mean": 0.0737913486005089,
+        "sd": 0.6847422327857944,
+        "se": 0.05982620665520853,
+        "ci_low": -0.043468016443699825,
+        "ci_high": 0.19105071364471762
+      },
+      "Qwen-3-32B": {
+        "n": 131,
+        "mean": 0.017811704834605598,
+        "sd": 0.6885051031711473,
+        "se": 0.06015497016724578,
+        "ci_low": -0.10009203669319613,
+        "ci_high": 0.13571544636240732
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 131,
+        "mean": 0.007633587786259541,
+        "sd": 0.6985524090060385,
+        "se": 0.06103280735389164,
+        "ci_low": -0.11199071462736807,
+        "ci_high": 0.12725789019988715
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "penalty__package2",
+      "n_obs": 131,
+      "n_participants": 131,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.3081735460368081,
+        "independent": 0.3081735460368081
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.2567431451892288,
+        "independent": 0.2567431451892288
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 2.7421568632125854,
+        "independent": 2.7421568632125854
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.1967024712460239,
+        "independent": 0.1967024712460239
+      }
+    }
+  },
+  "penalty__package3": {
+    "group": "penalty__package3",
+    "title": "topic = penalty, package = package3",
+    "topic": "penalty",
+    "package": "package3",
+    "counts": {
+      "n_obs": 127,
+      "n_participants": 127
+    },
+    "permutation": {
+      "GPT-5.2": {
+        "n": 127,
+        "mean_diff": 0.4409448818897638,
+        "sd_diff": 1.0362749474821604,
+        "d_z": 0.42550954547451797,
+        "p": 1e-06
+      },
+      "GPT-5-Mini": {
+        "n": 127,
+        "mean_diff": 0.2125984251968504,
+        "sd_diff": 1.2320451526193097,
+        "d_z": 0.172557332614693,
+        "p": 0.063506
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 127,
+        "mean_diff": 0.3700787401574803,
+        "sd_diff": 1.1464448124687445,
+        "d_z": 0.32280554295549196,
+        "p": 0.000418
+      },
+      "Claude-Opus-4.6": {
+        "n": 127,
+        "mean_diff": 0.5196850393700787,
+        "sd_diff": 1.1116296752665134,
+        "d_z": 0.467498350334597,
+        "p": 0.0
+      },
+      "Qwen-3-32B": {
+        "n": 127,
+        "mean_diff": -0.09448818897637795,
+        "sd_diff": 1.1981008176709655,
+        "d_z": -0.07886497328334786,
+        "p": 0.418371
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 127,
+        "mean_diff": 0.47244094488188976,
+        "sd_diff": 1.2203744653877877,
+        "d_z": 0.38712785155805957,
+        "p": 2.5e-05
+      }
+    },
+    "chi_squared": {
+      "GPT-5.2": {
+        "n_human": 127,
+        "n_model": 127,
+        "human_counts": [
+          13,
+          29,
+          24,
+          35,
+          26
+        ],
+        "model_counts": [
+          9,
+          51,
+          30,
+          29,
+          8
+        ],
+        "chi2": 17.535851158645276,
+        "dof": 4,
+        "p_value": 0.0015203397317501506,
+        "cramers_v": 0.26275232461227555,
+        "min_expected": 11.0
+      },
+      "GPT-5-Mini": {
+        "n_human": 127,
+        "n_model": 127,
+        "human_counts": [
+          13,
+          29,
+          24,
+          35,
+          26
+        ],
+        "model_counts": [
+          28,
+          24,
+          10,
+          45,
+          20
+        ],
+        "chi2": 13.756817569261445,
+        "dof": 4,
+        "p_value": 0.008113038403244625,
+        "cramers_v": 0.2327245133018447,
+        "min_expected": 17.0
+      },
+      "Gemini-3-Flash-Preview": {
+        "n_human": 127,
+        "n_model": 127,
+        "human_counts": [
+          13,
+          29,
+          24,
+          35,
+          26
+        ],
+        "model_counts": [
+          13,
+          52,
+          7,
+          47,
+          8
+        ],
+        "chi2": 27.138954168373647,
+        "dof": 4,
+        "p_value": 1.8633521753613675e-05,
+        "cramers_v": 0.32687348661743665,
+        "min_expected": 13.0
+      },
+      "Claude-Opus-4.6": {
+        "n_human": 127,
+        "n_model": 127,
+        "human_counts": [
+          13,
+          29,
+          24,
+          35,
+          26
+        ],
+        "model_counts": [
+          12,
+          52,
+          34,
+          16,
+          13
+        ],
+        "chi2": 19.706766834447702,
+        "dof": 4,
+        "p_value": 0.0005705518257197839,
+        "cramers_v": 0.27854209053321366,
+        "min_expected": 12.5
+      },
+      "Qwen-3-32B": {
+        "n_human": 127,
+        "n_model": 127,
+        "human_counts": [
+          13,
+          29,
+          24,
+          35,
+          26
+        ],
+        "model_counts": [
+          9,
+          25,
+          28,
+          43,
+          22
+        ],
+        "chi2": 2.485107485107485,
+        "dof": 4,
+        "p_value": 0.6473044994011091,
+        "cramers_v": 0.09891353667038522,
+        "min_expected": 11.0
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n_human": 127,
+        "n_model": 127,
+        "human_counts": [
+          13,
+          29,
+          24,
+          35,
+          26
+        ],
+        "model_counts": [
+          17,
+          41,
+          22,
+          47,
+          0
+        ],
+        "chi2": 30.433530273190932,
+        "dof": 4,
+        "p_value": 3.993991127196104e-06,
+        "cramers_v": 0.3461459927828854,
+        "min_expected": 13.0
+      }
+    },
+    "brown_forsythe_belief_change": {
+      "sd_human": 0.8807826223004915,
+      "n_human": 127,
+      "models": {
+        "GPT-5.2": {
+          "n_model": 127,
+          "sd_model": 0.5870110111906698,
+          "sd_ratio": 1.5004533228668864,
+          "variance_ratio": 2.2513601741022806,
+          "W": 0.00732217573221755,
+          "p_value": 0.9318764213375021,
+          "human_more_variable": true
+        },
+        "GPT-5-Mini": {
+          "n_model": 127,
+          "sd_model": 0.48254108038924187,
+          "sd_ratio": 1.8253008046278838,
+          "variance_ratio": 3.3317230273752,
+          "W": 2.5293680297397767,
+          "p_value": 0.11299866174144382,
+          "human_more_variable": true
+        },
+        "Gemini-3-Flash-Preview": {
+          "n_model": 127,
+          "sd_model": 0.5007181444360483,
+          "sd_ratio": 1.7590387568089916,
+          "variance_ratio": 3.0942173479561226,
+          "W": 0.19176914647510035,
+          "p_value": 0.661823348897883,
+          "human_more_variable": true
+        },
+        "Claude-Opus-4.6": {
+          "n_model": 127,
+          "sd_model": 0.4887178576202787,
+          "sd_ratio": 1.8022313049686782,
+          "variance_ratio": 3.248037676609105,
+          "W": 1.7461197339246128,
+          "p_value": 0.1875637393198586,
+          "human_more_variable": true
+        },
+        "Qwen-3-32B": {
+          "n_model": 127,
+          "sd_model": 0.49507005888520456,
+          "sd_ratio": 1.77910703039451,
+          "variance_ratio": 3.165221825599172,
+          "W": 0.933276199804114,
+          "p_value": 0.3349392388624216,
+          "human_more_variable": true
+        },
+        "Llama-3.3-70B-Instruct": {
+          "n_model": 127,
+          "sd_model": 0.4501107364200721,
+          "sd_ratio": 1.9568131818088625,
+          "variance_ratio": 3.8291178285009244,
+          "W": 10.117330886208707,
+          "p_value": 0.0016528642472903219,
+          "human_more_variable": true
+        }
+      }
+    },
+    "brown_forsythe_mean_ranks": {
+      "n_comments": 3,
+      "sd_human": 0.11652479202321857,
+      "models": {
+        "GPT-5.2": {
+          "sd": 0.26667234995080463,
+          "sd_ratio": 2.2885460280218126,
+          "variance_ratio": 5.237442922374415,
+          "W": 0.3406010606953435,
+          "p_value": 0.5908066013865745,
+          "significant": false
+        },
+        "GPT-5-Mini": {
+          "sd": 0.16942862040433085,
+          "sd_ratio": 1.4540134975788734,
+          "variance_ratio": 2.1141552511415487,
+          "W": 0.26069246435845117,
+          "p_value": 0.6365318774468557,
+          "significant": false
+        },
+        "Gemini-3-Flash-Preview": {
+          "sd": 0.2459921157765876,
+          "sd_ratio": 2.111071056257037,
+          "variance_ratio": 4.456621004566203,
+          "W": 0.278016528925619,
+          "p_value": 0.6258945148695815,
+          "significant": false
+        },
+        "Claude-Opus-4.6": {
+          "sd": 0.6215486888776658,
+          "sd_ratio": 5.334046755936855,
+          "variance_ratio": 28.45205479452049,
+          "W": 0.7721925133689832,
+          "p_value": 0.4291590029080229,
+          "significant": false
+        },
+        "Qwen-3-32B": {
+          "sd": 0.32110155124572715,
+          "sd_ratio": 2.755650069572704,
+          "variance_ratio": 7.593607305936049,
+          "W": 0.43882206553297337,
+          "p_value": 0.5439115776525684,
+          "significant": false
+        },
+        "Llama-3.3-70B-Instruct": {
+          "sd": 0.4677589524497369,
+          "sd_ratio": 4.014244044791188,
+          "variance_ratio": 16.11415525114152,
+          "W": 1.870989606868503,
+          "p_value": 0.24317048730132473,
+          "significant": false
+        }
+      },
+      "largest_p": 0.6365318774468557,
+      "alpha_bonferroni": 0.008333333333333333
+    },
+    "kendall_tau": {
+      "GPT-5.2": {
+        "n": 127,
+        "mean": 0.08661417322834646,
+        "sd": 0.6045281781771829,
+        "se": 0.05364320140309875,
+        "ci_low": -0.018526501521727093,
+        "ci_high": 0.19175484797842002
+      },
+      "GPT-5-Mini": {
+        "n": 127,
+        "mean": 0.05511811023622047,
+        "sd": 0.647561944395986,
+        "se": 0.05746183066099338,
+        "ci_low": -0.057507077859326544,
+        "ci_high": 0.1677432983317675
+      },
+      "Gemini-3-Flash-Preview": {
+        "n": 127,
+        "mean": 0.0026246719160104987,
+        "sd": 0.6278319445547486,
+        "se": 0.05571107628200328,
+        "ci_low": -0.10656903759671593,
+        "ci_high": 0.11181838142873693
+      },
+      "Claude-Opus-4.6": {
+        "n": 127,
+        "mean": 0.1758530183727034,
+        "sd": 0.6898441554616458,
+        "se": 0.0612137701831553,
+        "ci_low": 0.055874028813719015,
+        "ci_high": 0.2958320079316878
+      },
+      "Qwen-3-32B": {
+        "n": 127,
+        "mean": -0.0026246719160104987,
+        "sd": 0.6164929871139785,
+        "se": 0.05470490651249732,
+        "ci_low": -0.10984628868050525,
+        "ci_high": 0.10459694484848425
+      },
+      "Llama-3.3-70B-Instruct": {
+        "n": 127,
+        "mean": 0.06036745406824146,
+        "sd": 0.5900666910483396,
+        "se": 0.052359951929137116,
+        "ci_low": -0.04225805171286729,
+        "ci_high": 0.16299295984935022
+      }
+    },
+    "sensitivity": {
+      "alpha": 0.008333333333333333,
+      "power": 0.8,
+      "group": "penalty__package3",
+      "n_obs": 127,
+      "n_participants": 127,
+      "n_comments": 3,
+      "permutation_dz": {
+        "nominal": 0.31312414533969024,
+        "independent": 0.31312414533969024
+      },
+      "chi2_cramers_v": {
+        "nominal": 0.26075287678555,
+        "independent": 0.26075287678555
+      },
+      "brown_forsythe_belief_change_sd_ratio": {
+        "nominal": 2.308655858039856,
+        "independent": 2.308655858039856
+      },
+      "brown_forsythe_mean_rank_sd_ratio": {
+        "n": 3,
+        "fixed_n": NaN
+      },
+      "kendall_tau": {
+        "nominal": 0.19986236322750325,
+        "independent": 0.19986236322750325
+      }
+    }
+  }
+}

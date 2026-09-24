@@ -28,24 +28,25 @@ from scipy.stats import levene
 
 from belief_update_sim.comment_ranks import MODELS
 from belief_update_sim.config import MERGED_HUMAN_CSV, RESULTS_DIR, STATS_OUTPUT_DIR, ensure_output_dirs
+from belief_update_sim.grouping import ALL
 
 
-def human_abs_delta():
-    df = pd.read_csv(MERGED_HUMAN_CSV)
+def human_abs_delta(group=ALL):
+    df = group.filter(pd.read_csv(MERGED_HUMAN_CSV))
     delta = (df["final_belief_normalized"] - df["initial_belief_normalized"]).abs()
     return delta.dropna().to_numpy()
 
 
-def model_abs_delta(path):
-    df = pd.read_excel(path)
+def model_abs_delta(path, group=ALL):
+    df = group.filter(pd.read_excel(path))
     # |post - init| is the same whether or not the pro/con flip is applied, since
     # both terms flip together; use the raw recorded stances directly
     delta = (df["llm_new_belief"] - df["init_belief"]).abs()
     return delta.dropna().to_numpy()
 
 
-def compute():
-    human = human_abs_delta()
+def compute(group=ALL):
+    human = human_abs_delta(group)
     sd_human = float(pd.Series(human).std())          # ddof=1, matches the figure
 
     results = {}
@@ -53,7 +54,7 @@ def compute():
         path = RESULTS_DIR / filename
         if not path.exists():
             raise SystemExit(f"missing results file: {path}")
-        model = model_abs_delta(path)
+        model = model_abs_delta(path, group)
         sd_model = float(pd.Series(model).std())
         w, p_two = levene(human, model, center="median")
         sd_ratio = sd_human / sd_model

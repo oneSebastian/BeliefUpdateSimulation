@@ -544,6 +544,72 @@ python -m scripts.stats.analyze
 Writes `.parquet` and `.json` tables to `outputs/stats/`. Which result file feeds
 which comparison is declared in `scripts/stats/data_paths.json`.
 
+The headline table — all six models against the human belief updates, with the
+effect size and the sensitivity analysis beside each test statistic — is the
+combined report:
+
+```bash
+python -m scripts.stats.effect_size_report
+```
+
+It runs all six analyses (paired permutation, chi-squared, both Brown-Forsythe
+tests, Kendall tau, sensitivity), reading each number from the module that owns
+that test, and writes `outputs/stats/effect_size_report.txt`.
+
+### Subsets of the design
+
+`--group-by` reruns the whole report inside each cell of the design instead of
+over all 1173 observations, and `--output-dir` collects several runs in one
+place. To produce the whole design and both groupings side by side, without
+overwriting the published `outputs/stats/effect_size_report.txt`:
+
+```bash
+python -m scripts.stats.effect_size_report --group-by overall       --output-dir outputs/stats/grouped
+python -m scripts.stats.effect_size_report --group-by topic         --output-dir outputs/stats/grouped
+python -m scripts.stats.effect_size_report --group-by topic-package --output-dir outputs/stats/grouped
+```
+
+That writes `outputs/stats/grouped/whole_design/`, `.../by_topic/` and
+`.../by_topic_package/`. Each directory holds one `<subset>.txt` per cell plus
+`all_subsets.json`; where there is more than one subset it also holds
+`overview.txt` (every statistic as a subset x model matrix) and
+`all_subsets.txt`. Allow roughly 7 minutes for `topic`, 18 for
+`topic-package`, and 2 for `overall` — most of it is the simulated power solve
+in section 6, not the permutations.
+
+Without `--output-dir` the groupings still go to `outputs/stats/grouped/`, but
+a bare `--group-by overall` reverts to its long-standing behaviour of
+regenerating the published report in place.
+
+`all_subsets.json` carries everything the text reports display, so after a
+change to the report layout they can be rewritten without recomputing:
+
+```bash
+python -m scripts.stats.effect_size_report --group-by topic --rebuild
+```
+
+That rereads the saved JSON, rewrites every `.txt` beside it and leaves the
+JSON itself alone. It cannot pick up a change to a *statistic* — only to how
+one is presented; for that, rerun without `--rebuild`.
+
+The cells are defined in `belief_update_sim.grouping`, and each analysis module
+takes the same `group=` argument, so the subset reaches the statistic rather
+than being filtered afterwards. Two consequences are worth knowing before
+reading the tables, and each subset report restates them at the end:
+
+- **n falls to ~391 per topic and ~130 per cell**, so section 6 re-solves the
+  minimum detectable effect at that n. Most per-cell effects land below it; a
+  non-significant cell is usually an underpowered one, not a null result.
+- **Inside a cell there is no clustering left** — a participant contributes one
+  observation — so the nominal and independent sample sizes coincide there.
+- The 27 comments are 3 topics x 3 packages x 3 messages, so section 4 compares
+  spreads of 9 or 3 mean-ranks. Those ratios stay descriptive; their p-values
+  do not mean much.
+- Bonferroni is reported both ways: `0.05/6` across the models within a subset
+  (marked `*` in the overview) and `0.05/(6 x subsets)` across everything
+  (marked `**`). Which family applies is a reporting decision, not one the
+  script makes for you.
+
 `belief_update_sim.data_loading` is the shared loader and the reason human and LLM
 data are comparable at all. It sign-flips negatively phrased topic variants so that
 positive always means "toward the proposition", and renames columns onto a common
@@ -582,9 +648,11 @@ python -m scripts.stats.post_stance_distribution   # chi-squared: human vs LLM p
 python -m scripts.stats.belief_change_variability  # Brown-Forsythe on |belief change|
 python -m scripts.stats.comment_rank_correlation   # Kendall tau on comment rankings
 python -m scripts.stats.comment_rank_variability   # Brown-Forsythe on comment mean-ranks
+python -m scripts.stats.framing                    # statement framing: human initial beliefs + per-source update
 ```
 
-Each writes a `.txt` and `.json` summary to `outputs/stats/`.
+Each writes a `.txt` and `.json` summary to `outputs/stats/` (`framing` writes
+only `framing.txt`).
 
 ## Data
 

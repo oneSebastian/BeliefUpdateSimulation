@@ -32,6 +32,7 @@ import math
 from belief_update_sim.comment_ranks import (HUMAN, MODELS, SLOTS, load_human_ranks,
                                              load_model_ranks)
 from belief_update_sim.config import RESULTS_DIR, STATS_OUTPUT_DIR, ensure_output_dirs
+from belief_update_sim.grouping import ALL
 
 
 def ranks_of(row):
@@ -63,7 +64,7 @@ def summarize(taus):
             "ci_low": mean - 1.96 * se, "ci_high": mean + 1.96 * se}
 
 
-def compute():
+def compute(group=ALL):
     human = load_human_ranks()
     per_model, per_model_topic = {}, {}
     skipped = collections.Counter()
@@ -77,6 +78,10 @@ def compute():
 
         taus, by_topic = [], collections.defaultdict(list)
         for key, h in human.items():
+            # out-of-group pairs are not "skipped" -- they are not in the
+            # population this run is about, so they are not counted anywhere
+            if not group.matches(key[1], h["package"]):
+                continue
             m = model.get(key)
             if m is None:
                 skipped[name] += 1

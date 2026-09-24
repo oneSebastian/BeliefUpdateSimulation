@@ -27,6 +27,9 @@ HF_DATASET_DIR = DATA_DIR / "hf_dataset"
 # published images sit next to the panels assembled from them.
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 STATS_OUTPUT_DIR = OUTPUTS_DIR / "stats"
+# Subset runs (one topic, or one topic x package cell) write here, so that the
+# whole-design results in STATS_OUTPUT_DIR are never overwritten by them.
+GROUPED_STATS_DIR = STATS_OUTPUT_DIR / "grouped"
 # Regenerable intermediates (was figures/derived/): per-model regression tables,
 # bias summaries, the combined-results CSV the zscore figures read, and the
 # ablation tables written by personas.py / post_training.py.

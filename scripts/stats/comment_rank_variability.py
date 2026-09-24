@@ -27,19 +27,44 @@ from scipy.stats import levene
 
 from belief_update_sim.comment_ranks import HUMAN, load_all_sources, mean_rank_by_comment
 from belief_update_sim.config import STATS_OUTPUT_DIR, ensure_output_dirs
+from belief_update_sim.grouping import ALL
 
 N_COMMENTS = 27
+N_MESSAGES = 3          # messages per topic x package cell
 
 
-def collect():
+def expected_comments(group=ALL):
+    """How many of the 27 comments belong to a group."""
+    n = N_COMMENTS
+    if group.topic is not None:
+        n //= 3
+    if group.package is not None:
+        n //= 3
+    return n
+
+
+def comments_in_group(keys, group=ALL):
+    """The (topic, package, message) keys that belong to `group`."""
+    return [k for k in keys if group.matches(k[0], k[1])]
+
+
+def collect(group=ALL):
+    """Mean rank per comment, restricted to the comments in `group`.
+
+    A comment is only ever shown inside its own topic x package cell, so its
+    mean rank is already a within-cell quantity -- selecting the keys of the
+    cell is the same thing as recomputing the means from that cell's rows.
+    """
     sources = load_all_sources()
     means = {name: mean_rank_by_comment(records) for name, records in sources.items()}
 
     # only comments every source ranked, so the groups are strictly comparable
-    shared = sorted(set.intersection(*[set(m) for m in means.values()]))
-    if len(shared) != N_COMMENTS:
+    shared = comments_in_group(
+        sorted(set.intersection(*[set(m) for m in means.values()])), group)
+    expected = expected_comments(group)
+    if len(shared) != expected:
         print(f"note: {len(shared)} comments common to all sources "
-              f"(expected {N_COMMENTS})")
+              f"(expected {expected})")
     return means, shared
 
 
