@@ -255,7 +255,7 @@ being dropped: `--max-gpus 2` cannot shrink the 4-GPU model.
 | `--sequential` | one job at a time; the same as `--max-gpus 1` |
 | `--parallel` | no dependencies at all — the one mode where queued jobs *do* request resources |
 | `--after JOBID` | hold the first wave behind an existing job |
-| `--only GLOB` | restrict the batch, e.g. `--only 'gemma-4-*'` to re-run one family |
+| `--only GLOB` | restrict the batch, e.g. `--only 'gemma-4-*'` to re-run one family. Takes a comma-separated list — `--only 'Qwen3.5-27B,gemma-4-31B-it'` — which is what re-running an arbitrary set after a failure needs, and the selection is still packed into waves as one batch |
 
 Which lets you queue the full sweep behind the pilots — the last submitted job
 id is printed for exactly this:
@@ -490,36 +490,57 @@ nvcc fatal : Unsupported gpu architecture 'compute_90a'
 nvcc fatal : Unknown option '--compress-mode=size'
 ```
 
-Three JITs are affected:
+Four JITs are affected:
 
 | JIT | Disabled by | Where |
 | --- | --- | --- |
 | top-k/top-p sampler | `VLLM_USE_FLASHINFER_SAMPLER=0` | `slurm/run_model.slurm` |
-| fused all-reduce + RMSNorm (tensor-parallel only) | `VLLM_ALLREDUCE_USE_FLASHINFER=0` | `slurm/run_model.slurm` |
+| all-reduce communicator (tensor-parallel only) | `VLLM_ALLREDUCE_USE_FLASHINFER=0` | `slurm/run_model.slurm` |
+| fused all-reduce + RMSNorm pass (tensor-parallel only) | `--compilation-config '{"pass_config": {"fuse_allreduce_rms": false}}'` | `ServingConfig.vllm_args`, for every TP>1 config |
 | gated-delta-net prefill (Qwen3.5 only) | `--gdn-prefill-backend triton` | the Qwen configs' `extra_args` |
 
-The first two live in the job script rather than per config, so every model in
-the sweep runs the same kernels — a kernel that varied across models would be a
-confound on the size axis. The fallback paths draw from the same distributions,
-so results are unaffected; they are somewhat slower, which does not matter for
-1173 short calls, and it removes runtime compilation from the batch jobs
-entirely.
+The fallback paths draw from the same distributions, so results are unaffected;
+they are somewhat slower, which does not matter for 1173 short calls, and it
+removes runtime compilation from the batch jobs entirely.
 
-The all-reduce one is worth understanding before changing it, because it looks
-like a tensor-parallelism problem and is not. vLLM 0.30 promoted `FLASHINFER`
-to the front of the all-reduce dispatch order; 0.27.1 kept it in the candidate
-list and chose `CUSTOM`. The fused all-reduce+RMSNorm pass only builds
-`trtllm_mnnvl_allreduce.cu` once dispatch actually goes through FlashInfer — a
-working 0.27.1 run on 4 GPUs had `fuse_allreduce_rms: True` and never invoked
-`nvcc` at all. So do **not** "fix" this by disabling the fusion pass
-(`-O.pass_config.fuse_allreduce_rms=false`); that removes an optimization the
-older runs had. It is the backend choice that regressed, and
-`VLLM_ALLREDUCE_USE_FLASHINFER=0` is what restores the old behaviour.
+**The two all-reduce rows are separate doors into the same failing build, and
+shutting one does not shut the other.** This is worth reading before touching
+either, because it cost the sweep two waves of multi-GPU models.
 
-To undo all three once a CUDA ≥ 12.8 toolkit is available
-(`conda install -c nvidia cuda-nvcc`): set `VLLM_USE_FLASHINFER_SAMPLER=1` and
-`VLLM_ALLREDUCE_USE_FLASHINFER=1`, and drop `--gdn-prefill-backend` from
-`extra_args`.
+`VLLM_ALLREDUCE_USE_FLASHINFER=0` governs the *communicator*: vLLM 0.30 promoted
+`FLASHINFER` to the front of the all-reduce dispatch order, and this restores
+0.27.1's choice of `CUSTOM`. It works, and the job log proves it —
+
+```
+Using ['CUSTOM', 'SYMM_MEM', 'PYNCCL'] all-reduce backends (in dispatch order)
+```
+
+— and the job still died, because the `fuse_allreduce_rms` compilation pass
+never consults that list. It stands up its own workspace
+(`Initialized FlashInfer Allreduce norm fusion workspace with backend=mnnvl`)
+and rewrites the compiled graph to call
+`vllm.flashinfer_trtllm_fused_allreduce_norm` directly, reaching the same
+`trtllm_mnnvl_allreduce.cu` build. Hence the third row. An earlier version of
+this section said the opposite — that the fusion pass was safe to leave on
+because a working 0.27.1 TP=4 run had `fuse_allreduce_rms: True` and never
+invoked `nvcc`. That observation is real but does not generalise to 0.30; the
+26B run that failed with `FLASHINFER` already out of the dispatch order settles
+it.
+
+Dropping the fusion leaves a plain all-reduce followed by a native RMSNorm —
+the same unfused arithmetic the single-GPU models do, so it makes the sweep
+marginally *more* uniform across the size axis, not less. It is applied only at
+TP>1, where the pass actually runs; adding it at TP=1 would change nothing
+except make the serve command differ from the one the seven finished models ran
+under.
+
+To undo all four once a CUDA ≥ 12.8 toolkit is available
+(`conda install -c nvidia cuda-nvcc` into the `vllm` env, which fixes every
+FlashInfer JIT at once): set `VLLM_USE_FLASHINFER_SAMPLER=1` and
+`VLLM_ALLREDUCE_USE_FLASHINFER=1`, drop `--gdn-prefill-backend` from
+`extra_args`, and put `"--compilation-config", '{"pass_config":
+{"fuse_allreduce_rms": true}}'` in a config's `extra_args` (they are appended
+last, so they win over the default).
 
 Re-run just the affected family after a fix, rather than the whole sweep:
 

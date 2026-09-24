@@ -60,6 +60,28 @@ _TIME_RE = re.compile(r"^(?:(\d+)-)?(\d{1,3}):([0-5]\d):([0-5]\d)$")
 # should be able to ask for by accident, so it is rejected below.
 _MEM_RE = re.compile(r"^(\d+)([KMGT])?$")
 
+# vLLM 0.30 auto-enables the `fuse_allreduce_rms` compilation pass whenever
+# tensor-parallel > 1. The pass rewrites the compiled graph to call
+# `vllm.flashinfer_trtllm_fused_allreduce_norm`, and that op JIT-compiles
+# trtllm_mnnvl_allreduce.cu -- which the cluster's /usr/bin/nvcc rejects, because
+# FlashInfer emits `--compress-mode=size` and that flag needs CUDA 12.8+. The
+# build happens inside the profile run, so the job dies roughly ten minutes in,
+# with the weights already loaded.
+#
+# VLLM_ALLREDUCE_USE_FLASHINFER=0 does NOT prevent this, which cost the sweep a
+# second wave to learn: it removes FLASHINFER from the *communicator's*
+# all-reduce dispatch order (the logs confirm `['CUSTOM', 'SYMM_MEM',
+# 'PYNCCL']`), but the fusion pass never consults that list. It initialises its
+# own FlashInfer workspace -- `Initialized FlashInfer Allreduce norm fusion
+# workspace with backend=mnnvl` -- and calls the kernel directly. The env var and
+# this flag are two independent doors into the same failing build; both need
+# shutting.
+#
+# Turning the pass off leaves a plain all-reduce followed by a native RMSNorm.
+# That is the unfused arithmetic the single-GPU models already do, so if
+# anything it makes the sweep more uniform across the size axis, not less.
+FUSION_OFF_JSON = '{"pass_config": {"fuse_allreduce_rms": false}}'
+
 REQUIRED_SERVING_KEYS = (
     "hf_model_id",
     "gpus",
@@ -144,6 +166,9 @@ class ServingConfig:
         ]
         if self.reasoning_parser:
             args += ["--reasoning-parser", self.reasoning_parser]
+        if self.tensor_parallel_size > 1:
+            args += ["--compilation-config", FUSION_OFF_JSON]
+        # Last, so a config's own extra_args can override anything above.
         args += list(self.extra_args)
         return args
 

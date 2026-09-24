@@ -239,6 +239,54 @@ def test_only_still_packs_what_it_selects(shim):
         assert all(deps == expected for _, _, deps in wave)
 
 
+def test_only_accepts_a_comma_separated_list(shim):
+    """What re-running after a failure actually needs. The set left over is
+    rarely one glob -- no pattern picks out the five tensor-parallel models
+    without also catching gemma-4-12B-it, which has the same name shape.
+    """
+    env, log = shim
+    result = run(env, "--all", "--only",
+                 "Qwen3.5-27B,Qwen3.5-35B-A3B,gemma-4-26B-A4B-it,"
+                 "gemma-4-31B-it,Qwen3.5-122B-A10B")
+    assert result.returncode == 0, result.stderr
+
+    names = [line.split("--job-name=")[1].split()[0] for line in calls(log)]
+    assert sorted(names) == sorted([
+        "Qwen3.5-27B", "Qwen3.5-35B-A3B", "gemma-4-26B-A4B-it",
+        "gemma-4-31B-it", "Qwen3.5-122B-A10B",
+    ])
+    assert "gemma-4-12B-it" not in names
+
+
+def test_a_list_of_globs_is_still_packed_as_one_batch(shim):
+    """Not the same as submitting each name separately: the selection has to
+    share a wave plan, or five jobs run serially on a four-GPU node."""
+    env, log = shim
+    run(env, "--all", "--only", "Qwen3.5-0.8B,Qwen3.5-2B,Qwen3.5-4B")
+    waves = waves_from(parse_submissions(log))
+    assert len(waves) == 1, "three 1-GPU jobs fit one wave"
+
+
+def test_a_list_entry_may_itself_be_a_glob(shim):
+    env, log = shim
+    result = run(env, "--pilot-all", "--only", "gemma-4-E*,Qwen3.5-122B-A10B")
+    assert result.returncode == 0, result.stderr
+    names = [line.split("--job-name=")[1].split()[0] for line in calls(log)]
+    assert sorted(names) == ["Qwen3.5-122B-A10B-pilot",
+                             "gemma-4-E2B-it-pilot", "gemma-4-E4B-it-pilot"]
+
+
+def test_a_list_does_not_glob_against_the_working_directory(shim):
+    """Splitting on commas expands $ONLY unquoted, so without `set -f` a
+    pattern like 'README*' would be replaced by a filename before it is ever
+    matched against a config name."""
+    env, log = shim
+    result = run(env, "--pilot-all", "--only", "README*,Qwen3.5-9B")
+    assert result.returncode == 0, result.stderr
+    assert len(calls(log)) == 1
+    assert "Qwen3.5-9B" in calls(log)[0]
+
+
 def test_only_matching_nothing_fails_loudly(shim):
     env, log = shim
     result = run(env, "--pilot-all", "--only", "llama-*")
@@ -342,11 +390,20 @@ def test_pilot_walltime_is_overridable_for_a_slow_link(shim):
 
 
 def test_full_runs_keep_their_configured_walltime(shim):
+    """Each model's own `time`, not the pilot's and not a shared default.
+
+    Checked against the configs rather than against literals: the walltimes were
+    re-derived from the pilots' measured throughput and will move again.
+    """
+    from belief_update_sim.serving import load_serving_config
+
     env, log = shim
     run(env, "--all")
-    joined = "\n".join(calls(log))
-    assert "--time=48:00:00" in joined   # 122B-A10B
-    assert "--time=12:00:00" in joined   # the 1-GPU models
+    submitted = submitted_walltimes(log)
+
+    for path in sorted((PROJECT_ROOT / "configs" / "model_size").glob("*.json")):
+        serving = load_serving_config(path)
+        assert submitted[serving.model] == serving.time_limit
 
 
 def test_allocation_flags_come_from_the_config(shim):
@@ -431,10 +488,13 @@ def test_run_model_disables_the_flashinfer_sampler_by_default():
 
 
 def test_run_model_disables_the_flashinfer_allreduce_by_default():
-    """Without this every tensor-parallel model in the sweep dies in startup:
-    vLLM 0.30 dispatches all-reduce through FlashInfer, whose fused
-    all-reduce+RMSNorm JIT-compiles a CUDA kernel, and the cluster's nvcc is too
-    old to build it. It cost the first pilot wave all five multi-GPU models.
+    """Takes FLASHINFER out of the communicator's all-reduce dispatch order,
+    which vLLM 0.30 had promoted to the front of it.
+
+    Necessary but NOT sufficient: the `fuse_allreduce_rms` compilation pass
+    reaches the same failing JIT without consulting that list, and is turned off
+    separately through --compilation-config. See the fusion tests in
+    test_serving.py; disabling only one of the two loses every TP>1 model.
     """
     script = (PROJECT_ROOT / "slurm" / "run_model.slurm").read_text()
     assert 'export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"' in script

@@ -29,8 +29,15 @@
 #                       queued jobs DO request resources
 #     --after JOBID     hold the first wave behind an existing job, e.g. to
 #                       queue the full sweep behind the pilots
-#     --only GLOB       restrict a batch to configs whose name matches:
+#     --only GLOB       restrict a batch to configs whose name matches. Takes a
+#                       comma-separated list, and the selection is still packed
+#                       into waves as one batch:
 #                           ./slurm/submit_model.sh --pilot-all --only 'gemma-4-*'
+#                           ./slurm/submit_model.sh --all --only 'Qwen3.5-27B,gemma-4-31B-it'
+#                       The list form is what re-running after a failure needs:
+#                       the set left over is rarely one glob. There is no pattern
+#                       that picks out the five tensor-parallel models without
+#                       also catching gemma-4-12B-it.
 #
 # Pilot jobs request the config's `serving.pilot_time` rather than its full-run
 # walltime -- 9 calls do not need 48 hours, and asking for them would hold a
@@ -79,7 +86,8 @@ while [ $# -gt 0 ]; do
             AFTER="$2"; shift 2 ;;
         --only)
             if [ $# -lt 2 ]; then
-                echo "ERROR: --only needs a glob, e.g. --only 'gemma-4-*'." >&2
+                echo "ERROR: --only needs a glob or comma-separated list," >&2
+                echo "       e.g. --only 'gemma-4-*' or --only 'Qwen3.5-27B,gemma-4-31B-it'." >&2
                 exit 2
             fi
             ONLY="$2"; shift 2 ;;
@@ -189,11 +197,22 @@ if [ -n "$BATCH_MODE" ]; then
     for candidate in configs/model_size/*.json; do
         [ -e "$candidate" ] || continue
         if [ -n "$ONLY" ]; then
-            # shellcheck disable=SC2254 -- $ONLY is a glob on purpose
-            case "$(basename "$candidate" .json)" in
-                $ONLY) ;;
-                *) continue ;;
-            esac
+            name="$(basename "$candidate" .json)"
+            matched=0
+            # `set -f` so splitting $ONLY on commas cannot also glob it against
+            # the working directory; the patterns are for the loop below only.
+            saved_ifs="$IFS"
+            set -f
+            IFS=','
+            for pattern in $ONLY; do
+                # shellcheck disable=SC2254 -- $pattern is a glob on purpose
+                case "$name" in
+                    $pattern) matched=1; break ;;
+                esac
+            done
+            IFS="$saved_ifs"
+            set +f
+            [ "$matched" -eq 1 ] || continue
         fi
         configs+=("$candidate")
     done

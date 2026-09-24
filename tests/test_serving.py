@@ -243,6 +243,83 @@ def test_extra_args_are_appended_verbatim():
 
 
 # ---------------------------------------------------------------------------
+# the fused all-reduce+RMSNorm compilation pass
+#
+# This pass cost the sweep two whole waves of multi-GPU models, and the second
+# one only because the fix for the first looked like it should have covered it.
+# ---------------------------------------------------------------------------
+
+def compilation_config(serving) -> dict | None:
+    """The JSON handed to --compilation-config, or None if the flag is absent."""
+    args = serving.vllm_args()
+    if "--compilation-config" not in args:
+        return None
+    return json.loads(args[args.index("--compilation-config") + 1])
+
+
+def test_tensor_parallel_configs_turn_off_the_fused_allreduce_norm():
+    """Its op JIT-compiles trtllm_mnnvl_allreduce.cu, and /usr/bin/nvcc on the
+    cluster rejects the `--compress-mode=size` FlashInfer emits for it. The build
+    runs during the profile pass, so the job dies with the weights already in.
+    """
+    assert compilation_config(make(gpus=2, tensor_parallel_size=2)) == {
+        "pass_config": {"fuse_allreduce_rms": False}
+    }
+
+
+def test_single_gpu_configs_carry_no_compilation_flag():
+    """At TP=1 there is no all-reduce to fuse, so the flag would only make the
+    serve command differ from the one the seven finished models ran under."""
+    assert compilation_config(make()) is None
+
+
+def test_the_flag_touches_nothing_but_the_fusion():
+    """--compilation-config replaces the whole CompilationConfig, so anything
+    named in it is a setting taken away from vLLM's own defaults. Naming only
+    pass_config.fuse_allreduce_rms leaves torch.compile, the cudagraph mode and
+    every other fusion where vLLM put them.
+    """
+    config = compilation_config(make(gpus=2, tensor_parallel_size=2))
+    assert list(config) == ["pass_config"]
+    assert list(config["pass_config"]) == ["fuse_allreduce_rms"]
+
+
+def test_a_config_can_still_override_the_compilation_flag():
+    """extra_args land last, so a cluster with a working nvcc can put the
+    fusion back from the config without editing serving.py."""
+    override = '{"pass_config": {"fuse_allreduce_rms": true}}'
+    args = make(gpus=2, tensor_parallel_size=2,
+                extra_args=("--compilation-config", override)).vllm_args()
+    assert args[-2:] == ["--compilation-config", override]
+
+
+def test_every_multi_gpu_model_in_the_sweep_gets_the_flag():
+    """The five that failed twice are exactly the five with TP>1."""
+    disabled, untouched = set(), set()
+    for path in model_size_configs():
+        serving = load_serving_config(path)
+        target = disabled if compilation_config(serving) else untouched
+        target.add(serving.model)
+
+    assert disabled == {
+        "Qwen3.5-27B", "Qwen3.5-35B-A3B", "gemma-4-26B-A4B-it",
+        "gemma-4-31B-it", "Qwen3.5-122B-A10B",
+    }
+    assert len(untouched) == 7
+
+
+def test_the_flag_survives_shell_quoting():
+    """VLLM_ARGS is emitted as a bash array and `eval`-ed by run_model.slurm.
+    The JSON is full of braces, quotes and a space -- if it were not quoted it
+    would reach `vllm serve` as several arguments, or as brace expansion."""
+    serving = make(gpus=2, tensor_parallel_size=2)
+    line = next(l for l in serving.to_shell_assignments().splitlines()
+                if l.startswith("VLLM_ARGS="))
+    fields = shlex.split(line.removeprefix("VLLM_ARGS=").strip("()"))
+    assert fields == serving.vllm_args()
+
+
+# ---------------------------------------------------------------------------
 # the shipped sweep
 # ---------------------------------------------------------------------------
 

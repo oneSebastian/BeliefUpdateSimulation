@@ -93,19 +93,25 @@ nvidia-smi --query-gpu=index,name,memory.total --format=csv || true
 # kernel would be a confound on the size axis.
 export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
 
-# The all-reduce: this one only bites at tensor-parallel > 1, which is why the
-# first pilot wave lost exactly the five multi-GPU models and kept the seven
-# single-GPU ones. vLLM 0.30 promoted FLASHINFER to the front of the all-reduce
-# dispatch order; 0.27.1 left it in the candidate list but chose CUSTOM. Once
-# dispatch goes through FlashInfer, the fused all-reduce+RMSNorm JIT-compiles
-# trtllm_mnnvl_allreduce.cu, and that is the build that fails.
+# The all-reduce: this one only bites at tensor-parallel > 1, which is why both
+# waves so far lost exactly the five multi-GPU models and kept the seven
+# single-GPU ones. There are TWO independent routes into the failing build and
+# they need different switches.
 #
-# Turning it off restores what 0.27.1 did (dispatch falls back to CUSTOM, then
-# PYNCCL). Note this is NOT the same as disabling the fusion pass: a working
-# 0.27.1 run on 4 GPUs had `fuse_allreduce_rms: True` and never called nvcc,
-# because the fused op only builds that kernel when it dispatches to FlashInfer.
-# Leave the pass alone; it is the backend choice that regressed.
+# 1. The communicator. vLLM 0.30 promoted FLASHINFER to the front of the
+#    all-reduce dispatch order; 0.27.1 left it in the candidate list but chose
+#    CUSTOM. This variable restores the 0.27.1 choice, and the logs show it
+#    works: `Using ['CUSTOM', 'SYMM_MEM', 'PYNCCL'] all-reduce backends`.
 export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"
+
+# 2. The `fuse_allreduce_rms` compilation pass, which is NOT covered by the
+#    variable above -- an earlier version of this comment claimed it was, and a
+#    26B run with FLASHINFER already out of the dispatch order disproved it. The
+#    pass stands up its own FlashInfer workspace and emits a direct call to
+#    `vllm.flashinfer_trtllm_fused_allreduce_norm` into the compiled graph, so it
+#    reaches the same nvcc either way. It is turned off through the serve command
+#    rather than the environment; see FUSION_OFF_JSON in belief_update_sim/
+#    serving.py, which adds --compilation-config for every TP>1 config.
 
 VLLM_LOG="logs/vllm_${MODEL}_${SLURM_JOB_ID:-local}.out"
 echo "[$(date)] Starting vllm server -> $VLLM_LOG"
