@@ -21,7 +21,9 @@
       "reasoning_parser": "qwen3",
       "extra_args": [
         "--gdn-prefill-backend",
-        "triton"
+        "triton",
+        "--max-num-seqs",
+        "256"
       ]
     },
     "paths": {

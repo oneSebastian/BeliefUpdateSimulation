@@ -473,6 +473,37 @@ def test_gemma_configs_do_not_carry_the_gdn_flag():
             assert "--gdn-prefill-backend" not in serving.vllm_args()
 
 
+def test_the_122b_caps_concurrent_sequences_for_its_mamba_state():
+    """Qwen3.5 is a hybrid: its gated-delta-net layers hold a *recurrent* state
+    per sequence, one whole Mamba cache block each, unlike paged attention KV.
+
+    122B-A10B is an MoE, so all 256 experts stay resident and the weights take
+    57.31 GiB of the 72 GiB budget per rank. That leaves 9.73 GiB of cache =
+    804 Mamba blocks, and vLLM's default max_num_seqs of 1024 exceeds it, so
+    startup aborts in initialize_kv_cache -- after the weights, the profile run
+    and all 51 CUDA graphs. 27B escapes it only because its weights are 25.69
+    GiB and leave 41.85 GiB of cache.
+
+    256 rather than the 804 the error message suggests: 804 is derived from a
+    *measured* free-memory figure that moves between runs, and run_agent issues
+    one request at a time, so the ceiling is unreachable either way. It is a
+    scheduler admission limit, so it cannot change any generated text.
+    """
+    serving = load_serving_config(MODEL_SIZE_DIR / "Qwen3.5-122B-A10B.json")
+    args = serving.vllm_args()
+    assert "--max-num-seqs" in args, "122B-A10B cannot start without this"
+    assert int(args[args.index("--max-num-seqs") + 1]) <= 804
+
+
+def test_no_other_model_caps_concurrent_sequences():
+    """Only the one model that cannot start otherwise. Everywhere else the
+    default stands, so the scheduler is not a needless difference across the
+    size axis."""
+    capped = {load_serving_config(p).model for p in model_size_configs()
+              if "--max-num-seqs" in load_serving_config(p).vllm_args()}
+    assert capped == {"Qwen3.5-122B-A10B"}
+
+
 def test_larger_models_are_not_given_fewer_gpus():
     """A sanity check on the hand-written allocation: GPUs are monotone in size."""
     by_gpus = {}
