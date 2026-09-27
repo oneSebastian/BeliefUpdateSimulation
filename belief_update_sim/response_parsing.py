@@ -22,7 +22,9 @@ _THINK_PREFIX = re.compile(r".*?</think>", re.DOTALL | re.IGNORECASE)
 def parse_json_output(output):
     """Return a dict of parsed fields, or None if nothing usable is present.
 
-    Keys: new_belief, ranking, reasoning, general_public_stance.
+    Keys: new_belief, ranking, reasoning, general_public_stance. `reasoning` is
+    None when the response has no such field, which is what the `no-reason`
+    ablation asks for.
     """
     if output is None:
         return None
@@ -42,7 +44,8 @@ def parse_json_output(output):
         new_belief = int(data["new_belief"])
         general_public_stance = int(data["general_public_stance"])
         ranking = [int(r) for r in data["ranking"]]
-        reasoning = unicodedata.normalize("NFKC", str(data["reasoning"]))
+        reasoning = (unicodedata.normalize("NFKC", str(data["reasoning"]))
+                     if "reasoning" in data else None)
     except (KeyError, TypeError, ValueError):
         return None
 
@@ -93,7 +96,7 @@ def repair_dataframe(df):
             continue
         changed = False
         for col, key in SCALAR_TARGETS.items():
-            if col in cols and pd.isna(df.at[idx, col]):
+            if col in cols and pd.isna(df.at[idx, col]) and parsed[key] is not None:
                 df.at[idx, col] = parsed[key]
                 changed = True
         for i, col in enumerate(RANK_TARGETS):

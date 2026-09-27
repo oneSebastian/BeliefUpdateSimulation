@@ -11,12 +11,14 @@
         "Qwen3_32B": {
             "no-demographic": "results/ablations/Qwen3-32B_no-demographic.xlsx",
             "no-personality": "results/ablations/Qwen3-32B_no-personality.xlsx",
-            "no-persona": "results/ablations/Qwen3-32B_no-persona.xlsx"
+            "no-persona": "results/ablations/Qwen3-32B_no-persona.xlsx",
+            "no-reason": "results/ablations/Qwen3-32B_no-reason.xlsx"
         },
         "Llama-3.3-70B-Instruct": {
             "no-demographic": "results/ablations/Llama-3.3-70B-Instruct_no-demographic.xlsx",
             "no-personality": "results/ablations/Llama-3.3-70B-Instruct_no-personality.xlsx",
-            "no-persona": "results/ablations/Llama-3.3-70B-Instruct_no-persona.xlsx"
+            "no-persona": "results/ablations/Llama-3.3-70B-Instruct_no-persona.xlsx",
+            "no-reason": "results/ablations/Llama-3.3-70B-Instruct_no-reason.xlsx"
         },
         "academic-ai-gpt-5-mini": {
             "no-demographic": "results/ablations/academic-ai-gpt-5-mini_no-demographic.xlsx",

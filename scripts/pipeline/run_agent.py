@@ -64,6 +64,15 @@ json_example = """{
   "general_public_stance": "INTEGER"
 }"""
 
+# The `no-reason` ablation: the same fields in the same order, minus the
+# simulated justification. Only the written reason is dropped -- a thinking
+# model (Qwen3-32B) still thinks before answering.
+json_example_no_reason = """{
+  "new_belief": "INTEGER",
+  "ranking": ["INTEGER", "INTEGER", "INTEGER"],
+  "general_public_stance": "INTEGER"
+}"""
+
 json_example_initial_belief = """{
   "belief": "INTEGER",
 }"""
@@ -215,7 +224,8 @@ def is_valid_output(
     new_belief: Optional[int],
     ranking: List[int],
     reasoning: Optional[str],
-    general_public: Optional[int]
+    general_public: Optional[int],
+    require_reasoning: bool = True,
 ) -> bool:
     if new_belief not in {-2, -1, 0, 1, 2}:
         return False
@@ -223,7 +233,7 @@ def is_valid_output(
         return False
     if sorted(ranking) != [1, 2, 3]:
         return False
-    if not isinstance(reasoning, str):
+    if require_reasoning and not isinstance(reasoning, str):
         return False
     return True
 
@@ -636,6 +646,18 @@ def process_persona(
                 comments_block=comments_block,
                 json_example=json_example,
             )
+        elif ablation == "no-reason":
+            template_text = load_text("prompt_templates/no_reason.txt")
+            user_prompt = template_text.format(
+                demographic_block=demographic_block,
+                personality_block=personality_block,
+                topic=topic,
+                statement_formulation=statement_formulation,
+                init_belief=init_belief,
+                familiarity=familiarity,
+                comments_block=comments_block,
+                json_example=json_example_no_reason,
+            )
         elif ablation == "probe-initial-belief":
             template_text = load_text("prompt_templates/probe_initial_belief.txt")
             user_prompt = template_text.format(
@@ -681,8 +703,13 @@ def process_persona(
             def accept(text):
                 return _parse_initial_belief(text) in {-2, -1, 0, 1, 2}
         else:
+            # The no-reason prompt asks for no reasoning field, so its absence
+            # must not count as a failed attempt.
+            require_reasoning = ablation != "no-reason"
+
             def accept(text):
-                return is_valid_output(*parse_JSON_output(text))
+                return is_valid_output(*parse_JSON_output(text),
+                                       require_reasoning=require_reasoning)
 
         content, meta, stats = generate_with_retries(
             client, model, user_prompt,

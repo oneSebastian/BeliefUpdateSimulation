@@ -63,6 +63,15 @@ def test_returns_none_when_a_key_is_missing():
     assert parse_json_output(json.dumps(bad)) is None
 
 
+def test_parses_response_without_reasoning():
+    """The no-reason ablation asks for no reasoning field."""
+    no_reason = {k: v for k, v in PAYLOAD.items() if k != "reasoning"}
+    parsed = parse_json_output("<think>hm</think>" + json.dumps(no_reason))
+    assert parsed["new_belief"] == 1
+    assert parsed["ranking"] == [2, 1, 3]
+    assert parsed["reasoning"] is None
+
+
 def _frame(raw, **overrides):
     row = {"raw_response": raw, "llm_new_belief": None, "llm_general_public_stance": None,
            "llm_reasoning": None, "rank_1": None, "rank_2": None, "rank_3": None}
@@ -76,6 +85,14 @@ def test_repair_fills_null_columns():
     assert df.at[0, "llm_new_belief"] == 1
     assert df.at[0, "rank_2"] == 1
     assert df.at[0, "llm_reasoning"] == PAYLOAD["reasoning"]
+
+
+def test_repair_leaves_reasoning_null_when_the_response_has_none():
+    no_reason = {k: v for k, v in PAYLOAD.items() if k != "reasoning"}
+    df = _frame(json.dumps(no_reason))
+    assert repair_dataframe(df) == 1
+    assert df.at[0, "llm_new_belief"] == 1
+    assert pd.isna(df.at[0, "llm_reasoning"])
 
 
 def test_repair_never_overwrites_existing_values():
