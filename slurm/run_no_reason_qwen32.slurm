@@ -48,6 +48,16 @@ mkdir -p logs
 # ---------------------------------------------------------------------------
 PORT=8004   # must match "port" in configs/Qwen3-32B.json
 
+# Nothing here may JIT-compile a FlashInfer kernel: the cluster's /usr/bin/nvcc
+# rejects the `--compress-mode=size` flag FlashInfer emits, and the build dies
+# in the profile run after the weights have loaded. vLLM 0.30 reaches that build
+# three ways -- the sampler, the all-reduce communicator, and (at TP > 1) the
+# `fuse_allreduce_rms` compilation pass, which ignores the communicator switch.
+# Same switches as slurm/run_model.slurm; see FUSION_OFF_JSON in
+# belief_update_sim/serving.py for the details.
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
+export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"
+
 echo "[$(date)] Starting vllm server on port $PORT..."
 vllm serve Qwen/Qwen3-32B \
     --served-model-name Qwen3-32B \
@@ -55,6 +65,7 @@ vllm serve Qwen/Qwen3-32B \
     --gpu-memory-utilization 0.8 \
     --enable-auto-tool-choice \
     --tool-call-parser llama3_json \
+    --compilation-config '{"pass_config": {"fuse_allreduce_rms": false}}' \
     --port $PORT \
     > logs/vllm_qwen32_no-reason_${SLURM_JOB_ID}.out 2>&1 &
 

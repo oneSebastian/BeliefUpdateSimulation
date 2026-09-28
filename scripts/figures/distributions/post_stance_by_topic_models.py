@@ -77,24 +77,22 @@ def get_topic(formulation):
     return "Other"
 
 
-def load_model_by_topic(path):
-    df = load_normalized_data(path)
-    df["_topic"] = df["statement_formulation"].apply(get_topic)
+def split_by_topic(df, column):
+    """Integer values of `column` per topic, missing values dropped."""
+    topic = df["statement_formulation"].apply(get_topic)
     return {
-        t: pd.to_numeric(df.loc[df["_topic"] == t, "new_belief"],
+        t: pd.to_numeric(df.loc[topic == t, column],
                          errors="coerce").dropna().astype(int)
         for t in TOPICS
     }
+
+
+def load_model_by_topic(path):
+    return split_by_topic(load_normalized_data(path), "new_belief")
 
 
 def load_human_by_topic():
-    df = load_human_normalized_data()
-    df["_topic"] = df["statement_formulation"].apply(get_topic)
-    return {
-        t: pd.to_numeric(df.loc[df["_topic"] == t, "new_belief"],
-                         errors="coerce").dropna().astype(int)
-        for t in TOPICS
-    }
+    return split_by_topic(load_human_normalized_data(), "new_belief")
 
 
 def draw_panel(ax, series, color, human_series, y_max, show_ylabel):
@@ -146,16 +144,15 @@ def draw_panel(ax, series, color, human_series, y_max, show_ylabel):
     ax.grid(axis='y', alpha=0.12, linestyle='--', linewidth=0.4, zorder=0)
 
 
-def main():
-    print("Loading data...")
+def plot_grid(model_data, human_data, out):
+    """Models x topics grid of bars, each panel with the human outline.
 
-    model_data = {}
-    for label, path in MODELS:
-        model_data[label] = load_model_by_topic(path)
+    `model_data` maps each label in MODELS to {topic: values}; `human_data` is
+    {topic: values}. Saves `out`.{svg,png,pdf}.
+    """
+    for label, _ in MODELS:
         for t in TOPICS:
             print(f"  {label} / {t}: n={len(model_data[label][t])}")
-
-    human_data = load_human_by_topic()
     for t in TOPICS:
         print(f"  Human / {t}: n={len(human_data[t])}")
 
@@ -205,12 +202,18 @@ def main():
                ncol=2, fontsize=9,
                frameon=True, framealpha=0.95, edgecolor='black', fancybox=False)
 
-    out = "figures/plots/distributions/post_stance_by_topic_models"
     for fmt in ["svg", "png", "pdf"]:
         fig.savefig(f"{out}.{fmt}", format=fmt,
                     dpi=(300 if fmt != "svg" else None), bbox_inches='tight')
         print(f"Saved {out}.{fmt}")
     plt.close(fig)
+
+
+def main():
+    print("Loading data...")
+    model_data = {label: load_model_by_topic(path) for label, path in MODELS}
+    plot_grid(model_data, load_human_by_topic(),
+              "figures/plots/distributions/post_stance_by_topic_models")
     print("Done.")
 
 
