@@ -58,13 +58,14 @@ PORT=8004   # must match "port" in configs/Qwen3-32B.json
 export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
 export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"
 
+# No --enable-auto-tool-choice / --tool-call-parser, unlike run_qwen32.slurm:
+# the pipeline sends no tools, and under vLLM 0.30 the llama3_json tool parser
+# makes every chat completion fail with a 500 while the parser is constructed.
 echo "[$(date)] Starting vllm server on port $PORT..."
 vllm serve Qwen/Qwen3-32B \
     --served-model-name Qwen3-32B \
     --tensor-parallel-size 2 \
     --gpu-memory-utilization 0.8 \
-    --enable-auto-tool-choice \
-    --tool-call-parser llama3_json \
     --compilation-config '{"pass_config": {"fuse_allreduce_rms": false}}' \
     --port $PORT \
     > logs/vllm_qwen32_no-reason_${SLURM_JOB_ID}.out 2>&1 &

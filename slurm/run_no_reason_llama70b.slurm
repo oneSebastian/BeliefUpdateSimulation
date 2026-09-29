@@ -58,13 +58,15 @@ PORT=8005   # must match "port" in configs/Llama-3.3-70B-Instruct.json
 export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"
 export VLLM_ALLREDUCE_USE_FLASHINFER="${VLLM_ALLREDUCE_USE_FLASHINFER:-0}"
 
+# No --enable-auto-tool-choice / --tool-call-parser, unlike run_Llama70b.slurm:
+# the pipeline sends no tools, and under vLLM 0.30 the tool parser made every
+# Qwen3-32B chat completion fail with a 500 while the parser was constructed.
+# Dropped here too so both no-reason runs are served the same way.
 echo "[$(date)] Starting vllm server on port $PORT..."
 vllm serve meta-llama/Llama-3.3-70B-Instruct \
     --served-model-name Llama-3.3-70B-Instruct \
     --tensor-parallel-size 4 \
     --gpu-memory-utilization 0.8 \
-    --enable-auto-tool-choice \
-    --tool-call-parser llama3_json \
     --compilation-config '{"pass_config": {"fuse_allreduce_rms": false}}' \
     --port $PORT \
     > logs/vllm_llama70b_no-reason_${SLURM_JOB_ID}.out 2>&1 &

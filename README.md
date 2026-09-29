@@ -675,6 +675,71 @@ python -m scripts.stats.framing                    # statement framing: human in
 Each writes a `.txt` and `.json` summary to `outputs/stats/` (`framing` writes
 only `framing.txt`).
 
+### The model-size sweep
+
+Computing and rendering are separate, because the bootstrap and the permutation
+tests take minutes and reformatting a table should not pay for them again:
+
+```bash
+python -m scripts.stats.model_size          # minutes -> model_size.{csv,json,txt}
+python -m scripts.stats.model_size_table    # ~2s     -> model_size.tex
+```
+
+`model_size.csv` is the handover. It is one row per source and carries the
+run-level facts (n, replicates, seed, what was excluded) on every row, so the
+renderer opens one file and cannot caption a table with another run's metadata.
+`--sort total` orders within a family by stored rather than active parameters;
+`--csv`/`--out` point at other files.
+
+Reports each model's mean paired final-stance difference (`Delta`, with a
+permutation p-value Holm-corrected across the sweep) beside its mean absolute
+error, which is what the ranking uses. The scores come from
+`scripts.stats.model_ranking`, whose `compute` already takes an arbitrary frame;
+only the registry, the p-values and the LaTeX rendering are new. The registry is
+read from `configs/model_size/*.json`, so the analysis cannot drift from what
+`slurm/submit_model.sh` actually submitted.
+
+Two columns carry the caveats rather than burying them. Every score is computed
+on the **complete cases** — the persona x topic cases where every model in the
+sweep parsed — because otherwise each model is graded on a different,
+self-selected set of rows and the MAEs are not comparable. That costs 203 of
+1173 cases here, and not at random: the small models fail on what they find
+hard, so scoring them on what they answered flatters them. `valid n (%)` and
+`n_tries = 3` are both measured over *all* of a model's rows, before that
+intersection, so the reader can see how much of each row rests on a subset.
+Qwen3.5-0.8B needed all three attempts on 97.6% of its cases and Qwen3.5-2B on
+53.8%; from 4B up it is under 1%.
+
+A model whose results file is shorter than the human frame is a run still in
+flight. It is excluded by name in `EXCLUDED` and the loader refuses it rather
+than folding in a partial run, because including one shrinks the complete-case
+set for every other model.
+
+#### What "size" means on this axis
+
+The sweep's names encode three different things, and the table would be ordered
+wrongly if they were conflated:
+
+| Kind | Example | Stored | Active per token |
+| --- | --- | --- | --- |
+| dense | `Qwen3.5-9B` | 9B | 9B |
+| mixture-of-experts | `Qwen3.5-35B-A3B` | 35B | 3B |
+| Gemma effective-parameter | `gemma-4-E2B-it` | **5.1B** | 2B |
+
+The last row is not sparsity. Gemma's `E` names count parameters resident on the
+accelerator; per-layer embeddings are not, so the checkpoint is much larger than
+the name. That is measured, not assumed: `MEASURED_CHECKPOINT_GIB` records each
+model's `Checkpoint size:` line from its own vLLM startup log, converted at bf16.
+Every dense and MoE name matches its checkpoint within 25%; `E2B` and `E4B` are
+out by 2.6x and 2.0x. `logs/` is gitignored, so the measurements live in the
+module rather than being re-read, and a test asserts the split still holds.
+
+The table sorts on **active** parameters, which is compute per token and so the
+honest x-axis for "does more model help"; stored parameters appear after a slash
+where the two differ. This is what puts `Qwen3.5-35B-A3B` between the 2B and the
+4B rather than next to the 27B — and that is where its accuracy actually sits,
+which is the finding the ordering exists to make visible.
+
 ## Data
 
 | Path | Contents |
