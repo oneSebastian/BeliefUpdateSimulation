@@ -35,7 +35,7 @@ PROLIFIC_DATA = DATA_DIR / "prolific_data"
 HF_DATASET = DATA_DIR / "hf_dataset"
 CLEANED_CSV = DATA_DIR / "cleaned_for_llm_391_participant_otree.csv"
 MERGED_CSV = RESULTS_DIR / "merged_llm_participants_data_with_normalized_beliefs.csv"
-OTREE_XLSX = [DATA_DIR / "400_participant_otree.xlsx",
+OTREE_XLSX = [DATA_DIR / "recruited_participants_otree_export.xlsx",
               DATA_DIR / "cleaned_391_participant_otree.xlsx"]
 
 # A participant id is a 24-char alphanumeric token. Excluded on purpose:

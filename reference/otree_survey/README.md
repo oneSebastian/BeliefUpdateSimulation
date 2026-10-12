@@ -22,7 +22,7 @@ inspected alongside the analysis. It is **not part of the analysis pipeline**:
 ## Relation to the analysed data
 
 This application produced the raw oTree exports used in the analysis (for
-example `data/400_participant_otree.xlsx`). The page names referenced in the
+example `data/recruited_participants_otree_export.xlsx`). The page names referenced in the
 participant-flow accounting — `Consent`, `InitBeliefOne`, `MessagePageOne`,
 `EndBeliefOne`, `RankingOne`, … `Big5Page`, `ThankYou` — are the page classes
 defined here in `survey/`.

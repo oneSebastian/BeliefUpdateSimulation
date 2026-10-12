@@ -63,24 +63,35 @@ def perform_permutation_test(sample_1, sample_2):
     return observed_diff, p_value, reject
 
 
-def fast_permutation_test(sample_1, sample_2):
+PERMUTATION_RESAMPLES = 1_000_000
+PERMUTATION_CHUNK = 100_000
+
+
+def fast_permutation_test(sample_1, sample_2, n_resamples=PERMUTATION_RESAMPLES):
+    """Two-sided paired sign-flip test of mean(sample_1 - sample_2) == 0.
+
+    `n_resamples` sets the Monte Carlo budget, and so the resolution of p: the
+    smallest non-zero value it can return is 1/n_resamples. It does not change
+    what is being estimated, only how precisely -- every reported p in this
+    project uses the default, and lowering it is for tests that need the
+    machinery rather than the precision.
+    """
     _reject_nulls(sample_1, sample_2)
     d = (sample_1 - sample_2).to_numpy()
     obs = np.mean(d)
 
-    N_TOTAL = 1_000_000
-    CHUNK_SIZE = 100_000
-    N_CHUNKS = N_TOTAL // CHUNK_SIZE
-
     rng = np.random.default_rng(42)
     count = 0
 
-    for _ in range(N_CHUNKS):
-        signs = rng.integers(0, 2, size=(CHUNK_SIZE, len(d))) * 2 - 1
+    done = 0
+    while done < n_resamples:
+        size = min(PERMUTATION_CHUNK, n_resamples - done)
+        signs = rng.integers(0, 2, size=(size, len(d))) * 2 - 1
         perm_means = np.mean(signs * d, axis=1)
         count += np.sum(np.abs(perm_means) >= np.abs(obs))
+        done += size
 
-    p_value = count / N_TOTAL
+    p_value = count / n_resamples
     alpha = 0.0167
     reject = p_value < alpha
 

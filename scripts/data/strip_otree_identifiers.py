@@ -29,7 +29,7 @@ from openpyxl import Workbook, load_workbook
 
 from belief_update_sim.config import DATA_DIR
 
-TARGETS = [DATA_DIR / "400_participant_otree.xlsx",
+TARGETS = [DATA_DIR / "recruited_participants_otree_export.xlsx",
            DATA_DIR / "cleaned_391_participant_otree.xlsx"]
 
 DROP_COLUMNS = ("participant.code", "session.code", "participant.time_started_utc")

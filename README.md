@@ -747,8 +747,34 @@ which is the finding the ordering exists to make visible.
 | `data/prolific_data/` | 391 personas — `demographic.json` + `study_data.json` each |
 | `data/cleaned_for_llm_391_participant_otree.csv` | Cleaned oTree survey export, used by the pipeline |
 | `data/cleaned_391_participant_otree.xlsx` | The same export as delivered by oTree |
-| `data/400_participant_otree.xlsx` | Full oTree export, before exclusions |
+| `data/recruited_participants_otree_export.xlsx` | Full oTree export of all 430 recruited participants, before exclusions (see below) |
 | `data/hf_dataset/` | Generated HuggingFace export (gitignored; rebuild with `python -m scripts.data.export_hf_dataset`) |
+
+### Participant numbers: oTree export vs. analysis
+
+The full oTree export lists more participants than the analysis, which uses
+391. We recruited 430 participants via Prolific, and 391 of them completed all
+three topics of the survey on time. The other 39 did not complete the survey,
+so their responses are incomplete and are not included in any analysis:
+
+| Participants | Outcome |
+| ---: | --- |
+| 7 | Dropped out at the consent form |
+| 26 | Dropped out during the first topic |
+| 5 | Dropped out during a later topic |
+| 1 | Completed the survey only after the data-collection cutoff |
+| **39** | **Not included** |
+| **391** | **Completed on time, included in every analysis** |
+
+`data/recruited_participants_otree_export.xlsx` (formerly
+`data/400_participant_otree.xlsx`) holds the session records of all 430
+participants who opened the survey, including the page each one reached, which
+shows where they dropped out. Its 503 rows also include 73 session slots that
+were never opened (`participant.visited = 0`, three of them demo rows), which
+are not participants. One of the 430 has the unfilled label
+`{{%PROLIFIC_PID%}}` rather than a pseudonym, and dropped out during the first
+topic. The other files under `data/` contain only the 391 included
+participants.
 
 ### Comment-ranking conventions
 
@@ -817,8 +843,9 @@ later study, the approximate duration, and that participation was paid.
 They were informed that pseudonymised data would be released publicly and would
 not permit their identification, and that they could discontinue the study at
 any time without penalty. Participants who did not consent were routed out of
-the study before any responses were recorded, and returned submissions are
-excluded from the released data (391 of 400 recruited participants remain).
+the study before any responses were recorded. Only the 391 of 430 recruited
+participants who completed the survey on time are included in the analysis (see
+[Participant numbers](#participant-numbers-otree-export-vs-analysis)).
 
 The consent form and the survey instrument are the oTree application included in
 this repository under `reference/otree_survey/` (for reference only).

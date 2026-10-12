@@ -149,6 +149,115 @@ def test_update_framing_tests_per_source_and_topic():
     assert fr.render_updates(res.reset_index()).count("***") >= 1
 
 
+def _updates(p_by_cell, diff=-0.1):
+    """An update_framing_tests result with chosen raw p-values.
+
+    p_by_cell: {(source, topic): p}. Sources and topics keep insertion order.
+    """
+    return pd.DataFrame([{"source": s, "topic": t, "diff": diff, "U_p": p,
+                          "U_p_bonf": 1.0}
+                         for (s, t), p in p_by_cell.items()])
+
+
+TOPICS = ("UBI", "penalty", "weight_loss")
+
+
+def _six_models(p=0.5):
+    """Human plus six LLMs over three topics: m = 21, threshold 0.05/21."""
+    sources = [fr.HUMAN, *(f"M{i}" for i in range(6))]
+    return {(s, t): p for s in sources for t in TOPICS}
+
+
+def _cell(tex, source, topic_index):
+    line = next(l for l in tex.splitlines() if l.startswith(source + " "))
+    return line.split("&")[1 + topic_index].replace(r"\\", "").strip()
+
+
+@pytest.mark.parametrize("x,expected", [
+    (-0.078125, "-0.0781"), (0.1, "+0.1000"), (0.0, "+0.0000"),
+    (-0.00001, "+0.0000"),
+])
+def test_tex_diff_has_four_places_and_no_negative_zero(x, expected):
+    assert fr.tex_diff(x) == expected
+
+
+@pytest.mark.parametrize("p,expected", [
+    (0.6094, "$0.6094$"), (0.044491, "$0.0445$"), (0.00011, "$0.0001$"),
+    (0.00004, "$<0.0001$"), (3.7e-22, "$<0.0001$"),
+])
+def test_tex_p_has_four_places_and_a_floor(p, expected):
+    assert fr.tex_p(p) == expected
+
+
+def test_tex_p_bold_stays_in_one_math_group():
+    assert fr.tex_p(3.7e-22, bold=True) == r"$\mathbf{<0.0001}$"
+
+
+def test_tex_bolds_below_bonferroni_over_all_tests_including_human():
+    """0.05/21 = 0.00238: 0.0023 is bold, 0.0025 is not. Leaving the Human row
+    out (0.05/18 = 0.00278) would bold 0.0025."""
+    cells = _six_models()
+    cells[("M0", "UBI")] = 0.0023
+    cells[("M0", "penalty")] = 0.0025
+    tex = fr.render_updates_tex(_updates(cells))
+    assert _cell(tex, "M0", 0) == r"$-0.1000$ ($\mathbf{0.0023}$)"
+    assert _cell(tex, "M0", 1) == r"$-0.1000$ ($0.0025$)"
+
+
+def test_tex_holds_the_human_row_to_the_same_threshold():
+    cells = _six_models()
+    cells[(fr.HUMAN, "UBI")] = 0.0010
+    tex = fr.render_updates_tex(_updates(cells))
+    assert r"\mathbf{0.0010}" in _cell(tex, fr.HUMAN, 0)
+
+
+def test_tex_reports_raw_not_adjusted_p():
+    cells = _six_models()
+    cells[("M1", "UBI")] = 0.0100
+    tex = fr.render_updates_tex(_updates(cells))
+    assert "0.0100" in _cell(tex, "M1", 0)
+    assert "0.1800" not in tex and "1.0000" not in tex
+
+
+def test_tex_bold_compares_the_unrounded_p():
+    """0.002380 and 0.002382 both print as 0.0024, but sit either side of
+    0.05/21 = 0.0023810."""
+    cells = _six_models()
+    cells[("M2", "UBI")] = 0.002380
+    cells[("M2", "penalty")] = 0.002382
+    tex = fr.render_updates_tex(_updates(cells))
+    assert r"\mathbf" in _cell(tex, "M2", 0)
+    assert r"\mathbf" not in _cell(tex, "M2", 1)
+
+
+def test_tex_layout_matches_the_si_table():
+    tex = fr.render_updates_tex(_updates(_six_models()))
+    assert r"\label{tab:si_framing_updates}" in tex
+    assert r"\begin{tabular}{l r r r}" in tex
+    assert "Source & UBI & Penalty Shootout & Weight Loss Drugs \\\\" in tex
+    lines = tex.splitlines()
+    human = next(i for i, l in enumerate(lines) if l.startswith(fr.HUMAN + " "))
+    assert lines[human - 1] == r"\midrule" and lines[human + 1] == r"\midrule"
+    rows = [l for l in lines if l.endswith(r"\\") and not l.startswith("Source")]
+    assert [l.split("&")[0].strip() for l in rows] == \
+        [fr.HUMAN, *(f"M{i}" for i in range(6))]
+    assert {l.count("&") for l in rows} == {3}
+
+
+def test_tex_caption_states_raw_p_and_the_correction():
+    caption = fr.render_updates_tex(_updates(_six_models())).split(r"\caption{")[1]
+    assert "raw $p$-value" in caption
+    assert "Bonferroni correction across the 21 tests" in caption
+    assert r"3 topics $\times$ 7 sources" in caption
+    assert "$p < 0.05/21$" in caption
+    assert "^{*}" not in caption
+
+
+def test_tex_refuses_a_table_without_llms():
+    with pytest.raises(ValueError, match="no LLM"):
+        fr.render_updates_tex(_updates({(fr.HUMAN, "UBI"): 0.5}))
+
+
 def test_render_marks_significance_on_corrected_p():
     res = pd.DataFrame([{
         "topic": "t", "n_pro": 10, "n_anti": 10,
