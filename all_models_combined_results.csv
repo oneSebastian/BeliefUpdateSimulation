@@ -1,0 +1,183 @@
+Model,Variable,Coefficient,Std_Error,Z_value,P_value,Significance
+Human - Llama Bias (Difference),Intercept,-0.223516,0.072884,-3.066743,0.002164,**
+Human - Llama Bias (Difference),C(topic)[T.Penalty],0.051617,0.063548,0.812247,0.41665,
+Human - Llama Bias (Difference),C(topic)[T.Weight Loss],-0.051736,0.063062,-0.820393,0.411992,
+Human - Llama Bias (Difference),C(stance_direction)[T.Con],0.050421,0.049581,1.016941,0.309181,
+Human - Llama Bias (Difference),C(gender)[T.Diverse],0.217343,0.511925,0.424561,0.671157,
+Human - Llama Bias (Difference),C(gender)[T.Male],0.019171,0.054128,0.354171,0.723211,
+Human - Llama Bias (Difference),C(employment_status)[T.Employed part-time],-0.002615,0.077944,-0.033544,0.973241,
+Human - Llama Bias (Difference),C(employment_status)[T.Not in labor force],-0.217396,0.082532,-2.634092,0.008436,**
+Human - Llama Bias (Difference),C(employment_status)[T.Self-employed],0.041274,0.077499,0.532578,0.594326,
+Human - Llama Bias (Difference),C(employment_status)[T.Unemployed],-0.202012,0.10184,-1.983625,0.047298,*
+Human - Llama Bias (Difference),"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",-0.096271,0.063435,-1.51764,0.129105,
+Human - Llama Bias (Difference),C(highest_qualification)[T.Master's degree],0.078122,0.074363,1.05055,0.293465,
+Human - Llama Bias (Difference),C(highest_qualification)[T.No formal education],-0.10814,0.287654,-0.375937,0.706964,
+Human - Llama Bias (Difference),C(highest_qualification)[T.PhD or higher],0.055762,0.160846,0.34668,0.728832,
+Human - Llama Bias (Difference),C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],0.007026,0.088983,0.078963,0.937062,
+Human - Llama Bias (Difference),C(ethnicity_grouped)[T.1],0.202228,0.077504,2.609274,0.009073,**
+Human - Llama Bias (Difference),C(country_grouped)[T.1],-0.004846,0.085077,-0.056956,0.95458,
+Human - Llama Bias (Difference),C(student_grouped)[T.1],-0.187658,0.088758,-2.114279,0.034491,*
+Human - Llama Bias (Difference),initial_belief_normalized_centered,-0.38147,0.019245,-19.821706,0.0,***
+Human - Llama Bias (Difference),age_centered,0.002126,0.002122,1.001831,0.316425,
+Human - Llama Bias (Difference),familiarity_centered,0.013807,0.02298,0.60082,0.54796,
+Human - Llama Bias (Difference),BIG5_extraversion_score_centered,-0.019694,0.024496,-0.803978,0.42141,
+Human - Llama Bias (Difference),BIG5_agreeableness_score_centered,0.043516,0.026635,1.633762,0.102309,
+Human - Llama Bias (Difference),BIG5_conscientiousness_score_centered,-0.009555,0.032406,-0.294858,0.768102,
+Human - Llama Bias (Difference),BIG5_neuroticism_score_centered,0.007148,0.02529,0.282653,0.777443,
+Human - Llama Bias (Difference),BIG5_openness_score_centered,-0.020374,0.026182,-0.778176,0.436465,
+Human - Qwen Bias (Difference),Intercept,-0.411841,0.056742,-7.258133,0.0,***
+Human - Qwen Bias (Difference),C(topic)[T.Penalty],0.500336,0.049434,10.121247,0.0,***
+Human - Qwen Bias (Difference),C(topic)[T.Weight Loss],0.316517,0.049055,6.452309,0.0,***
+Human - Qwen Bias (Difference),C(stance_direction)[T.Con],-0.015117,0.038585,-0.391785,0.695217,
+Human - Qwen Bias (Difference),C(gender)[T.Diverse],-0.209677,0.398587,-0.52605,0.598853,
+Human - Qwen Bias (Difference),C(gender)[T.Male],0.024891,0.042135,0.590749,0.554689,
+Human - Qwen Bias (Difference),C(employment_status)[T.Employed part-time],-0.036301,0.060687,-0.598176,0.549723,
+Human - Qwen Bias (Difference),C(employment_status)[T.Not in labor force],-0.123693,0.064259,-1.924924,0.054239,
+Human - Qwen Bias (Difference),C(employment_status)[T.Self-employed],0.068705,0.06034,1.138631,0.254857,
+Human - Qwen Bias (Difference),C(employment_status)[T.Unemployed],-0.126498,0.079293,-1.59533,0.110638,
+Human - Qwen Bias (Difference),"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",-0.020567,0.049391,-0.416413,0.677108,
+Human - Qwen Bias (Difference),C(highest_qualification)[T.Master's degree],0.027687,0.0579,0.47818,0.632522,
+Human - Qwen Bias (Difference),C(highest_qualification)[T.No formal education],-0.135174,0.223965,-0.603551,0.546142,
+Human - Qwen Bias (Difference),C(highest_qualification)[T.PhD or higher],-0.057722,0.125235,-0.460906,0.644866,
+Human - Qwen Bias (Difference),C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],-0.072082,0.06928,-1.04044,0.298136,
+Human - Qwen Bias (Difference),C(ethnicity_grouped)[T.1],0.078399,0.060344,1.299192,0.193878,
+Human - Qwen Bias (Difference),C(country_grouped)[T.1],0.005717,0.066242,0.0863,0.931228,
+Human - Qwen Bias (Difference),C(student_grouped)[T.1],-0.125431,0.069107,-1.815033,0.069519,
+Human - Qwen Bias (Difference),initial_belief_normalized_centered,-0.284517,0.014904,-19.089539,0.0,***
+Human - Qwen Bias (Difference),age_centered,0.000424,0.001652,0.256489,0.797573,
+Human - Qwen Bias (Difference),familiarity_centered,0.004789,0.017781,0.269334,0.787672,
+Human - Qwen Bias (Difference),BIG5_extraversion_score_centered,0.011432,0.019072,0.599391,0.548912,
+Human - Qwen Bias (Difference),BIG5_agreeableness_score_centered,0.078742,0.020738,3.797053,0.000146,***
+Human - Qwen Bias (Difference),BIG5_conscientiousness_score_centered,-0.025694,0.02523,-1.01836,0.308507,
+Human - Qwen Bias (Difference),BIG5_neuroticism_score_centered,-0.00536,0.019691,-0.272205,0.785465,
+Human - Qwen Bias (Difference),BIG5_openness_score_centered,-0.015675,0.020385,-0.768958,0.441918,
+Claude Belief Shift,Intercept,-0.354334,0.056738,-6.245104,0.0,***
+Claude Belief Shift,C(topic)[T.Penalty],0.209936,0.04943,4.247143,2.2e-05,***
+Claude Belief Shift,C(topic)[T.Weight Loss],0.330669,0.04906,6.740166,0.0,***
+Claude Belief Shift,C(stance_direction)[T.Con],0.166229,0.038586,4.30799,1.6e-05,***
+Claude Belief Shift,C(gender)[T.Diverse],0.299941,0.398647,0.752399,0.451811,
+Claude Belief Shift,C(gender)[T.Male],0.036165,0.04214,0.858218,0.390772,
+Claude Belief Shift,C(employment_status)[T.Employed part-time],0.056575,0.060697,0.93209,0.35129,
+Claude Belief Shift,C(employment_status)[T.Not in labor force],-0.111761,0.064269,-1.738956,0.082043,
+Claude Belief Shift,C(employment_status)[T.Self-employed],0.007492,0.06035,0.124141,0.901204,
+Claude Belief Shift,C(employment_status)[T.Unemployed],-0.061574,0.079306,-0.776409,0.437508,
+Claude Belief Shift,"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",0.061618,0.049399,1.247349,0.21227,
+Claude Belief Shift,C(highest_qualification)[T.Master's degree],0.094533,0.057909,1.632434,0.102588,
+Claude Belief Shift,C(highest_qualification)[T.No formal education],-0.284639,0.224,-1.270713,0.203831,
+Claude Belief Shift,C(highest_qualification)[T.PhD or higher],0.007192,0.125255,0.057419,0.954212,
+Claude Belief Shift,C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],-0.091287,0.069291,-1.317442,0.18769,
+Claude Belief Shift,C(ethnicity_grouped)[T.1],0.111779,0.060354,1.852051,0.064018,
+Claude Belief Shift,C(country_grouped)[T.1],-0.007576,0.066252,-0.114356,0.908956,
+Claude Belief Shift,C(student_grouped)[T.1],-0.059837,0.069118,-0.865724,0.386641,
+Claude Belief Shift,initial_belief_normalized_centered,-0.202049,0.014911,-13.550605,0.0,***
+Claude Belief Shift,age_centered,0.002841,0.001652,1.719308,0.085558,
+Claude Belief Shift,familiarity_centered,0.032771,0.017741,1.847156,0.064724,
+Claude Belief Shift,BIG5_extraversion_score_centered,-0.003692,0.019076,-0.193524,0.846549,
+Claude Belief Shift,BIG5_agreeableness_score_centered,0.054129,0.020741,2.609794,0.00906,**
+Claude Belief Shift,BIG5_conscientiousness_score_centered,-0.012101,0.025234,-0.479545,0.631551,
+Claude Belief Shift,BIG5_neuroticism_score_centered,-0.009517,0.019694,-0.483236,0.628928,
+Claude Belief Shift,BIG5_openness_score_centered,-0.010045,0.020388,-0.492688,0.622233,
+Gemini Belief Shift,Intercept,-0.388617,0.050871,-7.639278,0.0,***
+Gemini Belief Shift,C(topic)[T.Penalty],0.29101,0.044303,6.568612,0.0,***
+Gemini Belief Shift,C(topic)[T.Weight Loss],0.203223,0.043988,4.620008,4e-06,***
+Gemini Belief Shift,C(stance_direction)[T.Con],0.28627,0.034586,8.277088,0.0,***
+Gemini Belief Shift,C(gender)[T.Diverse],0.004455,0.357183,0.012473,0.990049,
+Gemini Belief Shift,C(gender)[T.Male],-0.012969,0.037775,-0.343326,0.731353,
+Gemini Belief Shift,C(employment_status)[T.Employed part-time],-0.015553,0.054382,-0.285994,0.774883,
+Gemini Belief Shift,C(employment_status)[T.Not in labor force],-0.092951,0.057609,-1.61349,0.106638,
+Gemini Belief Shift,C(employment_status)[T.Self-employed],-0.040155,0.054171,-0.741257,0.458537,
+Gemini Belief Shift,C(employment_status)[T.Unemployed],-0.074627,0.071055,-1.050264,0.293597,
+Gemini Belief Shift,"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",0.007635,0.044313,0.172304,0.863199,
+Gemini Belief Shift,C(highest_qualification)[T.Master's degree],0.037712,0.051885,0.726842,0.467323,
+Gemini Belief Shift,C(highest_qualification)[T.No formal education],-0.086806,0.200701,-0.432513,0.665369,
+Gemini Belief Shift,C(highest_qualification)[T.PhD or higher],-0.052502,0.112227,-0.467815,0.639917,
+Gemini Belief Shift,C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],0.004246,0.062084,0.06839,0.945475,
+Gemini Belief Shift,C(ethnicity_grouped)[T.1],0.140079,0.054075,2.590443,0.009585,**
+Gemini Belief Shift,C(country_grouped)[T.1],0.028461,0.05936,0.479457,0.631613,
+Gemini Belief Shift,C(student_grouped)[T.1],-0.057242,0.061929,-0.924306,0.355327,
+Gemini Belief Shift,initial_belief_normalized_centered,-0.10954,0.01336,-8.198795,0.0,***
+Gemini Belief Shift,age_centered,0.000667,0.001483,0.44994,0.652754,
+Gemini Belief Shift,familiarity_centered,0.020561,0.015943,1.289625,0.197181,
+Gemini Belief Shift,BIG5_extraversion_score_centered,-0.004364,0.017094,-0.255308,0.798485,
+Gemini Belief Shift,BIG5_agreeableness_score_centered,0.024943,0.018588,1.341934,0.179617,
+Gemini Belief Shift,BIG5_conscientiousness_score_centered,-0.00412,0.022619,-0.182161,0.855456,
+Gemini Belief Shift,BIG5_neuroticism_score_centered,-0.011195,0.017646,-0.634409,0.525814,
+Gemini Belief Shift,BIG5_openness_score_centered,-0.014244,0.018291,-0.778765,0.436118,
+Human Belief Change,Intercept,-0.340971,0.078712,-4.331881,1.5e-05,***
+Human Belief Change,C(topic)[T.Penalty],0.395003,0.068569,5.760649,0.0,***
+Human Belief Change,C(topic)[T.Weight Loss],0.050321,0.068062,0.739342,0.459699,
+Human Belief Change,C(stance_direction)[T.Con],-0.012721,0.053577,-0.237427,0.812325,
+Human Belief Change,C(gender)[T.Diverse],-0.203948,0.553028,-0.368783,0.712289,
+Human Belief Change,C(gender)[T.Male],0.052922,0.058459,0.905273,0.365321,
+Human Belief Change,C(employment_status)[T.Employed part-time],0.198149,0.084202,2.353248,0.01861,*
+Human Belief Change,C(employment_status)[T.Not in labor force],0.024873,0.089159,0.27897,0.780268,
+Human Belief Change,C(employment_status)[T.Self-employed],0.101274,0.083722,1.209649,0.226414,
+Human Belief Change,C(employment_status)[T.Unemployed],0.10949,0.110019,0.995192,0.319643,
+Human Belief Change,"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",-0.009539,0.068529,-0.139199,0.889293,
+Human Belief Change,C(highest_qualification)[T.Master's degree],0.097322,0.080336,1.211446,0.225725,
+Human Belief Change,C(highest_qualification)[T.No formal education],-0.18311,0.310748,-0.589257,0.555689,
+Human Belief Change,C(highest_qualification)[T.PhD or higher],-0.0538,0.173761,-0.309619,0.756851,
+Human Belief Change,C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],-0.181114,0.096124,-1.88416,0.059543,
+Human Belief Change,C(ethnicity_grouped)[T.1],0.016864,0.083728,0.201413,0.840375,
+Human Belief Change,C(country_grouped)[T.1],-0.164276,0.091909,-1.787367,0.073878,
+Human Belief Change,C(student_grouped)[T.1],0.190903,0.095885,1.990951,0.046486,*
+Human Belief Change,initial_belief_normalized_centered,-0.303896,0.020719,-14.667651,0.0,***
+Human Belief Change,age_centered,0.002298,0.002292,1.002601,0.316053,
+Human Belief Change,familiarity_centered,0.066028,0.024602,2.683834,0.007278,**
+Human Belief Change,BIG5_extraversion_score_centered,-0.042415,0.026463,-1.602795,0.10898,
+Human Belief Change,BIG5_agreeableness_score_centered,0.030017,0.028773,1.043239,0.296837,
+Human Belief Change,BIG5_conscientiousness_score_centered,-0.010148,0.035006,-0.289884,0.771905,
+Human Belief Change,BIG5_neuroticism_score_centered,0.027957,0.027321,1.023281,0.306175,
+Human Belief Change,BIG5_openness_score_centered,0.017662,0.028284,0.62444,0.532339,
+GPT-5 Mini Belief Shift,Intercept,-0.557326,0.067468,-8.26062,0.0,***
+GPT-5 Mini Belief Shift,C(topic)[T.Penalty],0.542806,0.058769,9.236275,0.0,***
+GPT-5 Mini Belief Shift,C(topic)[T.Weight Loss],0.544341,0.058333,9.331656,0.0,***
+GPT-5 Mini Belief Shift,C(stance_direction)[T.Con],0.135507,0.045896,2.952509,0.003152,**
+GPT-5 Mini Belief Shift,C(gender)[T.Diverse],-0.009013,0.473999,-0.019016,0.984828,
+GPT-5 Mini Belief Shift,C(gender)[T.Male],-0.011879,0.050104,-0.237094,0.812584,
+GPT-5 Mini Belief Shift,C(employment_status)[T.Employed part-time],0.060457,0.072169,0.837713,0.402192,
+GPT-5 Mini Belief Shift,C(employment_status)[T.Not in labor force],-0.17571,0.076417,-2.299349,0.021485,*
+GPT-5 Mini Belief Shift,C(employment_status)[T.Self-employed],0.036971,0.071757,0.515229,0.606393,
+GPT-5 Mini Belief Shift,C(employment_status)[T.Unemployed],-0.042493,0.094296,-0.450632,0.652255,
+GPT-5 Mini Belief Shift,"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",0.012627,0.058736,0.214982,0.829781,
+GPT-5 Mini Belief Shift,C(highest_qualification)[T.Master's degree],0.097265,0.068855,1.412606,0.157772,
+GPT-5 Mini Belief Shift,C(highest_qualification)[T.No formal education],-0.441158,0.266339,-1.656377,0.097645,
+GPT-5 Mini Belief Shift,C(highest_qualification)[T.PhD or higher],-0.149079,0.14893,-1.001,0.316827,
+GPT-5 Mini Belief Shift,C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],0.043724,0.082388,0.530709,0.59562,
+GPT-5 Mini Belief Shift,C(ethnicity_grouped)[T.1],0.077783,0.071762,1.083909,0.278405,
+GPT-5 Mini Belief Shift,C(country_grouped)[T.1],0.026917,0.078775,0.341697,0.732579,
+GPT-5 Mini Belief Shift,C(student_grouped)[T.1],-0.068515,0.082182,-0.833699,0.404451,
+GPT-5 Mini Belief Shift,initial_belief_normalized_centered,-0.203658,0.017733,-11.484899,0.0,***
+GPT-5 Mini Belief Shift,age_centered,0.001217,0.001965,0.619669,0.535475,
+GPT-5 Mini Belief Shift,familiarity_centered,0.024596,0.021084,1.166581,0.24338,
+GPT-5 Mini Belief Shift,BIG5_extraversion_score_centered,-0.002955,0.022681,-0.130271,0.896352,
+GPT-5 Mini Belief Shift,BIG5_agreeableness_score_centered,0.083973,0.024661,3.405081,0.000661,***
+GPT-5 Mini Belief Shift,BIG5_conscientiousness_score_centered,-0.040939,0.030004,-1.364475,0.172418,
+GPT-5 Mini Belief Shift,BIG5_neuroticism_score_centered,-0.024063,0.023416,-1.027642,0.304118,
+GPT-5 Mini Belief Shift,BIG5_openness_score_centered,-0.031054,0.024242,-1.280981,0.2002,
+GPT-5.2 Belief Shift,Intercept,-0.534491,0.051639,-10.350458,0.0,***
+GPT-5.2 Belief Shift,C(topic)[T.Penalty],0.427019,0.044976,9.494386,0.0,***
+GPT-5.2 Belief Shift,C(topic)[T.Weight Loss],0.516395,0.044644,11.566924,0.0,***
+GPT-5.2 Belief Shift,C(stance_direction)[T.Con],-0.046586,0.03513,-1.326086,0.184811,
+GPT-5.2 Belief Shift,C(gender)[T.Diverse],0.118752,0.362745,0.32737,0.743388,
+GPT-5.2 Belief Shift,C(gender)[T.Male],0.014297,0.038344,0.372861,0.709252,
+GPT-5.2 Belief Shift,C(employment_status)[T.Employed part-time],0.066739,0.05523,1.20838,0.226901,
+GPT-5.2 Belief Shift,C(employment_status)[T.Not in labor force],-0.087155,0.058481,-1.490316,0.136141,
+GPT-5.2 Belief Shift,C(employment_status)[T.Self-employed],0.047868,0.054915,0.871689,0.383378,
+GPT-5.2 Belief Shift,C(employment_status)[T.Unemployed],-0.032416,0.072163,-0.44921,0.65328,
+GPT-5.2 Belief Shift,"C(highest_qualification)[T.Further education (A Levels, BTEC, apprenticeship)]",0.055985,0.04495,1.245502,0.212947,
+GPT-5.2 Belief Shift,C(highest_qualification)[T.Master's degree],0.127827,0.052693,2.425873,0.015272,*
+GPT-5.2 Belief Shift,C(highest_qualification)[T.No formal education],-0.465032,0.203826,-2.281512,0.022518,*
+GPT-5.2 Belief Shift,C(highest_qualification)[T.PhD or higher],0.08138,0.113974,0.714022,0.475214,
+GPT-5.2 Belief Shift,C(highest_qualification)[T.Secondary school (GCSEs/O Levels)],-0.065938,0.06305,-1.045811,0.295648,
+GPT-5.2 Belief Shift,C(ethnicity_grouped)[T.1],0.140585,0.054918,2.55992,0.01047,*
+GPT-5.2 Belief Shift,C(country_grouped)[T.1],-0.026644,0.060285,-0.441964,0.658516,
+GPT-5.2 Belief Shift,C(student_grouped)[T.1],-0.006186,0.062893,-0.098359,0.921647,
+GPT-5.2 Belief Shift,initial_belief_normalized_centered,-0.308184,0.013568,-22.714405,0.0,***
+GPT-5.2 Belief Shift,age_centered,0.000848,0.001503,0.563921,0.572808,
+GPT-5.2 Belief Shift,familiarity_centered,0.036133,0.016133,2.239674,0.025112,*
+GPT-5.2 Belief Shift,BIG5_extraversion_score_centered,-0.002453,0.017357,-0.141319,0.887618,
+GPT-5.2 Belief Shift,BIG5_agreeableness_score_centered,0.021651,0.018873,1.147238,0.251283,
+GPT-5.2 Belief Shift,BIG5_conscientiousness_score_centered,-0.018112,0.022961,-0.788822,0.430216,
+GPT-5.2 Belief Shift,BIG5_neuroticism_score_centered,0.003023,0.01792,0.168698,0.866034,
+GPT-5.2 Belief Shift,BIG5_openness_score_centered,-0.015609,0.018552,-0.841369,0.400141,
